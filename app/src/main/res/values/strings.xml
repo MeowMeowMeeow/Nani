@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NaNi</string>
+    <string name="txtLogin">Let’s bring your digital\ndreams to life</string>
+    <string name="lblEmail">Email</string>
+    <string name="lblPassword">Password</string>
+    <string name="extra">extra</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_pass">Enter Account Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="lblLogin">Login</string>
+    <string name="copyright">\©2024 Jairosoft</string>
+</resources>
