@@ -56,7 +56,11 @@ import com.example.nani.ui.theme.NaNiTheme
 
 @Composable
 fun LoginScreen(){
-
+//Need og View model
+    //Nav Host
+    //User
+    //password
+    //etc
 }
 
 
@@ -76,7 +80,7 @@ fun LoginGroup(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(1.dp)
+            .padding(10.dp)
             .fillMaxSize()
             .background(backgroundColor)
     ) {
