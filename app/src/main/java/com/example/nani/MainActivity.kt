@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nani.screens.LoginGroup
+import com.example.nani.screens.LoginScreen
 import com.example.nani.ui.theme.NaNiTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,9 +21,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NaNiTheme {
-                    LoginGroup(
-                        onUserEmail = {},
-                        onUserPass = {}
+                    LoginScreen(
+
                     )
 
             }

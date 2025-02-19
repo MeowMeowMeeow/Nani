@@ -31,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -56,11 +57,12 @@ import com.example.nani.ui.theme.NaNiTheme
 
 @Composable
 fun LoginScreen(){
-//Need og View model
-    //Nav Host
-    //User
-    //password
-    //etc
+Surface(
+    color = MaterialTheme.colorScheme.background,
+    modifier = Modifier
+){
+    LoginGroup()
+}
 }
 
 
