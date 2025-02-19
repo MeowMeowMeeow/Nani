@@ -1,12 +1,15 @@
 package com.example.nani.screens
 
+import android.content.res.Configuration
 import androidx.compose.material3.ButtonDefaults
 
 import android.graphics.drawable.Icon
 import android.widget.Button
 import android.window.SplashScreenView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,10 +43,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.sp
+import com.example.nani.ui.theme.NaNiTheme
 
 
 @Composable
@@ -62,13 +70,15 @@ fun LoginGroup(
     var email by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(true) }
-
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundColor = MaterialTheme.colorScheme.background
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(1.dp)
             .fillMaxSize()
+            .background(backgroundColor)
     ) {
         Image(
             painter = painterResource(R.drawable.jairosoft),
@@ -80,8 +90,8 @@ fun LoginGroup(
             text = stringResource(R.string.txtLogin),
             style = MaterialTheme.typography.titleLarge, //from Type.kt refer in bubble.io specifics
             textAlign = TextAlign.Center,
-            color = Color(0xFF4f5051), //Add sa theme later
-            fontWeight = FontWeight.ExtraBold
+            color = MaterialTheme.colorScheme.primary, //Add sa theme later
+
         )
         Spacer(modifier = Modifier.padding(bottom = 29.dp))
 
@@ -90,10 +100,10 @@ fun LoginGroup(
             Text(
                 text = stringResource(R.string.lblEmail),
                 style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Normal, //debug
-                modifier = Modifier.padding(bottom = 6.dp)
+                modifier = Modifier.padding(bottom = 6.dp),
+                color = MaterialTheme.colorScheme.onSurface
             )
-            TextField(
+            OutlinedTextField(
                 value = email,
                 onValueChange = { newEmailtxt ->
                     email = newEmailtxt
@@ -103,7 +113,7 @@ fun LoginGroup(
                     Text(
                         text = stringResource(R.string.enter_email),
                         style = MaterialTheme.typography.labelSmall,
-                        color  = Color.Gray //edit temporary
+                        color  = MaterialTheme.colorScheme.onPrimary //edit temporary
                     )
                 },
                 leadingIcon = {
@@ -122,7 +132,7 @@ fun LoginGroup(
                     .fillMaxWidth(),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF0F2F6),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
@@ -136,10 +146,10 @@ fun LoginGroup(
             Text(
                 text = stringResource(R.string.lblPassword),
                 style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Normal, //debug
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 6.dp)
             )
-            TextField(
+            OutlinedTextField(
                 value = pass,
                 onValueChange = { newPasstxt ->
                     pass = newPasstxt
@@ -149,7 +159,7 @@ fun LoginGroup(
                     Text(
                         text = stringResource(R.string.enter_pass),
                         style = MaterialTheme.typography.labelSmall,
-                        color  = Color.Gray //edit temporary
+                        color  = MaterialTheme.colorScheme.onPrimary //edit temporary
                     )
                 },
                 leadingIcon = {
@@ -159,7 +169,7 @@ fun LoginGroup(
                         modifier = Modifier
                             .size(30.dp)
                             .padding(4.dp) ,
-                        tint = Color.Gray //edit
+                        tint = Color.Gray
                     )
                 },
                 trailingIcon = {
@@ -183,7 +193,7 @@ fun LoginGroup(
                     .fillMaxWidth(),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF0F2F6),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
@@ -195,8 +205,8 @@ fun LoginGroup(
             Text(
                 text = stringResource(R.string.forgot_password),
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Light,//debug
-                color = Color.Blue,//edit
+
+                color = Color(0xFF5F71CA),//edit
                 modifier = modifier.padding(4.dp)
             )
         }
@@ -205,30 +215,35 @@ fun LoginGroup(
             modifier = Modifier.fillMaxWidth(),
             onClick = {  },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF5F71CA) // edit
+                containerColor = MaterialTheme.colorScheme.secondary
             )
         ) {
             Text(
                 text = stringResource(R.string.lblLogin),
-                fontSize = 15.sp,
-                color = Color.White // edit
+                style =MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.tertiary
             )
+
+
         }
         Spacer(modifier = Modifier.padding(bottom = 43.dp))
         Text(
             text = stringResource(R.string.copyright),
             style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.Normal //debug
+            color = MaterialTheme.colorScheme.onSurface
 
         )
+
     }
 }
-
-@Preview(showBackground = true)
+@Preview(name = "Light Theme", showBackground = true)
+@Preview(name = "Dark Theme", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginGroup() {
-    LoginGroup(
-        onUserEmail = {},
-        onUserPass = {}
-    )
+    NaNiTheme {
+        LoginGroup(
+            onUserEmail = {},
+            onUserPass = {}
+        )
+    }
 }

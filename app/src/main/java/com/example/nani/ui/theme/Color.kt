@@ -2,11 +2,18 @@ package com.example.nani.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Dark_blue = Color(0xFF272C39)
+val Dark_Lightblue = Color(0xFF7269E3)
+val Dark_LightGreen = Color(0xFF76FF03)
+val Dark_Gray = Color(0xFF343844)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-val Gray = Color(0xFF4f5051)
+val Gray = Color(0xFF666666)
+val White = Color(0xFFFFFFFF)
+
+val Light_Text = Color(0xFF091747)
+val Dark_Text = Color(0xFFFFFFFF)
+
+val Light_LightGray = Color(0xFFf0f2f6)
+val Light_Gray = Color(0xFF7b7b7b)
+val Light_Blue = Color(0xFF615BFF)
+val Light_Title = Color(0xFF4f5051)
