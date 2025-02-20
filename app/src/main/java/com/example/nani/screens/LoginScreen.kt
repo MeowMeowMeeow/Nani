@@ -242,8 +242,8 @@ fun LoginGroup(
 
     }
 }
-@Preview(name = "Light Theme", showBackground = true)
-@Preview(name = "Dark Theme", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Light Theme")
+@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewLoginGroup() {
     NaNiTheme {

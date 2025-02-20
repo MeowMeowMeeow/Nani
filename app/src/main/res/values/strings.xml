@@ -9,4 +9,6 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="lblLogin">Login</string>
     <string name="copyright">\©2024 Jairosoft</string>
+    <string name="txtForgotPassword">Enter your email to receive a confirmation email.</string>
+    <string name="buttonSendEmail">Send password reset email</string>
 </resources>
