@@ -20,6 +20,7 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = Dark_Text,
     tertiary = White,
 
+
 )
 
 private val LightColorScheme = lightColorScheme(

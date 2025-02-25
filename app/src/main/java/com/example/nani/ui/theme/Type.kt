@@ -50,4 +50,10 @@ val CustomTypography = Typography(
         fontFamily = PoppinsSemiBold,
         fontWeight = FontWeight.SemiBold,
         fontSize = 15.sp,
-))
+),
+    bodySmall = TextStyle(
+        fontFamily = PoppinsRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp,
+    ),
+)

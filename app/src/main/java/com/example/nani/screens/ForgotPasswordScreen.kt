@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
+
 //DAPAT POP UP pero gi wholescreen lang sa nako
 @Composable
 fun ForgotPasswordScreen(){
@@ -62,93 +63,99 @@ fun ForgotPasswordScreen(){
 fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
                             onBackClick: () -> Unit , modifier: Modifier){
     var email by remember { mutableStateOf("") }
-    Box {
-        IconButton(
-            onClick = onBackClick, 
-            modifier = Modifier
-                .padding(16.dp)
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.secondary),
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.tertiary
-            )
-        }
-        Column(
-            horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        )
-        {
-            Text(
-                text = stringResource(R.string.forgot_password),
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 11.dp)
-            )
-            Text(
-                text = stringResource(R.string.txtForgotPassword),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-            OutlinedTextField(
-                value = email,
-                onValueChange = { newEmailtxt ->
-                    email = newEmailtxt
-                    onUserEmail(newEmailtxt)
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.enter_email),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onPrimary //edit temporary
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.email_icon),
-                        contentDescription = "Mail Icon",
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(4.dp),
-                        tint = Color.Gray//edit
-                    )
-                },
+    Column {
+        Box {
+            IconButton(
+                onClick = onBackClick,
                 modifier = Modifier
-                    .width(530.dp)
-                    .height(50.dp)
-                    .fillMaxWidth(),
-                singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
-            )
-            Spacer(modifier = Modifier.padding(bottom = 55.dp))
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
+                    .padding(16.dp)
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondary),
             ) {
-                Text(
-                    text = stringResource(R.string.buttonSendEmail),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.tertiary
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
-
-
             }
         }
-    }
+            Spacer(modifier= Modifier.padding(32.dp))
+            Column(
+                horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+
+                    .padding(10.dp)
+            )
+            {
+                Text(
+                    text = stringResource(R.string.forgot_password),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 11.dp)
+                )
+                Text(
+                    text = stringResource(R.string.txtForgotPassword),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { newEmailtxt ->
+                        email = newEmailtxt
+                        onUserEmail(newEmailtxt)
+                    },
+                    placeholder = {
+                        Text(
+                            text = stringResource(R.string.enter_email),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimary //edit temporary
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.email_icon),
+                            contentDescription = "Mail Icon",
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(4.dp),
+                            tint = Color.Gray//edit
+                        )
+                    },
+                    modifier = Modifier
+                        .width(530.dp)
+                        .height(50.dp)
+                        .fillMaxWidth(),
+                    singleLine = true,
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
+                )
+                Spacer(modifier = Modifier.padding(bottom = 55.dp))
+
+
+
+                }
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
+
+            ) {
+            Text(
+                text = stringResource(R.string.buttonSendEmail),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            }
+        }
+
 }
 
 

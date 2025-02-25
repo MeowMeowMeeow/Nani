@@ -11,4 +11,8 @@
     <string name="copyright">\©2024 Jairosoft</string>
     <string name="txtForgotPassword">Enter your email to receive a confirmation email.</string>
     <string name="buttonSendEmail">Send password reset email</string>
+    <string name="txtWelcome">Welcome to Jairosoft</string>
+    <string name="lblVerifypass">Verify Password</string>
+    <string name="terms_and_conditions"> Terms and Conditions.</string>
+
 </resources>
