@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun DashboardScreen()
 {
 Text(
-    text = "To be Done"
+    text = "To be Done."
 )
 }
 
