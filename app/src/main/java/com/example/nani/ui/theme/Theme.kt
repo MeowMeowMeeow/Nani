@@ -19,7 +19,7 @@ private val DarkColorScheme = darkColorScheme(
     onPrimary = White,
     onSurface = Dark_Text,
     tertiary = White,
-
+    onSecondary =Dark_bar
 
 )
 
@@ -31,7 +31,7 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = Light_Gray,
    onSurface = Light_Text,
     tertiary = White,
-
+    onSecondary = White_bar
 
 
     /* Other default colors to override

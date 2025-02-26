@@ -14,5 +14,10 @@
     <string name="txtWelcome">Welcome to Jairosoft</string>
     <string name="lblVerifypass">Verify Password</string>
     <string name="terms_and_conditions"> Terms and Conditions.</string>
+    <string name="signup"> Signup</string>
+    <string name="lblDashboard">Dashboard</string>
+    <string name="lblAnalytics">Analytics</string>
+    <string name="lblprojects">Projects</string>
+    <string name="lblprofile">Profile</string>
 
 </resources>

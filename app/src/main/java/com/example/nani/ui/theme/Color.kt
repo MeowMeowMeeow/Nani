@@ -7,6 +7,10 @@ val Dark_Lightblue = Color(0xFF7269E3)
 val Dark_LightGreen = Color(0xFF76FF03)
 val Dark_Gray = Color(0xFF343844)
 
+//Bottom bar
+val Dark_bar = Color(0xFF2C2C2C)
+val White_bar = Color(0xFFFFFFFF)
+
 val Gray = Color(0xFF666666)
 val White = Color(0xFFFFFFFF)
 

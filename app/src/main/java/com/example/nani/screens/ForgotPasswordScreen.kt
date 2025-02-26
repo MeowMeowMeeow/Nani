@@ -40,20 +40,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
 
 //DAPAT POP UP pero gi wholescreen lang sa nako
 @Composable
-fun ForgotPasswordScreen(){
+fun ForgotPasswordScreen(navController: NavHostController) {
     Surface(
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier
+        modifier = Modifier.fillMaxSize()
     ){
         ForgotPasswordGroup(
-            onUserEmail ={},
-            onBackClick = {  },
-            modifier = Modifier
+            onUserEmail = {},
+            onBackClick = {},
+            modifier = Modifier,
+
         )
     }
 }
@@ -61,26 +63,31 @@ fun ForgotPasswordScreen(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
-                            onBackClick: () -> Unit , modifier: Modifier){
+                            onBackClick: () -> Unit , modifier: Modifier,
+                           ) {
     var email by remember { mutableStateOf("") }
-    Column {
-        Box {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondary),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.tertiary
-                )
+    Surface(
+        color = MaterialTheme.colorScheme.background,
+        modifier = Modifier
+    ) {
+        Column {
+            Box {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondary),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.tertiary
+                    )
+                }
             }
-        }
-            Spacer(modifier= Modifier.padding(32.dp))
+            Spacer(modifier = Modifier.padding(32.dp))
             Column(
                 horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Center,
                 modifier = Modifier
@@ -129,8 +136,9 @@ fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
                         .height(50.dp)
                         .fillMaxWidth(),
                     singleLine = true,
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     )
@@ -138,24 +146,24 @@ fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
                 Spacer(modifier = Modifier.padding(bottom = 55.dp))
 
 
+            }
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ),
 
-                }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
-
-            ) {
-            Text(
-                text = stringResource(R.string.buttonSendEmail),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.tertiary
-            )
+                ) {
+                Text(
+                    text = stringResource(R.string.buttonSendEmail),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
         }
 
+    }
 }
 
 
