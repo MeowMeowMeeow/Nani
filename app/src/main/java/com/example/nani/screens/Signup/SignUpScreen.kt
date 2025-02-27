@@ -1,4 +1,4 @@
-    package com.example.nani.screens
+    package com.example.nani.screens.Signup
 
     import android.content.res.Configuration
     import androidx.compose.foundation.Image

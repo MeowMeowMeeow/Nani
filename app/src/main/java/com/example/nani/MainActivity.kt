@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.example.nani.screens.SignUpScreen
 import com.example.nani.ui.theme.NaNiTheme
 
 class MainActivity : ComponentActivity() {

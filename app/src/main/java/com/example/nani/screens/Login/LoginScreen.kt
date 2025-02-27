@@ -1,7 +1,6 @@
-package com.example.nani.screens
+package com.example.nani.screens.Login
 
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.compose.material3.ButtonDefaults
 
 import androidx.compose.foundation.Image

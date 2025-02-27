@@ -1,4 +1,4 @@
-package com.example.nani.screens
+package com.example.nani.screens.PopUps
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
