@@ -2,11 +2,14 @@ package com.example.nani.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Dark_blue = Color(0xFF272C39)
+    val Dark_blue = Color(0xFF272C39)
 val Dark_Lightblue = Color(0xFF7269E3)
 val Dark_LightGreen = Color(0xFF76FF03)
 val Dark_Gray = Color(0xFF343844)
 
+
+val White_Error = Color(0xFFD32F2F)
+val Dark_Error = Color(0xFFFF6B6B)
 //Bottom bar
 val Dark_bar = Color(0xFF2C2C2C)
 val White_bar = Color(0xFFFFFFFF)
