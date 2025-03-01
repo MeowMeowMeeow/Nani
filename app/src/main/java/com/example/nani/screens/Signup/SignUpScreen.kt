@@ -53,6 +53,8 @@
     import androidx.lifecycle.ViewModelProvider
     import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
     import androidx.lifecycle.viewmodel.compose.viewModel
+    import androidx.navigation.NavHostController
+    import com.example.nani.JairosoftAppScreen
     import com.example.nani.R
     import com.example.nani.data.UserDatabase
     import com.example.nani.repository.SignUpViewModelFactory
@@ -63,7 +65,7 @@
     //need pa mu add if bawal null , dapat naay @email, Checkbox dapat checked
 
     @Composable
-    fun SignUpScreen() {
+    fun SignUpScreen(navController: NavHostController) {
         val context = LocalContext.current
         val factory = SignUpViewModelFactory(context)
         val viewModel: SignUpViewModel = viewModel(factory = factory)
@@ -73,13 +75,14 @@
         val verifyPassword by viewModel.verifyPassword.collectAsState()
 
         SignUpScreenGroup(
-            email = email,  // Use ViewModel state
+            email = email,
             password = password,
             verifyPassword = verifyPassword,
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
             onUserVPass = { viewModel.updateVerifyPassword(it) },
-            onRegister = { viewModel.registerUser() }
+            onRegister = { viewModel.registerUser() },
+            alreadyHaveAnAccount = { navController.navigate(JairosoftAppScreen.Login.name)}
         )
     }
 
@@ -87,13 +90,14 @@
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SignUpScreenGroup(
-        email: String,
-        password: String,
-        verifyPassword: String,
-        onUserEmail: (String) -> Unit,
-        onUserPass: (String) -> Unit,
-        onUserVPass: (String) -> Unit,
-        onRegister: () -> Unit
+        email: String = "",
+        password: String = "",
+        verifyPassword: String = "",
+        onUserEmail: (String) -> Unit = {},
+        onUserPass: (String) -> Unit = {},
+        onUserVPass: (String) -> Unit = {},
+        onRegister: () -> Unit = {},
+        alreadyHaveAnAccount: () -> Unit,
     )
     {
         var checked by remember { mutableStateOf(false) }
@@ -289,7 +293,11 @@
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(3.dp))
-                            .border(1.dp, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(3.dp)) // Border added here
+                            .border(
+                                1.dp,
+                                MaterialTheme.colorScheme.onSurface,
+                                RoundedCornerShape(3.dp)
+                            ) // Border added here
                             .size(20.dp) // Ensures the box size matches the checkbox
                     ) {
                         Checkbox(
@@ -314,7 +322,8 @@
                         text = stringResource(R.string.terms_and_conditions),//add underline
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.clickable { TODO() }//add
+                        modifier = Modifier
+                            .clickable { TODO() }//add
                             .padding(2.dp)
                     )
 
@@ -345,7 +354,9 @@
                 Text(
                     text = "Already have an account?",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.
+                    clickable { alreadyHaveAnAccount() }
                 )
                 Spacer(modifier = Modifier.padding(27.dp))
 
@@ -419,7 +430,8 @@
                 onRegister = {},
                 email = "",
                 password = "",
-                verifyPassword =""
+                verifyPassword = "",
+                alreadyHaveAnAccount = {  }
             )
         }
     }

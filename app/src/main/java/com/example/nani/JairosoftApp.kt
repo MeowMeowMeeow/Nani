@@ -29,24 +29,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.nani.repository.LoginViewModelFactory
 import com.example.nani.screens.Dashboard.DashboardGroup
 import com.example.nani.screens.PopUps.ForgotPasswordScreen
 import com.example.nani.screens.Login.LoginGroup
+import com.example.nani.screens.Login.LoginViewModel
+import com.example.nani.screens.Signup.SignUpScreen
+import com.example.nani.screens.Signup.SignUpScreenGroup
 import com.example.nani.ui.theme.NaNiTheme
 
 enum class JairosoftAppScreen(@StringRes val title: Int) {
-    Initiial(title = R.string.app_name),
+    Login(title = R.string.app_name),
     Forgot(title = R.string.forgot_password),
     Signup(title = R.string.signup),
     Dashboard(title = R.string.lblDashboard)
@@ -56,10 +64,15 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JairosoftApp() {
+    val context = LocalContext.current
+    val loginViewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(context)
+    )
+
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = JairosoftAppScreen.valueOf(
-        backStackEntry?.destination?.route ?: JairosoftAppScreen.Initiial.name
+        backStackEntry?.destination?.route ?: JairosoftAppScreen.Login.name
     )
 
     Scaffold(
@@ -71,17 +84,26 @@ fun JairosoftApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = JairosoftAppScreen.Initiial.name,
+            startDestination = JairosoftAppScreen.Signup.name,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = JairosoftAppScreen.Initiial.name) {
+            composable(route = JairosoftAppScreen.Login.name) {
+                val loginResult by loginViewModel.loginResult.collectAsState()
+
+                LaunchedEffect(loginResult) {
+                    if (loginResult != null) {
+                        navController.navigate(JairosoftAppScreen.Dashboard.name)
+                    }
+                }
+
                 LoginGroup(
                     onForgotPassword = {
                         navController.navigate(JairosoftAppScreen.Forgot.name)
                     },
-                    onLogin = {
-                        navController.navigate(JairosoftAppScreen.Dashboard.name)
-                    }
+                    onLogin = { email, password ->
+                        loginViewModel.loginUser(email, password)
+                    },
+                    loginViewModel = loginViewModel
                 )
             }
 
@@ -92,9 +114,15 @@ fun JairosoftApp() {
             composable(route = JairosoftAppScreen.Dashboard.name) {
                 DashboardGroup()
             }
+
+            composable(route = JairosoftAppScreen.Signup.name) {
+                SignUpScreen(navController
+                )
+            }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

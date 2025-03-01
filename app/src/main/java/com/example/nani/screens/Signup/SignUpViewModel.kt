@@ -61,5 +61,7 @@ class SignUpViewModel(private val repository: UserRepository) : ViewModel() {
             repository.insertUser(newUser)
             Log.d("SignUp", "User Registered: $userEmail")
         }
+
     }
+
 }
