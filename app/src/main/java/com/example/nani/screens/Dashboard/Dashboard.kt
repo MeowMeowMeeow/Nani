@@ -3,6 +3,7 @@ package com.example.nani.screens.Dashboard
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
 import java.text.SimpleDateFormat
@@ -24,18 +26,23 @@ import java.util.*
 @Composable
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
-    Column {
-        Box {
+    Surface ( color = MaterialTheme.colorScheme.background,
+        modifier = Modifier.fillMaxSize()){
+    Column ( modifier = Modifier
+        .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)){
+        Box(modifier = Modifier.padding(bottom = 5.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.jairosoft),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp)
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.jairosoft),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(40.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
 
 
                 Text(
@@ -44,14 +51,14 @@ fun DashboardScreen(navController: NavHostController) {
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge,
 
-                    )
 
+                    )
             }
         }
+        Spacer(modifier = Modifier.height(14.dp))
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(16.dp)
+
         ) {
             // Left-aligned Company Logo and Name
 
@@ -66,22 +73,22 @@ fun DashboardScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             // Today's Date Card
-            DashboardCard(
+            DateDashboardCard(
                 icon = R.drawable.calendar,
                 title = "Today is $currentDate",
                 subtitle = "Have a productive day!"
             )
-
+            Spacer(modifier = Modifier.height(30.dp))
             // On-Going Projects Card
-            DashboardCard(
+            ProjectsCard(
                 icon = R.drawable.folder,
                 title = "On-Going Projects",
                 subtitle = "--  --  --"
             )
-
+            Spacer(modifier = Modifier.height(30.dp))
             // Attendance Card
             AttendanceCard()
-
+            Spacer(modifier = Modifier.height(30.dp))
             // Tracked Hours Card
             TrackedHoursCard()
         }
@@ -89,15 +96,16 @@ fun DashboardScreen(navController: NavHostController) {
 
     }
 }
+    }
 
 @Composable
-fun DashboardCard(icon: Int, title: String, subtitle: String) {
+fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -116,13 +124,39 @@ fun DashboardCard(icon: Int, title: String, subtitle: String) {
 }
 
 @Composable
+fun ProjectsCard(icon: Int, title: String, subtitle: String) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+    ) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = "Icon",
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
+                Text(text = title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = subtitle, fontSize = 12.sp, color = Color.Gray)
+            }
+        }
+    }
+}
+
+
+@Composable
 fun AttendanceCard() {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -170,10 +204,12 @@ fun AttendanceCard() {
 fun TrackedHoursCard() {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+
+
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -196,3 +232,13 @@ fun TrackedHoursCard() {
     }
 }
 
+@Composable
+@Preview(name = "Light Theme", showBackground = true)
+@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+fun PreviewDash(){
+    NaNiTheme {
+        DashboardScreen(
+            navController = rememberNavController()
+        )
+    }
+}

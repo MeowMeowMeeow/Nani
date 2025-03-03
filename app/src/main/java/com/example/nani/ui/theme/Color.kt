@@ -14,7 +14,7 @@ val Dark_Error = Color(0xFFFF6B6B)
 val Dark_bar = Color(0xFF2C2C2C)
 val White_bar = Color(0xFFFFFFFF)
 
-val Gray = Color(0xFF666666)
+
 val White = Color(0xFFFFFFFF)
 
 val Light_Text = Color(0xFF091747)
@@ -27,5 +27,5 @@ val Light_Title = Color(0xFF4f5051)
 
 
 
-val Light_icon = Color(0xFFFFFFFF)
+val Gray = Color(0xFF666666)
 val Dark_icon = Color(0xFF7269E3)

@@ -49,6 +49,7 @@ import com.example.nani.screens.Signup.SignUpScreen
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.bottomIconColor
 import com.example.nani.ui.theme.components.bottomIconImageColor
+import kotlinx.coroutines.delay
 
 enum class JairosoftAppScreen(@StringRes val title: Int) {
     Login(title = R.string.app_name),
@@ -71,9 +72,11 @@ fun JairosoftApp() {
         backStackEntry?.destination?.route ?: JairosoftAppScreen.Login.name
     )
 
+    val loginResult by loginViewModel.loginResult.collectAsState()
+
     Scaffold(
         bottomBar = {
-            if (currentScreen in listOf(
+            if (loginResult != null && currentScreen in listOf(
                     JairosoftAppScreen.Dashboard,
                     JairosoftAppScreen.Analytics,
                     JairosoftAppScreen.Projects,
@@ -91,8 +94,9 @@ fun JairosoftApp() {
         ) {
             composable(route = JairosoftAppScreen.Login.name) {
                 val loginResult by loginViewModel.loginResult.collectAsState()
-                LaunchedEffect(loginResult) {
-                    if (loginResult != null) {
+                loginResult?.let {
+                    LaunchedEffect(Unit) {
+                        delay(1000) // 1-second delay before navigation
                         navController.navigate(JairosoftAppScreen.Dashboard.name) {
                             popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
                         }

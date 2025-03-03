@@ -21,7 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = White,
     onSecondary =Dark_bar,
     onError = Dark_Error,
-
+    onSecondaryContainer = Dark_icon
 
 )
 
@@ -35,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = White,
     onSecondary = White_bar,
     onError = White_Error,
+    onSecondaryContainer = Gray
 
 
 
