@@ -5,7 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +29,9 @@ import java.util.*
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
     Surface ( color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()){
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState())){
+
     Column ( modifier = Modifier
         .padding(top = 10.dp, start = 10.dp, end = 10.dp)
         .fillMaxSize()
@@ -102,22 +106,24 @@ fun DashboardScreen(navController: NavHostController) {
 fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
     ) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = "Icon",
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
+
                 Text(text = title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
-                Text(text = subtitle, fontSize = 12.sp, color = Color.Gray)
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = subtitle, fontSize = 12.sp, color =  MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -127,22 +133,23 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
 fun ProjectsCard(icon: Int, title: String, subtitle: String) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
     ) {
-        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = "Icon",
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
                 Text(text = title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
-                Text(text = subtitle, fontSize = 12.sp, color = Color.Gray)
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = subtitle, fontSize = 12.sp, color =  MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -153,7 +160,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
 fun AttendanceCard() {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
@@ -164,7 +171,7 @@ fun AttendanceCard() {
                     painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Calendar Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Attendance", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
@@ -173,16 +180,18 @@ fun AttendanceCard() {
                     painter = painterResource(id = R.drawable.time),
                     contentDescription = "Clock Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Date", fontSize = 14.sp, color = Color.Gray)
-                Text(text = "Time In", fontSize = 14.sp, color = Color.Gray)
-                Text(text = "Time Out", fontSize = 14.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(15.dp))
+            Row(modifier = Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5F))
+                , horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(text = "Date", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Time In", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Time Out", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = { /* TODO: Show attendance details */ },
                 modifier = Modifier.fillMaxWidth(),
@@ -204,7 +213,7 @@ fun AttendanceCard() {
 fun TrackedHoursCard() {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
@@ -217,16 +226,18 @@ fun TrackedHoursCard() {
                     painter = painterResource(id = R.drawable.time),
                     contentDescription = "Clock Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Tracked Hours", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Column {
-                Text(text = "0               2              4              6              8              10", fontSize = 14.sp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "M\nT\nW\nT\nF\nS\nS", fontSize = 14.sp, color = Color.Gray)
+            Column() {
+                Text(text = "0               2              4              6              8              10", fontSize = 14.sp, color =  MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5f))
+                            .fillMaxWidth())
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = "M\n\nT\n\nW\n\nT\n\nF\n\nS\n\nS", fontSize = 14.sp, color =  MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -241,4 +252,5 @@ fun PreviewDash(){
             navController = rememberNavController()
         )
     }
+
 }

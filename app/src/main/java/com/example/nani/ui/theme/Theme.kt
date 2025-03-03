@@ -21,7 +21,10 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = White,
     onSecondary =Dark_bar,
     onError = Dark_Error,
-    onSecondaryContainer = Dark_icon
+    onSecondaryContainer = Dark_icon,
+    surfaceVariant = Light_LightGray,
+    surfaceDim = Dark_background,
+    secondaryContainer = Dark_Gray
 
 )
 
@@ -35,7 +38,10 @@ private val LightColorScheme = lightColorScheme(
     tertiary = White,
     onSecondary = White_bar,
     onError = White_Error,
-    onSecondaryContainer = Gray
+    onSecondaryContainer = Gray,
+    surfaceVariant = Dark_icon,
+    surfaceDim = Light_background,
+    secondaryContainer = White
 
 
 
