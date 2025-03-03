@@ -121,9 +121,9 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
             Spacer(modifier = Modifier.width(8.dp))
             Column {
 
-                Text(text = title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = title,  style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = subtitle, fontSize = 12.sp, color =  MaterialTheme.colorScheme.onSurface)
+                Text(text = subtitle,style = MaterialTheme.typography.bodyMedium, color =  MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -147,7 +147,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(text = title, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(text = subtitle, fontSize = 12.sp, color =  MaterialTheme.colorScheme.onSurface)
             }
@@ -174,7 +174,7 @@ fun AttendanceCard() {
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Attendance", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Attendance", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.weight(1f))
                 Image(
                     painter = painterResource(id = R.drawable.time),
@@ -187,9 +187,9 @@ fun AttendanceCard() {
             Row(modifier = Modifier.fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5F))
                 , horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Date", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
-                Text(text = "Time In", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
-                Text(text = "Time Out", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Date", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Time In", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Time Out", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
             }
             Spacer(modifier = Modifier.height(15.dp))
             Button(
@@ -229,15 +229,15 @@ fun TrackedHoursCard() {
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Tracked Hours", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "Tracked Hours", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
             }
             Spacer(modifier = Modifier.height(8.dp))
             Column() {
-                Text(text = "0               2              4              6              8              10", fontSize = 14.sp, color =  MaterialTheme.colorScheme.onSurface,
+                Text(text = "0               2              4              6              8              10",style =  MaterialTheme.typography.labelSmall, color =  MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5f))
                             .fillMaxWidth())
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "M\n\nT\n\nW\n\nT\n\nF\n\nS\n\nS", fontSize = 14.sp, color =  MaterialTheme.colorScheme.onSurface)
+                Text(text = "M\n\nT\n\nW\n\nT\n\nF\n\nS\n\nS", style =  MaterialTheme.typography.labelSmall, color =  MaterialTheme.colorScheme.onSurface)
             }
         }
     }

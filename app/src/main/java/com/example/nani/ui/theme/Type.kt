@@ -56,4 +56,9 @@ val CustomTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 10.sp,
     ),
+    bodyMedium = TextStyle(
+        fontFamily = PoppinsRegular,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+    )
 )
