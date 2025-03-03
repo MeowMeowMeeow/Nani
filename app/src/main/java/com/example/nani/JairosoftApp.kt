@@ -40,7 +40,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nani.screens.Dashboard.DashboardGroup
+import com.example.nani.screens.Dashboard.DashboardScreen
 import com.example.nani.screens.PopUps.ForgotPasswordScreen
 import com.example.nani.screens.Login.LoginGroup
 import com.example.nani.ui.theme.NaNiTheme
@@ -90,7 +90,7 @@ fun JairosoftApp() {
             }
 
             composable(route = JairosoftAppScreen.Dashboard.name) {
-                DashboardGroup()
+                DashboardScreen()
             }
         }
     }
