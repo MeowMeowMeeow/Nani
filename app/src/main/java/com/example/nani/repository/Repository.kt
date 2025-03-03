@@ -21,7 +21,9 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun login(email: String, password: String): UserEntity? {
         return userDao.login(email, password)
-    } //to be applied
+    }
+
+
 }
 
 class SignUpViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

@@ -1,30 +1,23 @@
-package com.example.nani
+package com.example.nani.screens.Dashboard
+
 
 import android.content.res.Configuration
-import androidx.compose.ui.unit.dp
-
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,41 +27,44 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.nani.R
 import com.example.nani.repository.LoginViewModelFactory
-import com.example.nani.screens.Dashboard.DashboardGroup
+import com.example.nani.screens.Analytics.AnalyticsScreen
 import com.example.nani.screens.PopUps.ForgotPasswordScreen
 import com.example.nani.screens.Login.LoginGroup
 import com.example.nani.screens.Login.LoginViewModel
+import com.example.nani.screens.Profile.ProfileScreen
+import com.example.nani.screens.Projects.ProjectsScreen
 import com.example.nani.screens.Signup.SignUpScreen
-import com.example.nani.screens.Signup.SignUpScreenGroup
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.bottomIconColor
+import com.example.nani.ui.theme.components.bottomIconImageColor
 
 enum class JairosoftAppScreen(@StringRes val title: Int) {
     Login(title = R.string.app_name),
     Forgot(title = R.string.forgot_password),
     Signup(title = R.string.signup),
-    Dashboard(title = R.string.lblDashboard)
+    Dashboard(title = R.string.lblDashboard),
+    Analytics(title = R.string.lblAnalytics),
+    Projects(title = R.string.lblprojects),
+    Profile(title = R.string.lblprofile)
 
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JairosoftApp() {
     val context = LocalContext.current
-    val loginViewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(context)
-    )
-
+    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = JairosoftAppScreen.valueOf(
@@ -77,135 +73,128 @@ fun JairosoftApp() {
 
     Scaffold(
         bottomBar = {
-            if (currentScreen == JairosoftAppScreen.Dashboard) {
-                JairosoftAppBar()
+            if (currentScreen in listOf(
+                    JairosoftAppScreen.Dashboard,
+                    JairosoftAppScreen.Analytics,
+                    JairosoftAppScreen.Projects,
+                    JairosoftAppScreen.Profile
+                )
+            ) {
+                JairosoftAppBar(navController)
             }
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = JairosoftAppScreen.Signup.name,
+            startDestination = JairosoftAppScreen.Login.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = JairosoftAppScreen.Login.name) {
                 val loginResult by loginViewModel.loginResult.collectAsState()
-
                 LaunchedEffect(loginResult) {
                     if (loginResult != null) {
-                        navController.navigate(JairosoftAppScreen.Dashboard.name)
+                        navController.navigate(JairosoftAppScreen.Dashboard.name) {
+                            popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+                        }
                     }
                 }
-
                 LoginGroup(
-                    onForgotPassword = {
-                        navController.navigate(JairosoftAppScreen.Forgot.name)
-                    },
-                    onLogin = { email, password ->
-                        loginViewModel.loginUser(email, password)
-                    },
+                    onForgotPassword = { navController.navigate(JairosoftAppScreen.Forgot.name) },
+                    onLogin = { email, password -> loginViewModel.loginUser(email, password) },
                     loginViewModel = loginViewModel
                 )
             }
 
-            composable(route = JairosoftAppScreen.Forgot.name) {
-                ForgotPasswordScreen(navController)
-            }
-
+            composable(route = JairosoftAppScreen.Forgot.name) { ForgotPasswordScreen(navController) }
             composable(route = JairosoftAppScreen.Dashboard.name) {
-                DashboardGroup()
+                Log.d("NavDebug", "DashboardScreen Composable loaded")
+                DashboardScreen(navController)
             }
-
-            composable(route = JairosoftAppScreen.Signup.name) {
-                SignUpScreen(navController
-                )
-            }
+            composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
+            composable(route = JairosoftAppScreen.Analytics.name) { AnalyticsScreen(navController) }
+            composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
+            composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JairosoftAppBar() {
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.height(80.dp),
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                tonalElevation = 8.dp,
-                contentPadding = PaddingValues(horizontal = 10.dp),
-                actions = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
-                        Row {
-                            Spacer(modifier = Modifier.width(5.dp))
-                            BottomBarIcons(R.drawable.dashboard, "Dashboard")
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            BottomBarIcons(R.drawable.analytics, "Analytics")
-                        }
-                        Spacer(modifier = Modifier.padding(40.dp))
-                        Row {
-                            BottomBarIcons(R.drawable.projects, "Projects")
-                            Spacer(modifier = Modifier.padding(10.dp))
-                            BottomBarIcons(R.drawable.profile, "Profile")
-
-                        }
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* FAB Action */ },
-                shape = CircleShape,
-                containerColor = Color.Green,
-                elevation = FloatingActionButtonDefaults.elevation(12.dp),
-                modifier = Modifier
-                    .size(80.dp)
-                    .offset(y = 50.dp, x = 8.dp) // Moves ang Cicle
-
-
+fun JairosoftAppBar(navController: NavController) {
+    BottomAppBar(
+        modifier = Modifier.height(80.dp),
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        tonalElevation = 8.dp,
+        contentPadding = PaddingValues(horizontal = 10.dp),
+        actions = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                Row {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    BottomNavItem(
+                        navController,
+                        JairosoftAppScreen.Dashboard,
+                        R.drawable.dashboard,
+                        "Dashboard"
+                    )
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    BottomNavItem(
+                        navController,
+                        JairosoftAppScreen.Analytics,
+                        R.drawable.analytics,
+                        "Analytics"
+                    )
+                }
+                Spacer(modifier = Modifier.padding(35.dp))
+                Row {
+                    BottomNavItem(
+                        navController,
+                        JairosoftAppScreen.Projects,
+                        R.drawable.projects,
+                        "Projects"
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    BottomNavItem(
+                        navController,
+                        JairosoftAppScreen.Profile,
+                        R.drawable.profile,
+                        "Profile"
+                    )
+                }
             }
-
-        },
-        floatingActionButtonPosition = FabPosition.Center
-    )     { innerPadding -> Box(modifier = Modifier.padding(innerPadding)) { } }
-
+        }
+    )
 }
 
-
-
 @Composable
-fun BottomBarIcons(iconRes: Int, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .clickable {
+                navController.navigate(screen.name) {
+                    popUpTo(screen.name) { inclusive = true }
+                }
+            }
+            .fillMaxHeight()
+    ) {
         Image(
-            painter = painterResource(id = iconRes),
+            painter = painterResource(icon),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-
+            colorFilter = bottomIconImageColor(navController, screen)
         )
-        Text(text = label,
+        Text(
+            text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurface)
+            color = bottomIconColor(navController, screen)
+        )
     }
 }
 
 
-
-@Preview(name = "Light Theme", showBackground = true)
-@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun Appbarpreview()
-{
-    NaNiTheme {
-        JairosoftAppBar()
-    }
-}
 
 
 

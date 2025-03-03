@@ -54,11 +54,12 @@
     import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
     import androidx.lifecycle.viewmodel.compose.viewModel
     import androidx.navigation.NavHostController
-    import com.example.nani.JairosoftAppScreen
+
     import com.example.nani.R
     import com.example.nani.data.UserDatabase
     import com.example.nani.repository.SignUpViewModelFactory
     import com.example.nani.repository.UserRepository
+    import com.example.nani.screens.Dashboard.JairosoftAppScreen
     import com.example.nani.ui.theme.NaNiTheme
 
 
@@ -81,7 +82,7 @@
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
             onUserVPass = { viewModel.updateVerifyPassword(it) },
-            onRegister = { viewModel.registerUser() },
+            onRegister = {navController.navigate(JairosoftAppScreen.Dashboard.name) },
             alreadyHaveAnAccount = { navController.navigate(JairosoftAppScreen.Login.name)}
         )
     }

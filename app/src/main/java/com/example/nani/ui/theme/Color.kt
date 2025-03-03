@@ -24,3 +24,8 @@ val Light_LightGray = Color(0xFFf0f2f6)
 val Light_Gray = Color(0xFF7b7b7b)
 val Light_Blue = Color(0xFF5f71ca)
 val Light_Title = Color(0xFF4f5051)
+
+
+
+val Light_icon = Color(0xFFFFFFFF)
+val Dark_icon = Color(0xFF7269E3)

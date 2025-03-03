@@ -63,7 +63,7 @@
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
             onLogin = { email, password -> viewModel.loginUser(email, password) },
-            onForgotPassword = { /* Handle forgot password action */ },
+            onForgotPassword = {  },
             loginViewModel = viewModel // Pass the ViewModel instance
         )
     }

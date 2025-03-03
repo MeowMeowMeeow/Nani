@@ -38,7 +38,7 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel()  {
             val user = repository.login(email, password)
             viewModelScope.launch(Dispatchers.Main) { // Ensure state is updated on Main thread
                 if (user != null) {
-                    _loginResult.value = user // ✅ User exists, allow login
+                    _loginResult.value = user // User exists, allow login
                 } else {
                     _errorMessage.value = "Invalid email or password"
                 }

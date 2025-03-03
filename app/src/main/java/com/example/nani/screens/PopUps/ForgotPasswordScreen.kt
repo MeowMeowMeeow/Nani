@@ -41,7 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+
 import com.example.nani.R
+import com.example.nani.screens.Dashboard.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
 
 //DAPAT POP UP pero gi wholescreen lang sa nako
@@ -53,7 +55,7 @@ fun ForgotPasswordScreen(navController: NavHostController) {
     ){
         ForgotPasswordGroup(
             onUserEmail = {},
-            onBackClick = {},
+            onBackClick = {navController.navigate(JairosoftAppScreen.Login.name)},
             modifier = Modifier,
 
         )

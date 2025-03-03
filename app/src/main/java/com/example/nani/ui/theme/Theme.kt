@@ -20,7 +20,8 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = Dark_Text,
     tertiary = White,
     onSecondary =Dark_bar,
-    onError = Dark_Error
+    onError = Dark_Error,
+
 
 )
 
@@ -34,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = White,
     onSecondary = White_bar,
     onError = White_Error,
+
 
 
 

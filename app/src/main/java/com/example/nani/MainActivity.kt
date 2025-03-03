@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.nani.screens.Dashboard.JairosoftApp
 import com.example.nani.screens.Signup.SignUpScreen
 import com.example.nani.ui.theme.NaNiTheme
 
