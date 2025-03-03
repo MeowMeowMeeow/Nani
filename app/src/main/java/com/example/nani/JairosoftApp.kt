@@ -115,7 +115,7 @@ fun JairosoftApp() {
                 )
             ) {
                 FloatingActionButton(
-                    onClick = { /* FAB Action */ },
+                    onClick = {},
                     shape = CircleShape,
                     containerColor = Color.Green,
                     elevation = FloatingActionButtonDefaults.elevation(12.dp),
