@@ -11,6 +11,7 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -45,6 +46,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -93,9 +95,14 @@ fun JairosoftApp() {
         animationSpec = tween(durationMillis = 300),
         label = "FAB Color Animation"
     )
+    val fabRotation by animateFloatAsState(
+        targetValue = if (isGreen) 0f else 180f,
+        animationSpec = tween(durationMillis = 300),
+        label = "FAB Rotation Animation"
+    )
     val loginResult by loginViewModel.loginResult.collectAsState()
 
-
+    val fabIcon = if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
     val showBottomBarAndFab = loginResult != null && currentScreen in listOf(
         JairosoftAppScreen.Dashboard,
         JairosoftAppScreen.Analytics,
@@ -123,7 +130,12 @@ fun JairosoftApp() {
                         .size(80.dp)
                         .offset(y = 50.dp)
                 ){
-                    Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                    Icon(
+                        painter = fabIcon,
+                        contentDescription = "FAB Icon",
+                        tint = Color.White,
+                        modifier = Modifier.rotate(fabRotation)
+                    )
                 }
             }
         },
