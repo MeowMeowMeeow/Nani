@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import android.content.res.Configuration
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -85,7 +87,12 @@ fun JairosoftApp() {
     val currentScreen = JairosoftAppScreen.valueOf(
         backStackEntry?.destination?.route ?: JairosoftAppScreen.Login.name
     )
-
+    var isGreen by remember { mutableStateOf(true) }
+    val fabColor by animateColorAsState(
+        targetValue = if (isGreen) Color.Green else Color.Red,
+        animationSpec = tween(durationMillis = 300),
+        label = "FAB Color Animation"
+    )
     val loginResult by loginViewModel.loginResult.collectAsState()
 
 
@@ -104,15 +111,18 @@ fun JairosoftApp() {
         },
         floatingActionButton = {
             if (showBottomBarAndFab) {
+
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = {
+                        isGreen = !isGreen
+                    },
                     shape = CircleShape,
-                    containerColor = Color.Green,
+                    containerColor = fabColor,
                     elevation = FloatingActionButtonDefaults.elevation(12.dp),
                     modifier = Modifier
                         .size(80.dp)
                         .offset(y = 50.dp)
-                ) {
+                ){
                     Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
                 }
             }
@@ -184,6 +194,7 @@ fun JairosoftAppBar(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.padding(35.dp))
                 Row {
+                    Spacer(modifier = Modifier.padding(start= 10.dp))
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Projects,
