@@ -19,5 +19,6 @@
     <string name="lblAnalytics">Analytics</string>
     <string name="lblprojects">Projects</string>
     <string name="lblprofile">Profile</string>
+    <string name="_10">10</string>
 
 </resources>

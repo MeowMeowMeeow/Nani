@@ -12,9 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.ProgressBar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +30,8 @@ import java.util.*
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
     Surface ( color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())){
 
     Column ( modifier = Modifier
@@ -109,7 +111,11 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSecondaryContainer,
+                shape = RoundedCornerShape(12.dp)
+            )
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
             Image(
@@ -136,7 +142,11 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSecondaryContainer,
+                shape = RoundedCornerShape(12.dp)
+            )
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
             Image(
@@ -163,7 +173,11 @@ fun AttendanceCard() {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSecondaryContainer,
+                shape = RoundedCornerShape(12.dp)
+            )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -184,7 +198,8 @@ fun AttendanceCard() {
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
-            Row(modifier = Modifier.fillMaxWidth()
+            Row(modifier = Modifier
+                .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5F))
                 , horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(text = "Date", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
@@ -216,7 +231,11 @@ fun TrackedHoursCard() {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp,MaterialTheme.colorScheme.onSecondaryContainer, shape = RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.onSecondaryContainer,
+                shape = RoundedCornerShape(12.dp)
+            )
 
 
     ) {
@@ -229,15 +248,87 @@ fun TrackedHoursCard() {
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Tracked Hours", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    text = "Tracked Hours",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Column() {
-                Text(text = "0               2              4              6              8              10",style =  MaterialTheme.typography.labelSmall, color =  MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5f))
-                            .fillMaxWidth())
+
+                Text(
+                    text = "0          2           4           6           8           10",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5f))
+                        .fillMaxWidth()
+                        .padding(start = 30.dp)
+                )
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "M\n\nT\n\nW\n\nT\n\nF\n\nS\n\nS", style =  MaterialTheme.typography.labelSmall, color =  MaterialTheme.colorScheme.onSurface)
+                Row {
+                    Column(
+                    ) {
+                        Text(
+                            text = "M",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Text(
+                            text = "T",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Text(
+                            text = "W",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Text(
+                            text = "Th",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Text(
+                            text = "F",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Column {
+                        ProgressBar(
+                            modifier = Modifier,
+                            progress = 0.8f
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        ProgressBar(
+                            modifier = Modifier,
+                            progress = 0.65f
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        ProgressBar(
+                            modifier = Modifier,
+                            progress = 0.75f
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        ProgressBar(
+                            modifier = Modifier,
+                            progress = 0.72f
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        ProgressBar(
+                            modifier = Modifier,
+                            progress = 0.78f
+                        )
+                    }
+                }
             }
         }
     }
