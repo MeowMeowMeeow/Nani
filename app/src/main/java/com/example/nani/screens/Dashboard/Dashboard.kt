@@ -90,7 +90,7 @@ fun DashboardScreen(navController: NavHostController) {
             ProjectsCard(
                 icon = R.drawable.folder,
                 title = "On-Going Projects",
-                subtitle = "--  --  --"
+                subtitle = "--               --                --"
             )
             Spacer(modifier = Modifier.height(30.dp))
             // Attendance Card
@@ -263,7 +263,7 @@ fun TrackedHoursCard() {
             Column() {
 
                 Text(
-                    text = "0          2           4           6           8           10",
+                    text = "0            2            4            6            8            10",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
@@ -298,7 +298,7 @@ fun TrackedHoursCard() {
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "F",
                             style = MaterialTheme.typography.labelSmall,
@@ -312,22 +312,22 @@ fun TrackedHoursCard() {
                             modifier = Modifier,
                             progress = 0.8f
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(17.dp))
                         ProgressBar(
                             modifier = Modifier,
                             progress = 0.65f
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(17.dp))
                         ProgressBar(
                             modifier = Modifier,
                             progress = 0.75f
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(17.dp))
                         ProgressBar(
                             modifier = Modifier,
                             progress = 0.72f
                         )
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(17.dp))
                         ProgressBar(
                             modifier = Modifier,
                             progress = 0.78f
