@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
@@ -93,7 +94,9 @@ fun DashboardScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(30.dp))
             // Attendance Card
-            AttendanceCard()
+            AttendanceCard(
+                navController = navController
+            )
             Spacer(modifier = Modifier.height(30.dp))
             // Tracked Hours Card
             TrackedHoursCard()
@@ -167,7 +170,9 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
 
 
 @Composable
-fun AttendanceCard() {
+fun AttendanceCard(
+                   navController: NavController
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -208,7 +213,7 @@ fun AttendanceCard() {
             }
             Spacer(modifier = Modifier.height(15.dp))
             Button(
-                onClick = { /* TODO: Show attendance details */ },
+                onClick = {JairosoftAppScreen.Analytics},
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary

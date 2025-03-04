@@ -87,33 +87,23 @@ fun JairosoftApp() {
     )
 
     val loginResult by loginViewModel.loginResult.collectAsState()
-    var showBottomBarAndFab by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
 
-        showBottomBarAndFab = true
-    }
+    val showBottomBarAndFab = loginResult != null && currentScreen in listOf(
+        JairosoftAppScreen.Dashboard,
+        JairosoftAppScreen.Analytics,
+        JairosoftAppScreen.Projects,
+        JairosoftAppScreen.Profile
+    )
 
     Scaffold(
         bottomBar = {
-            if (showBottomBarAndFab && loginResult != null && currentScreen in listOf(
-                    JairosoftAppScreen.Dashboard,
-                    JairosoftAppScreen.Analytics,
-                    JairosoftAppScreen.Projects,
-                    JairosoftAppScreen.Profile
-                )
-            ) {
+            if (showBottomBarAndFab) {
                 JairosoftAppBar(navController)
             }
         },
         floatingActionButton = {
-            if (showBottomBarAndFab && loginResult != null && currentScreen in listOf(
-                    JairosoftAppScreen.Dashboard,
-                    JairosoftAppScreen.Analytics,
-                    JairosoftAppScreen.Projects,
-                    JairosoftAppScreen.Profile
-                )
-            ) {
+            if (showBottomBarAndFab) {
                 FloatingActionButton(
                     onClick = {},
                     shape = CircleShape,
@@ -135,9 +125,8 @@ fun JairosoftApp() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = JairosoftAppScreen.Login.name) {
-                val loginResult by loginViewModel.loginResult.collectAsState()
                 loginResult?.let {
-                    LaunchedEffect(Unit) {
+                    LaunchedEffect(loginResult) {
                         navController.navigate(JairosoftAppScreen.Dashboard.name) {
                             popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
                         }
@@ -162,6 +151,7 @@ fun JairosoftApp() {
         }
     }
 }
+
 
 
 @Composable

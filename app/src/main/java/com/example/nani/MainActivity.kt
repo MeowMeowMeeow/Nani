@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier
                 ) {
-                   DashboardScreen(navController = rememberNavController())
+                 JairosoftApp()
 
                 }
             }

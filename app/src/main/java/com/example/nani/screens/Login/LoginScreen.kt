@@ -1,6 +1,7 @@
     package com.example.nani.screens.Login
 
     import android.content.res.Configuration
+    import android.widget.Toast
     import androidx.compose.material3.ButtonDefaults
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
@@ -51,23 +52,35 @@
 
     @Composable
     fun LoginScreen() {
-        val context = LocalContext.current.applicationContext // Use application context
-        val factory = LoginViewModelFactory(context) // Pass it to ViewModel factory
+        val context = LocalContext.current
+        val factory = LoginViewModelFactory(context)
         val viewModel: LoginViewModel = viewModel(factory = factory)
 
         val email by viewModel.email.collectAsState()
         val password by viewModel.password.collectAsState()
+        val loginResult by viewModel.loginResult.collectAsState()
+        val errorMessage by viewModel.errorMessage.collectAsState()
+
+        // Handle login success
+        loginResult?.let {
+            Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+            // Navigate to home screen or perform further actions
+        }
+
+        // Handle error message
+        errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
 
         LoginGroup(
-            modifier = Modifier, // If not needed, remove it from LoginGroup's parameters
+            modifier = Modifier,
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
             onLogin = { email, password -> viewModel.loginUser(email, password) },
-            onForgotPassword = {  },
-            loginViewModel = viewModel // Pass the ViewModel instance
+            onForgotPassword = { },
+            loginViewModel = viewModel
         )
     }
-
 
 
 

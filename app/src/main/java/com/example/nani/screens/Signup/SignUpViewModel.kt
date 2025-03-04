@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class SignUpViewModel(private val repository: UserRepository) : ViewModel() {
@@ -39,7 +40,7 @@ class SignUpViewModel(private val repository: UserRepository) : ViewModel() {
         _verifyPassword.value = newVerifyPassword
     }
 
-    fun registerUser() {
+    fun registerUser(onSuccess: () -> Unit) {
         val userEmail = email.value.trim()
         val userPass = password.value.trim()
         val userVPass = verifyPassword.value.trim()
@@ -56,12 +57,17 @@ class SignUpViewModel(private val repository: UserRepository) : ViewModel() {
 
         val newUser = UserEntity(id = 0, userId = UUID.randomUUID().toString(), email = userEmail, password = userPass)
 
-
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertUser(newUser)
             Log.d("SignUp", "User Registered: $userEmail")
-        }
 
+            // Call the success callback on the main thread
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
+        }
     }
+
+
 
 }

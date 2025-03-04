@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel()  {
@@ -32,17 +33,20 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel()  {
     fun updatePassword(newPassword: String) {
         _password.value = newPassword
     }
+    fun setLoginResult(user: UserEntity?) {
+        _loginResult.value = user
+    }
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = repository.login(email, password)
-            viewModelScope.launch(Dispatchers.Main) { // Ensure state is updated on Main thread
-                if (user != null) {
-                    _loginResult.value = user // User exists, allow login
-                } else {
-                    _errorMessage.value = "Invalid email or password"
-                }
+            withContext(Dispatchers.Main) {  // Ensure state updates happen on the main thread
+                _loginResult.value = user
+                _errorMessage.value = if (user == null) "Invalid email or password" else null
             }
         }
     }
+
+
+
 }

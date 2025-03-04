@@ -1,6 +1,5 @@
     package com.example.nani.screens.Signup
 
-    import android.content.Context
     import android.content.res.Configuration
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
@@ -49,17 +48,15 @@
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.tooling.preview.Preview
     import androidx.compose.ui.unit.dp
-    import androidx.lifecycle.ViewModel
-    import androidx.lifecycle.ViewModelProvider
-    import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
     import androidx.lifecycle.viewmodel.compose.viewModel
     import androidx.navigation.NavHostController
 
     import com.example.nani.R
-    import com.example.nani.data.UserDatabase
+    import com.example.nani.data.UserEntity
+    import com.example.nani.repository.LoginViewModelFactory
     import com.example.nani.repository.SignUpViewModelFactory
-    import com.example.nani.repository.UserRepository
     import com.example.nani.screens.Dashboard.JairosoftAppScreen
+    import com.example.nani.screens.Login.LoginViewModel
     import com.example.nani.ui.theme.NaNiTheme
 
 
@@ -70,6 +67,9 @@
         val context = LocalContext.current
         val factory = SignUpViewModelFactory(context)
         val viewModel: SignUpViewModel = viewModel(factory = factory)
+
+        // Obtain loginViewModel here
+        val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
 
         val email by viewModel.email.collectAsState()
         val password by viewModel.password.collectAsState()
@@ -82,10 +82,17 @@
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
             onUserVPass = { viewModel.updateVerifyPassword(it) },
-            onRegister = {navController.navigate(JairosoftAppScreen.Dashboard.name) },
-            alreadyHaveAnAccount = { navController.navigate(JairosoftAppScreen.Login.name)}
+            onRegister = {
+                viewModel.registerUser {
+                    loginViewModel.setLoginResult(UserEntity(id = 0, userId = "", email = "", password = ""))
+                    navController.navigate(JairosoftAppScreen.Dashboard.name)
+                }
+            }
+            ,
+            alreadyHaveAnAccount = { navController.navigate(JairosoftAppScreen.Login.name) }
         )
     }
+
 
 
     @OptIn(ExperimentalMaterial3Api::class)
