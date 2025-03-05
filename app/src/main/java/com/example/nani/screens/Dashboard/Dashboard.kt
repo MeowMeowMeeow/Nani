@@ -116,7 +116,7 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
             .fillMaxWidth()
             .border(
                 1.dp,
-                MaterialTheme.colorScheme.onSecondaryContainer,
+                MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
@@ -147,7 +147,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
             .fillMaxWidth()
             .border(
                 1.dp,
-                MaterialTheme.colorScheme.onSecondaryContainer,
+                MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
@@ -180,7 +180,7 @@ fun AttendanceCard(
             .fillMaxWidth()
             .border(
                 1.dp,
-                MaterialTheme.colorScheme.onSecondaryContainer,
+                MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
@@ -205,7 +205,7 @@ fun AttendanceCard(
             Spacer(modifier = Modifier.height(15.dp))
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5F))
+                .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F))
                 , horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(text = "Date", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
                 Text(text = "Time In", style =  MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
@@ -238,7 +238,7 @@ fun TrackedHoursCard() {
             .fillMaxWidth()
             .border(
                 1.dp,
-                MaterialTheme.colorScheme.onSecondaryContainer,
+                MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -267,7 +267,7 @@ fun TrackedHoursCard() {
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.5f))
+                        .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3f))
                         .fillMaxWidth()
                         .padding(start = 30.dp)
                 )

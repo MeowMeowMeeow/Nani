@@ -94,7 +94,7 @@ fun JairosoftApp() {
     )
     var isGreen by remember { mutableStateOf(true) }
     val fabColor by animateColorAsState(
-        targetValue = if (isGreen) Color.Green else Color.Red,
+        targetValue = if (isGreen) MaterialTheme.colorScheme.tertiaryContainer else Color.Red,
         animationSpec = tween(durationMillis = 300),
         label = "FAB Color Animation"
     )
@@ -106,7 +106,7 @@ fun JairosoftApp() {
     val loginResult by loginViewModel.loginResult.collectAsState()
 
     val fabIcon = if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
-    val showBottomBarAndFab = loginResult != null && currentScreen in listOf(
+    val showBottomBarAndFab = currentScreen in listOf(
         JairosoftAppScreen.Dashboard,
         JairosoftAppScreen.Analytics,
         JairosoftAppScreen.Projects,
@@ -130,8 +130,8 @@ fun JairosoftApp() {
                     containerColor = fabColor,
                     elevation = FloatingActionButtonDefaults.elevation(12.dp),
                     modifier = Modifier
-                        .size(80.dp)
-                        .offset(y = 50.dp)
+                        .size(90.dp)
+                        .offset(y = 60.dp,x=8.dp)
                 ){
                     Icon(
                         painter = fabIcon,
@@ -146,7 +146,7 @@ fun JairosoftApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = JairosoftAppScreen.Login.name,
+            startDestination = JairosoftAppScreen.Dashboard.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = JairosoftAppScreen.Login.name) {

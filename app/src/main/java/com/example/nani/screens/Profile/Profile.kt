@@ -1,11 +1,15 @@
 package com.example.nani.screens.Profile
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,11 +17,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +47,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.nani.R
+import com.example.nani.screens.Dashboard.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
 
 @Composable
@@ -47,14 +58,15 @@ fun ProfileScreen(navController: NavHostController)
         .fillMaxSize()
         .verticalScroll(rememberScrollState()))
             {
-        ProfileGroup()
+        ProfileGroup(onLogout = {navController.navigate(JairosoftAppScreen.Login.name)})
     }
 }
 
 @Composable
-fun ProfileGroup() {
+fun ProfileGroup(onLogout: () -> Unit) {
 
     Column {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -68,12 +80,29 @@ fun ProfileGroup() {
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 MaterialTheme.colorScheme.background,
-                                MaterialTheme.colorScheme.secondary
+                                MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     )
             ) {
 
+                Row(modifier = Modifier.fillMaxWidth()
+                    .padding(end= 10.dp, top = 20.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable{onLogout()}){
+                        Text(
+                            text = "Log out",
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleSmall
+                            )
+                        Image(
+                            painter = painterResource(R.drawable.logout),
+                            contentDescription = "",
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
+                            modifier = Modifier.padding(5.dp)
+                                .size(24.dp)
+                        )
+                    }
+                }
 
                 Image(
                     painter = painterResource(R.drawable.arc),
@@ -83,7 +112,8 @@ fun ProfileGroup() {
                         .height(100.dp)
                         .align(Alignment.BottomCenter)
                         .offset(y = (30).dp)
-                        .zIndex(0f),
+                        .zIndex(0f)
+                        ,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
                 )
             }
@@ -96,13 +126,14 @@ fun ProfileGroup() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_launcher_background),
+                painter = painterResource(R.drawable.face),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(150.dp)
                     .clip(CircleShape)
-                    .border(1.dp, Color.LightGray, CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
                     .zIndex(2f)
+
 
 
             )
@@ -110,30 +141,94 @@ fun ProfileGroup() {
 
         }}
 
-Column(horizontalAlignment = Alignment.CenterHorizontally) {
+Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.padding(130.dp))
+        Text(
+            text = "Name Name",
+            style = MaterialTheme.typography.titleLarge, //from Type.kt refer in bubble.io specifics
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.primary, //Add sa theme later
+            modifier = Modifier,
 
-    Spacer(modifier = Modifier.padding(130.dp))
-    Text(
-        text = "Name Name",
-        style = MaterialTheme.typography.titleLarge, //from Type.kt refer in bubble.io specifics
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colorScheme.primary, //Add sa theme later
-        modifier = Modifier,
+            )
+        Text(
+            text = "Description",
+            style = MaterialTheme.typography.titleMedium, //from Type.kt refer in bubble.io specifics
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.primary, //Add sa theme later
+            modifier = Modifier,
 
-        )
-    Text(
-        text = "Description",
-        style = MaterialTheme.typography.titleMedium, //from Type.kt refer in bubble.io specifics
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colorScheme.primary, //Add sa theme later
-        modifier = Modifier,
+            )
+    }
+    Spacer(modifier = Modifier.height(60.dp))
 
-        )
+Row {
+    Spacer(modifier = Modifier.width((30.dp)))
+    progressCard(
+        "10",
+        "Projects"
+    )
+    Spacer(modifier = Modifier.width((30.dp)))
+    progressCard(
+        "50",
+        "Tasks"
+    )
 }
 
 
+}
+
 
 }
+
+@Composable
+fun progressCard(percent:String, label:String){
+
+    OutlinedCard ( colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
+
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
+        )
+    {
+
+
+            Column (horizontalAlignment = Alignment.CenterHorizontally) {
+                Box {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(150.dp).padding(20.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.background,
+                    )
+
+                }
+
+                Text(
+                    text = "$percent%",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.offset(y = -83.dp, x = 1.dp)
+                )
+
+                    Text(
+                        text = label,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.offset(y=-20.dp)
+
+                    )
+
+            }
+    }
+
+
+
+
+
+
+    }
+
 
 
 
