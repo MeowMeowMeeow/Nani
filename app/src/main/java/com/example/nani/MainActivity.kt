@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.screens.Dashboard.DashboardScreen
 import com.example.nani.screens.Dashboard.JairosoftApp
+import com.example.nani.screens.PopUps.SplashScreen
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.ProgressBar
 
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                     modifier = Modifier
                 ) {
-                 JairosoftApp()
+                JairosoftApp()
 
                 }
             }

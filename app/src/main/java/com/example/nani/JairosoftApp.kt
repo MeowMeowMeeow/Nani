@@ -66,6 +66,7 @@ import com.example.nani.screens.PopUps.ForgotPasswordScreen
 import com.example.nani.screens.Login.LoginGroup
 import com.example.nani.screens.Login.LoginScreen
 import com.example.nani.screens.Login.LoginViewModel
+import com.example.nani.screens.PopUps.SplashScreen
 import com.example.nani.screens.Profile.ProfileScreen
 import com.example.nani.screens.Projects.ProjectsScreen
 import com.example.nani.screens.Signup.SignUpScreen
@@ -81,7 +82,8 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
     Dashboard(title = R.string.lblDashboard),
     Analytics(title = R.string.lblAnalytics),
     Projects(title = R.string.lblprojects),
-    Profile(title = R.string.lblprofile)
+    Profile(title = R.string.lblprofile),
+    SplashScreen (title = R.string.splashscreen)
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,9 +108,11 @@ fun JairosoftApp() {
         label = "FAB Rotation Animation"
     )
     val loginResult by loginViewModel.loginResult.collectAsState()
+    var showBottomBar by remember { mutableStateOf(false) }
 
     val fabIcon = if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
     val showBottomBarAndFab = currentScreen in listOf(
+
         JairosoftAppScreen.Dashboard,
         JairosoftAppScreen.Analytics,
         JairosoftAppScreen.Projects,
@@ -116,8 +120,11 @@ fun JairosoftApp() {
     )
 
     Scaffold(
+
         bottomBar = {
-            if (showBottomBarAndFab) {
+
+            if (showBottomBarAndFab ) {
+
                 JairosoftAppBar(navController)
             }
         },
@@ -133,7 +140,7 @@ fun JairosoftApp() {
                     elevation = FloatingActionButtonDefaults.elevation(12.dp),
                     modifier = Modifier
                         .size(90.dp)
-                        .offset(y = 60.dp,x=8.dp)
+                        .offset(y = 60.dp, x = 8.dp)
                 ){
                     Icon(
                         painter = fabIcon,
@@ -148,23 +155,28 @@ fun JairosoftApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = JairosoftAppScreen.Login.name,
+            startDestination = JairosoftAppScreen.SplashScreen.name,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(route= JairosoftAppScreen.SplashScreen.name) {
+                SplashScreen(navController)
+            }
             composable(route = JairosoftAppScreen.Login.name) {
-                loginResult?.let {
-                    LaunchedEffect(loginResult) {
-                        delay(1)
+                LaunchedEffect(loginResult) {
+                    if (loginResult != null) {
                         navController.navigate(JairosoftAppScreen.Dashboard.name) {
                             popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
-
                         }
+                        delay(300)
+                        showBottomBar = true
                     }
                 }
-                LoginScreen(
-                    navController
-                )
+
+                if (loginResult == null) {
+                    LoginScreen(navController)
+                }
             }
+
 
             composable(route = JairosoftAppScreen.Forgot.name) { ForgotPasswordScreen(navController) }
             composable(route = JairosoftAppScreen.Dashboard.name) {
