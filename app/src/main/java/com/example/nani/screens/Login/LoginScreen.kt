@@ -43,15 +43,17 @@
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.tooling.preview.Preview
     import androidx.lifecycle.viewmodel.compose.viewModel
+    import androidx.navigation.NavController
     import com.example.nani.R
     import com.example.nani.data.UserDao
     import com.example.nani.repository.LoginViewModelFactory
     import com.example.nani.repository.UserRepository
+    import com.example.nani.screens.Dashboard.JairosoftAppScreen
     import com.example.nani.ui.theme.NaNiTheme
 
 
     @Composable
-    fun LoginScreen() {
+    fun LoginScreen(navController: NavController) {
         val context = LocalContext.current
         val factory = LoginViewModelFactory(context)
         val viewModel: LoginViewModel = viewModel(factory = factory)
@@ -64,8 +66,9 @@
             modifier = Modifier,
             onUserEmail = { viewModel.updateEmail(it) },
             onUserPass = { viewModel.updatePassword(it) },
-            onLogin = { email, password -> viewModel.loginUser(email, password) },
-            onForgotPassword = { },
+            onLogin = { email, password -> viewModel.loginUser(email, password)
+                navController.navigate(JairosoftAppScreen.Dashboard.name)},
+            onForgotPassword = {  navController.navigate(JairosoftAppScreen.Forgot.name)},
             loginViewModel = viewModel
         )
     }
@@ -239,7 +242,8 @@
                 Spacer(modifier = Modifier.padding(bottom = 34.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {onLogin(email, pass) },
+                    onClick = {onLogin(email, pass)
+                              },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
                     )

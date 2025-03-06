@@ -64,6 +64,7 @@ import com.example.nani.repository.LoginViewModelFactory
 import com.example.nani.screens.Analytics.AnalyticsScreen
 import com.example.nani.screens.PopUps.ForgotPasswordScreen
 import com.example.nani.screens.Login.LoginGroup
+import com.example.nani.screens.Login.LoginScreen
 import com.example.nani.screens.Login.LoginViewModel
 import com.example.nani.screens.Profile.ProfileScreen
 import com.example.nani.screens.Projects.ProjectsScreen
@@ -147,27 +148,27 @@ fun JairosoftApp() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = JairosoftAppScreen.Dashboard.name,
+            startDestination = JairosoftAppScreen.Login.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = JairosoftAppScreen.Login.name) {
                 loginResult?.let {
                     LaunchedEffect(loginResult) {
+                        delay(1)
                         navController.navigate(JairosoftAppScreen.Dashboard.name) {
                             popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+
                         }
                     }
                 }
-                LoginGroup(
-                    onForgotPassword = { navController.navigate(JairosoftAppScreen.Forgot.name) },
-                    onLogin = { email, password -> loginViewModel.loginUser(email, password) },
-                    loginViewModel = loginViewModel
+                LoginScreen(
+                    navController
                 )
             }
 
             composable(route = JairosoftAppScreen.Forgot.name) { ForgotPasswordScreen(navController) }
             composable(route = JairosoftAppScreen.Dashboard.name) {
-                Log.d("NavDebug", "DashboardScreen Composable loaded")
+
                 DashboardScreen(navController)
             }
             composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
