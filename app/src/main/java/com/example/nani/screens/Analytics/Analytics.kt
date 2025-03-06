@@ -37,11 +37,13 @@ fun AnalyticsScreen(navController: NavHostController) {
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
-    ) {
+    ){
         Column(modifier = Modifier.padding(16.dp)) {
             HeaderSection()
             Spacer(modifier = Modifier.height(16.dp))
-            MonthSelection(selectedMonth, months) { selectedMonth = it }
+            MonthSelection(selectedMonth, months) {
+                selectedMonth = it
+            }
             Spacer(modifier = Modifier.height(16.dp))
             AnalyticsTableSection(horizontalScrollState)
             Spacer(modifier = Modifier.height(20.dp))
@@ -150,9 +152,13 @@ fun DownloadReportButton() {
 
 @Composable
 fun DropdownMenuDemo(selectedMonth: String, months: List<String>, onMonthSelected: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember {
+        mutableStateOf(false)
+    }
     Box {
-        TextButton(onClick = { expanded = true }) {
+        TextButton(onClick = {
+            expanded = true
+        }) {
             Text(text = selectedMonth)
             Icon(
                 painter = painterResource(id = R.drawable.dropdown),
@@ -160,9 +166,14 @@ fun DropdownMenuDemo(selectedMonth: String, months: List<String>, onMonthSelecte
                 modifier = Modifier.size(15.dp)
             )
         }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        DropdownMenu(expanded = expanded, onDismissRequest = {
+            expanded = false
+        }) {
             months.forEach { month ->
-                DropdownMenuItem(text = { Text(month) }, onClick = {
+                DropdownMenuItem(text = {
+                    Text(month)
+                                        },
+                    onClick = {
                     onMonthSelected(month)
                     expanded = false
                 })

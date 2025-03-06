@@ -30,16 +30,21 @@ import java.util.*
 @Composable
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
-    Surface ( color = MaterialTheme.colorScheme.background,
+    Surface (
+        color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())){
-
-    Column ( modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ){
+    Column (
+        modifier = Modifier
         .padding(top = 10.dp, start = 10.dp, end = 10.dp)
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)){
-        Box(modifier = Modifier.padding(bottom = 5.dp)) {
+        .background(MaterialTheme.colorScheme.background)
+    ){
+        Box(
+            modifier = Modifier.padding(bottom = 5.dp)
+        ){
             Image(
                 painter = painterResource(id = R.drawable.jairosoft),
                 contentDescription = "Logo",
@@ -50,25 +55,21 @@ fun DashboardScreen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-
-
                 Text(
                     text = "Jairosoft",
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge,
-
-
                     )
             }
         }
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(
+            modifier = Modifier.height(14.dp)
+        )
         Column(
             modifier = Modifier
-
         ) {
             // Left-aligned Company Logo and Name
-
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = "Dashboard",
@@ -76,9 +77,7 @@ fun DashboardScreen(navController: NavHostController) {
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             // Today's Date Card
             DateDashboardCard(
                 icon = R.drawable.calendar,
@@ -105,7 +104,7 @@ fun DashboardScreen(navController: NavHostController) {
 
     }
 }
-    }
+}
 
 @Composable
 fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
@@ -129,7 +128,6 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-
                 Text(text = title,  style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(text = subtitle,style = MaterialTheme.typography.bodyMedium, color =  MaterialTheme.colorScheme.onSurface)
@@ -171,7 +169,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
 
 @Composable
 fun AttendanceCard(
-                   navController: NavController
+    navController: NavController
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),

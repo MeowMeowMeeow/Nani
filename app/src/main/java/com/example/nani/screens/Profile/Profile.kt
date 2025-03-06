@@ -64,9 +64,7 @@ fun ProfileScreen(navController: NavHostController)
 
 @Composable
 fun ProfileGroup(onLogout: () -> Unit) {
-
     Column {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,10 +83,13 @@ fun ProfileGroup(onLogout: () -> Unit) {
                         )
                     )
             ) {
-
                 Row(modifier = Modifier.fillMaxWidth()
-                    .padding(end= 10.dp, top = 20.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable{onLogout()}){
+                    .padding(end= 10.dp, top = 20.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable{
+                        onLogout()
+                    }
+                    ){
                         Text(
                             text = "Log out",
                             color = MaterialTheme.colorScheme.primary,
@@ -137,8 +138,6 @@ fun ProfileGroup(onLogout: () -> Unit) {
 
 
             )
-
-
         }}
 
 Column {
@@ -162,24 +161,20 @@ Column {
             )
     }
     Spacer(modifier = Modifier.height(60.dp))
-
 Row {
-    Spacer(modifier = Modifier.width((30.dp)))
-    progressCard(
-        "10",
-        "Projects"
-    )
-    Spacer(modifier = Modifier.width((30.dp)))
-    progressCard(
-        "50",
-        "Tasks"
-    )
-}
+        Spacer(modifier = Modifier.width((30.dp)))
+        progressCard(
+            "10",
+            "Projects"
+        )
+        Spacer(modifier = Modifier.width((30.dp)))
+        progressCard(
+            "50",
+            "Tasks"
+        )
+     }
 
-
-}
-
-
+    }
 }
 
 @Composable
@@ -187,13 +182,10 @@ fun progressCard(percent:String, label:String){
 
     OutlinedCard ( colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
-
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
         )
     {
-
-
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Box {
                     CircularProgressIndicator(
@@ -201,7 +193,6 @@ fun progressCard(percent:String, label:String){
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.background,
                     )
-
                 }
 
                 Text(
@@ -218,15 +209,8 @@ fun progressCard(percent:String, label:String){
                         modifier = Modifier.offset(y=-20.dp)
 
                     )
-
             }
-    }
-
-
-
-
-
-
+       }
     }
 
 

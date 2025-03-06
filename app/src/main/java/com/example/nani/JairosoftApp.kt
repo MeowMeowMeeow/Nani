@@ -68,6 +68,7 @@ import com.example.nani.screens.Login.LoginViewModel
 import com.example.nani.screens.Profile.ProfileScreen
 import com.example.nani.screens.Projects.ProjectsScreen
 import com.example.nani.screens.Signup.SignUpScreen
+import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.bottomIconColor
 import com.example.nani.ui.theme.components.bottomIconImageColor
 import kotlinx.coroutines.delay
@@ -176,91 +177,6 @@ fun JairosoftApp() {
         }
     }
 }
-
-
-
-@Composable
-fun JairosoftAppBar(navController: NavController) {
-    BottomAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .navigationBarsPadding(),
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        tonalElevation = 8.dp,
-        contentPadding = PaddingValues(horizontal = 10.dp),
-        actions = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row {
-                    Spacer(modifier = Modifier.width(5.dp))
-                    BottomNavItem(
-                        navController,
-                        JairosoftAppScreen.Dashboard,
-                        R.drawable.dashboard,
-                        "Dashboard"
-                    )
-                    Spacer(modifier = Modifier.padding(5.dp))
-                    BottomNavItem(
-                        navController,
-                        JairosoftAppScreen.Analytics,
-                        R.drawable.analytics,
-                        "Analytics"
-                    )
-                }
-                Spacer(modifier = Modifier.padding(35.dp))
-                Row {
-                    Spacer(modifier = Modifier.padding(start= 10.dp))
-                    BottomNavItem(
-                        navController,
-                        JairosoftAppScreen.Projects,
-                        R.drawable.projects,
-                        "Projects"
-                    )
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    BottomNavItem(
-                        navController,
-                        JairosoftAppScreen.Profile,
-                        R.drawable.profile,
-                        "Profile"
-                    )
-                }
-            }
-        }
-
-    )
-
-}
-
-@Composable
-fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .clickable {
-                navController.navigate(screen.name) {
-                    popUpTo(screen.name) { inclusive = true }
-                }
-            }
-
-            .fillMaxHeight()
-    ) {
-        Image(
-            painter = painterResource(icon),
-            contentDescription = null,
-            colorFilter = bottomIconImageColor(navController, screen)
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = bottomIconColor(navController, screen)
-        )
-    }
-}
-
 
 
 

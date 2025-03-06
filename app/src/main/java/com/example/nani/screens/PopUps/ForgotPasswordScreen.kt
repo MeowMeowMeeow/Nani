@@ -64,9 +64,10 @@ fun ForgotPasswordScreen(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
-                            onBackClick: () -> Unit , modifier: Modifier,
-                           ) {
+fun ForgotPasswordGroup(
+    onUserEmail: (String) -> Unit = {},
+    onBackClick: () -> Unit , modifier: Modifier,
+    ) {
     var email by remember { mutableStateOf("") }
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -164,7 +165,6 @@ fun ForgotPasswordGroup(    onUserEmail: (String) -> Unit = {},
                 )
             }
         }
-
     }
 }
 

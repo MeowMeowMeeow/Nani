@@ -72,7 +72,7 @@ dependencies {
 
 // design
     implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
-
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.1")
     // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")

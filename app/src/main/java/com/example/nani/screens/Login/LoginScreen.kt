@@ -55,22 +55,10 @@
         val context = LocalContext.current
         val factory = LoginViewModelFactory(context)
         val viewModel: LoginViewModel = viewModel(factory = factory)
-
         val email by viewModel.email.collectAsState()
         val password by viewModel.password.collectAsState()
         val loginResult by viewModel.loginResult.collectAsState()
         val errorMessage by viewModel.errorMessage.collectAsState()
-
-        // Handle login success
-        loginResult?.let {
-            Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
-            // Navigate to home screen or perform further actions
-        }
-
-        // Handle error message
-        errorMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
 
         LoginGroup(
             modifier = Modifier,
@@ -126,7 +114,6 @@
 
                 )
                 Spacer(modifier = Modifier.padding(bottom = 29.dp))
-
                 // Email
                 Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth()) {
                     Text(
@@ -174,7 +161,6 @@
                 }
 
                 Spacer(modifier = Modifier.padding(bottom = 29.dp))
-
                 // Password
                 Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth()) {
                     Text(
@@ -234,7 +220,6 @@
                             unfocusedIndicatorColor = Color.Transparent
                         )
                     )
-
                 }
                 Spacer(modifier = Modifier.padding(bottom = 6.dp))
                 Row(
