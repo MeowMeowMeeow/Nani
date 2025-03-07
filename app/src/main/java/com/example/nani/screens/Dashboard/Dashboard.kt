@@ -124,7 +124,7 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
                 painter = painterResource(id = icon),
                 contentDescription = "Icon",
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
@@ -154,7 +154,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
                 painter = painterResource(id = icon),
                 contentDescription = "Icon",
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
@@ -188,7 +188,7 @@ fun AttendanceCard(
                     painter = painterResource(id = R.drawable.calendar),
                     contentDescription = "Calendar Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Attendance", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
@@ -197,7 +197,7 @@ fun AttendanceCard(
                     painter = painterResource(id = R.drawable.time),
                     contentDescription = "Clock Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -248,7 +248,7 @@ fun TrackedHoursCard() {
                     painter = painterResource(id = R.drawable.time),
                     contentDescription = "Clock Icon",
                     modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surfaceVariant)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(

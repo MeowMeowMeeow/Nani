@@ -43,7 +43,7 @@ fun AnalyticsScreen(navController: NavHostController) {
                 selectedMonth = it
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AnalyticsTableSection(horizontalScrollState)
+            AnalyticsTableSection()
             Spacer(modifier = Modifier.height(20.dp))
             DownloadReportButton()
         }
@@ -116,7 +116,10 @@ fun MonthSelection(selectedMonth: String, months: List<String>, onMonthSelected:
 }
 
 @Composable
-fun AnalyticsTableSection(horizontalScrollState: ScrollState) {
+fun AnalyticsTableSection() {
+    val verticalScrollState = rememberScrollState()
+    val horizontalScrollState = rememberScrollState()
+
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -128,13 +131,18 @@ fun AnalyticsTableSection(horizontalScrollState: ScrollState) {
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(modifier = Modifier.horizontalScroll(horizontalScrollState)) {
-                AnalyticsTable()
-            }
+        Box(
+            modifier = Modifier
+                .height(300.dp) // Adjust based on UI needs
+                .verticalScroll(verticalScrollState)
+                .horizontalScroll(horizontalScrollState)
+                .padding(16.dp)
+        ) {
+            AnalyticsTable()
         }
     }
 }
+
 
 @Composable
 fun DownloadReportButton() {
@@ -201,22 +209,22 @@ fun AnalyticsTable() {
             Spacer(modifier = Modifier.width(18.dp))
             TableHeaderCell("Total\nHours")
         }
-        repeat(8) {
+        repeat(15) {
             Row(Modifier.fillMaxWidth()) {
                 TableCell("Feb ${14 + it}, 2025")
                 Spacer(modifier = Modifier.width(5.dp))
                 TableCell("7:${30 + it} am")
                 Spacer(modifier = Modifier.width(5.dp))
                 TableCell("Davao City")
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 TableCell("5:${20 + it} pm")
                 Spacer(modifier = Modifier.width(46.dp))
                 TableCell("${15 + it * 5}")
                 Spacer(modifier = Modifier.width(64.dp))
                 TableCell("${20 + it * 10}")
-                Spacer(modifier = Modifier.width(85.dp))
+                Spacer(modifier = Modifier.width(95.dp))
                 TableCell("${35 + it * 15}")
-                Spacer(modifier = Modifier.width(75.dp))
+                Spacer(modifier = Modifier.width(90.dp))
                 TableCell("${if (it % 2 == 0) "1hr 10m" else "0"}")
             }
         }
