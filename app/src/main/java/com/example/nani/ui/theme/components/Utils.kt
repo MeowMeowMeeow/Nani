@@ -129,7 +129,7 @@ fun JairosoftAppBar(navController: NavController) {
                         "Analytics"
                     )
                 }
-                Spacer(modifier = Modifier.padding(35.dp))
+                Spacer(modifier = Modifier.padding(40.dp))
                 Row {
                     Spacer(modifier = Modifier.padding(start= 10.dp))
                     BottomNavItem(

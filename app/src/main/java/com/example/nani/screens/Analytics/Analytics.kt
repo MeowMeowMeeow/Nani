@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -161,6 +162,8 @@ fun DropdownMenuDemo(selectedMonth: String, months: List<String>, onMonthSelecte
                 painter = painterResource(id = R.drawable.dropdown),
                 contentDescription = "Dropdown",
                 modifier = Modifier.size(15.dp)
+                    .padding(start = 5.dp)
+
             )
         }
         DropdownMenu(expanded = expanded, onDismissRequest = {
@@ -182,25 +185,38 @@ fun DropdownMenuDemo(selectedMonth: String, months: List<String>, onMonthSelecte
 @Composable
 fun AnalyticsTable() {
     Column {
-        Row(Modifier.fillMaxWidth()) {
-            TableHeaderCell("     Date       ")
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            TableHeaderCell("Date")
+            Spacer(modifier = Modifier.width(46.dp))
             TableHeaderCell("Time In")
+            Spacer(modifier = Modifier.width(5.dp))
             TableHeaderCell("Location")
+            Spacer(modifier = Modifier.width(5.dp))
             TableHeaderCell("Time Out")
-            TableHeaderCell("Late Minutes")
-            TableHeaderCell("Undertime Minutes")
-            TableHeaderCell("Total Late & Undertime Minutes")
-            TableHeaderCell("Total Hours")
+            Spacer(modifier = Modifier.width(10.dp))
+            TableHeaderCell("Late\nMinutes")
+            Spacer(modifier = Modifier.width(18.dp))
+            TableHeaderCell("Undertime\nMinutes")
+            TableHeaderCell("Total Late &\nUndertime Minutes")
+            Spacer(modifier = Modifier.width(18.dp))
+            TableHeaderCell("Total\nHours")
         }
         repeat(8) {
             Row(Modifier.fillMaxWidth()) {
-                TableCell("Feb ${14 + it}, 2025  ")
-                TableCell("7:${30 + it} am ")
-                TableCell("Davao City ")
-                TableCell("5:${20 + it} pm             ")
-                TableCell("${15 + it * 5}                           ")
-                TableCell("${20 + it * 10}                                             ")
-                TableCell("${35 + it * 15}                                      ")
+                TableCell("Feb ${14 + it}, 2025")
+                Spacer(modifier = Modifier.width(5.dp))
+                TableCell("7:${30 + it} am")
+                Spacer(modifier = Modifier.width(5.dp))
+                TableCell("Davao City")
+                Spacer(modifier = Modifier.width(5.dp))
+                TableCell("5:${20 + it} pm")
+                Spacer(modifier = Modifier.width(46.dp))
+                TableCell("${15 + it * 5}")
+                Spacer(modifier = Modifier.width(64.dp))
+                TableCell("${20 + it * 10}")
+                Spacer(modifier = Modifier.width(85.dp))
+                TableCell("${35 + it * 15}")
+                Spacer(modifier = Modifier.width(75.dp))
                 TableCell("${if (it % 2 == 0) "1hr 10m" else "0"}")
             }
         }
@@ -209,12 +225,12 @@ fun AnalyticsTable() {
 
 @Composable
 fun TableHeaderCell(text: String) {
-    Text(text = text, fontSize = 14.sp, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface)
+    Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
 }
 
 @Composable
 fun TableCell(text: String) {
-    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface)
+    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
 }
 
 @Composable
