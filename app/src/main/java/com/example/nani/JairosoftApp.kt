@@ -111,25 +111,34 @@ fun JairosoftApp() {
     var showBottomBar by remember { mutableStateOf(false) }
 
     val fabIcon = if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
-    val showBottomBarAndFab = currentScreen in listOf(
+    var shouldShowBottomBar by remember { mutableStateOf(false) }
 
-        JairosoftAppScreen.Dashboard,
-        JairosoftAppScreen.Analytics,
-        JairosoftAppScreen.Projects,
-        JairosoftAppScreen.Profile
-    )
+    LaunchedEffect(currentScreen) {
+        if (currentScreen in listOf(
+                JairosoftAppScreen.Dashboard,
+                JairosoftAppScreen.Analytics,
+                JairosoftAppScreen.Projects,
+                JairosoftAppScreen.Profile
+            )
+        ) {
+            delay(200)
+            shouldShowBottomBar = true
+        } else {
+            shouldShowBottomBar = false
+        }
+    }
 
     Scaffold(
 
         bottomBar = {
 
-            if (showBottomBarAndFab ) {
+            if (shouldShowBottomBar) {
 
                 JairosoftAppBar(navController)
             }
         },
         floatingActionButton = {
-            if (showBottomBarAndFab) {
+            if (shouldShowBottomBar) {
 
                 FloatingActionButton(
                     onClick = {
@@ -162,20 +171,18 @@ fun JairosoftApp() {
                 SplashScreen(navController)
             }
             composable(route = JairosoftAppScreen.Login.name) {
+                LoginScreen(navController)
+
+
                 LaunchedEffect(loginResult) {
                     if (loginResult != null) {
                         navController.navigate(JairosoftAppScreen.Dashboard.name) {
                             popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
                         }
-                        delay(300)
-                        showBottomBar = true
                     }
                 }
-
-                if (loginResult == null) {
-                    LoginScreen(navController)
-                }
             }
+
 
 
             composable(route = JairosoftAppScreen.Forgot.name) { ForgotPasswordScreen(navController) }

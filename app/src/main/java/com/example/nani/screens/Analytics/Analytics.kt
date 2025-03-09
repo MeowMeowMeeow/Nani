@@ -1,20 +1,19 @@
 package com.example.nani.screens.Analytics
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,22 +23,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
+import java.util.Locale
 
 @Composable
 fun AnalyticsScreen(navController: NavHostController) {
-    val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-    var selectedMonth by remember { mutableStateOf("February") }
+    var selectedMonth by remember {
+        mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
+    }
     val scrollState = rememberScrollState()
-    val horizontalScrollState = rememberScrollState()
 
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
-    ){
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             HeaderSection()
             Spacer(modifier = Modifier.height(16.dp))
-            MonthSelection(selectedMonth, months) {
+            MonthSelection(selectedMonth) {
                 selectedMonth = it
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -80,7 +80,7 @@ fun HeaderSection() {
 }
 
 @Composable
-fun MonthSelection(selectedMonth: String, months: List<String>, onMonthSelected: (String) -> Unit) {
+fun MonthSelection(selectedMonth: String, onMonthSelected: (String) -> Unit) {
     Card(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -103,13 +103,87 @@ fun MonthSelection(selectedMonth: String, months: List<String>, onMonthSelected:
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            DropdownMenuDemo(selectedMonth, months, onMonthSelected)
+            DatePickerDemo(selectedMonth, onMonthSelected)
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(id = R.drawable.time),
                 contentDescription = "Time Icon",
                 modifier = Modifier.size(24.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerDemo(selectedMonth: String, onMonthSelected: (String) -> Unit) {
+    val context = LocalContext.current
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
+    Box {
+        TextButton(onClick = { showDatePicker = true }) {
+            Text(text = selectedMonth)
+            Icon(
+                painter = painterResource(id = R.drawable.dropdown),
+                contentDescription = "Dropdown",
+                modifier = Modifier.size(15.dp).padding(start = 5.dp)
+            )
+        }
+    }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            colors = DatePickerDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = MaterialTheme.colorScheme.onSurface,
+                headlineContentColor = MaterialTheme.colorScheme.onSurface,
+            ),
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val calendar = Calendar.getInstance().apply { timeInMillis = millis }
+                            val day = calendar.get(Calendar.DAY_OF_MONTH)
+                            val month = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar.time)
+                            val year = calendar.get(Calendar.YEAR)
+
+                            //mao ni ang stored data sample paras api later
+                            val fullDate = "$day $month, $year"
+
+
+                            onMonthSelected(month)
+                        }
+                        showDatePicker = false
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color.Cyan
+                    )
+                ) {
+                    Text("OK", color = MaterialTheme.colorScheme.secondary)
+                }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface ,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationContentColor = MaterialTheme.colorScheme.secondary,
+                    weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+                    dayContentColor = MaterialTheme.colorScheme.onSurface,
+                    selectedDayContentColor = MaterialTheme.colorScheme.primary,
+                    selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    todayContentColor = MaterialTheme.colorScheme.secondary,
+                    disabledDayContentColor = MaterialTheme.colorScheme.background,
+                    yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedYearContentColor = MaterialTheme.colorScheme.primary,
+                    selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+
+                )
             )
         }
     }
@@ -133,7 +207,7 @@ fun AnalyticsTableSection() {
     ) {
         Box(
             modifier = Modifier
-                .height(300.dp) // Adjust based on UI needs
+                .height(300.dp)
                 .verticalScroll(verticalScrollState)
                 .horizontalScroll(horizontalScrollState)
                 .padding(16.dp)
@@ -142,7 +216,6 @@ fun AnalyticsTableSection() {
         }
     }
 }
-
 
 @Composable
 fun DownloadReportButton() {
@@ -153,40 +226,6 @@ fun DownloadReportButton() {
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
         Text(text = "Download Report", color = Color.White)
-    }
-}
-
-@Composable
-fun DropdownMenuDemo(selectedMonth: String, months: List<String>, onMonthSelected: (String) -> Unit) {
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    Box {
-        TextButton(onClick = {
-            expanded = true
-        }) {
-            Text(text = selectedMonth)
-            Icon(
-                painter = painterResource(id = R.drawable.dropdown),
-                contentDescription = "Dropdown",
-                modifier = Modifier.size(15.dp)
-                    .padding(start = 5.dp)
-
-            )
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = {
-            expanded = false
-        }) {
-            months.forEach { month ->
-                DropdownMenuItem(text = {
-                    Text(month)
-                                        },
-                    onClick = {
-                    onMonthSelected(month)
-                    expanded = false
-                })
-            }
-        }
     }
 }
 
@@ -241,11 +280,31 @@ fun TableCell(text: String) {
     Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(name = "Light Theme", showBackground = true)
-@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-fun PreviewAnalytics() {
+@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+fun PreviewDatePicker() {
     NaNiTheme {
-        AnalyticsScreen(navController = rememberNavController())
+        val datePickerState = rememberDatePickerState()
+
+        DatePicker(
+            state = datePickerState,
+            colors = DatePickerDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surface ,
+                titleContentColor = MaterialTheme.colorScheme.onSurface,
+                headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                navigationContentColor = MaterialTheme.colorScheme.secondary,
+                weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+                dayContentColor = MaterialTheme.colorScheme.onSurface,
+                selectedDayContentColor = MaterialTheme.colorScheme.primary,
+                selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                todayContentColor = MaterialTheme.colorScheme.secondary,
+                disabledDayContentColor = MaterialTheme.colorScheme.background,
+                yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                selectedYearContentColor = MaterialTheme.colorScheme.primary,
+                selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        )
     }
 }
