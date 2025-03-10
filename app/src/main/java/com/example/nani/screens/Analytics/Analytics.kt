@@ -181,9 +181,10 @@ fun DatePickerDemo(selectedMonth: String, onMonthSelected: (String) -> Unit) {
                     disabledDayContentColor = MaterialTheme.colorScheme.background,
                     yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     selectedYearContentColor = MaterialTheme.colorScheme.primary,
-                    selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
 
-                )
+                ),
+                modifier = Modifier.verticalScroll(rememberScrollState())
             )
         }
     }
