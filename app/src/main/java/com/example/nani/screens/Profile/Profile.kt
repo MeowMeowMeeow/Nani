@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,6 +65,10 @@ fun ProfileScreen(navController: NavHostController)
 
 @Composable
 fun ProfileGroup(onLogout: () -> Unit) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isLargeScreen = screenWidth > 600
+    val borderSpace = if (isLargeScreen) 100.dp else 30.dp //space before sa card
+    val betweenSpace = if (isLargeScreen) 170.dp else 30.dp //space sa tunga sa cards
     Column {
         Box(
             modifier = Modifier
@@ -162,12 +167,12 @@ Column {
     }
     Spacer(modifier = Modifier.height(60.dp))
 Row {
-        Spacer(modifier = Modifier.width((30.dp)))
+        Spacer(modifier = Modifier.width((borderSpace)))
         progressCard(
             "10",
             "Projects"
         )
-        Spacer(modifier = Modifier.width((30.dp)))
+        Spacer(modifier = Modifier.width((betweenSpace)))
         progressCard(
             "50",
             "Tasks"
@@ -179,6 +184,10 @@ Row {
 
 @Composable
 fun progressCard(percent:String, label:String){
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isLargeScreen = screenWidth > 600
+    val cardPadding = if (isLargeScreen) 50.dp else 1.dp //kadako sa card
+
 
     OutlinedCard ( colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
@@ -186,7 +195,8 @@ fun progressCard(percent:String, label:String){
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
         )
     {
-            Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            Column (horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(cardPadding)) {
                 Box {
                     CircularProgressIndicator(
                         modifier = Modifier.size(150.dp).padding(20.dp),

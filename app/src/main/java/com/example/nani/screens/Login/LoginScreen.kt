@@ -152,7 +152,7 @@
                             )
                         },
                         modifier = Modifier
-                            .width(530.dp)
+
                             .height(50.dp)
                             .fillMaxWidth(),
                         singleLine = true,
@@ -214,7 +214,7 @@
                             )
                         },
                         modifier = Modifier
-                            .width(530.dp)
+
                             .height(50.dp)
                             .fillMaxWidth(),
                         singleLine = true,
