@@ -66,9 +66,24 @@ fun ProfileScreen(navController: NavHostController)
 @Composable
 fun ProfileGroup(onLogout: () -> Unit) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val isLargeScreen = screenWidth > 600
-    val borderSpace = if (isLargeScreen) 100.dp else 30.dp //space before sa card
-    val betweenSpace = if (isLargeScreen) 170.dp else 30.dp //space sa tunga sa cards
+
+val landscape =  screenWidth in 801..900
+val isLargeScreen =  screenWidth in 601..800
+val tabletScreenL = screenWidth >= 901
+
+val borderSpace = when {
+   landscape -> 100.dp
+   tabletScreenL ->250.dp
+   isLargeScreen -> 100.dp
+   else -> 30.dp
+}
+  val betweenSpace = when {
+   landscape -> 170.dp
+   tabletScreenL ->250.dp
+   isLargeScreen -> 120.dp
+   else -> 30.dp
+}
+
     Column {
         Box(
             modifier = Modifier
@@ -185,6 +200,7 @@ Row {
 @Composable
 fun progressCard(percent:String, label:String){
     val screenWidth = LocalConfiguration.current.screenWidthDp
+
     val isLargeScreen = screenWidth > 600
     val cardPadding = if (isLargeScreen) 50.dp else 1.dp //kadako sa card
 

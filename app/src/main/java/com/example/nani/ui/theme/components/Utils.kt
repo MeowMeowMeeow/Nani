@@ -78,8 +78,19 @@ fun ProgressBar(
 @Composable
 fun JairosoftAppBar(navController: NavController) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val isLargeScreen = screenWidth > 600
-    val middlepadding = if (isLargeScreen) 30.dp else 10.dp
+
+    val landscape =  screenWidth in 801..900
+    val isLargeScreen =  screenWidth in 601..800
+    val tabletScreenL = screenWidth >= 901
+
+    val middlePadding = when {
+        landscape -> 95.dp
+        tabletScreenL ->250.dp
+        isLargeScreen -> 40.dp
+        else -> 10.dp
+    }
+
+
 
     BottomAppBar(
         modifier = Modifier
@@ -95,7 +106,7 @@ fun JairosoftAppBar(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row {
-                    Spacer(modifier = Modifier.width(5.dp))
+
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Dashboard,
@@ -112,20 +123,21 @@ fun JairosoftAppBar(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.padding(40.dp))
                 Row {
-                    Spacer(modifier = Modifier.padding(start= middlepadding))
+                    Spacer(modifier = Modifier.padding(start= middlePadding))
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Projects,
                         R.drawable.projects,
                         "Projects"
                     )
-                    Spacer(modifier = Modifier.padding(10.dp))
+                    Spacer(modifier = Modifier.padding(5.dp))
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Profile,
                         R.drawable.profile,
                         "Profile"
                     )
+
                 }
             }
         }
@@ -138,8 +150,13 @@ fun JairosoftAppBar(navController: NavController) {
 fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp
-    val isLargeScreen = screenWidth > 600
-    val padding = if (isLargeScreen) 55.dp else 1.dp
+    val isLargeScreen =  screenWidth in 601..900
+    val tabletScreen = screenWidth >= 901
+    val padding = when {
+        tabletScreen -> 80.dp
+        isLargeScreen -> 50.dp
+        else -> 1.dp
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
