@@ -1,5 +1,6 @@
 package com.example.nani.ui.theme.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,13 +34,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.screens.Dashboard.JairosoftAppScreen
+import com.example.nani.ui.theme.NaNiTheme
 
 
 //The Weekly progress
@@ -66,40 +72,15 @@ fun ProgressBar(
     }
 }
 
-@Composable
-@Preview
-fun PreviewProgressBar() {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "M",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.width(15.dp))
-            ProgressBar(progress = 0.3f) // Example progress
-        }
-        Spacer(modifier = Modifier.height(15.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "T",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.width(15.dp))
-            ProgressBar(progress = 0.7f) // Example progress
-        }
-    }
-}
 
 
 //For navigation bar
 @Composable
 fun JairosoftAppBar(navController: NavController) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isLargeScreen = screenWidth > 600
+    val middlepadding = if (isLargeScreen) 30.dp else 10.dp
+
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,7 +112,7 @@ fun JairosoftAppBar(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.padding(40.dp))
                 Row {
-                    Spacer(modifier = Modifier.padding(start= 10.dp))
+                    Spacer(modifier = Modifier.padding(start= middlepadding))
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Projects,
@@ -155,6 +136,10 @@ fun JairosoftAppBar(navController: NavController) {
 
 @Composable
 fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val isLargeScreen = screenWidth > 600
+    val padding = if (isLargeScreen) 55.dp else 1.dp
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -164,7 +149,7 @@ fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon
                     popUpTo(screen.name) { inclusive = true }
                 }
             }
-
+            .padding(start = padding , end = padding)
             .fillMaxHeight()
     ) {
         Image(
@@ -194,6 +179,19 @@ fun bottomIconImageColor(navController: NavController, label: JairosoftAppScreen
     else ColorFilter.tint(MaterialTheme.colorScheme.primary)
 }
 
+@Composable
+@Preview(name = "Light Theme", showBackground = true)
+@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES,showBackground = true)
+fun PreviewJairoBar() {
+    NaNiTheme {
+        Surface(      color = MaterialTheme.colorScheme.background,)
+            {
+        JairosoftAppBar(
+            navController = rememberNavController()
+        )
+    }
+        }
+}
 
 
 

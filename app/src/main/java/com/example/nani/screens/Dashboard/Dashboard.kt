@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.ProgressBar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -345,6 +346,7 @@ fun PreviewDash(){
         DashboardScreen(
             navController = rememberNavController()
         )
+
     }
 
 }
