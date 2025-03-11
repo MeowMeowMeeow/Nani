@@ -50,10 +50,17 @@ import coil.compose.AsyncImage
 import com.example.nani.R
 import com.example.nani.screens.Dashboard.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.arcOffset
+import com.example.nani.ui.theme.components.betweenSpace
+import com.example.nani.ui.theme.components.cardPadding
+import com.example.nani.ui.theme.components.imageOffset
+import com.example.nani.ui.theme.components.imageSize
+import com.example.nani.ui.theme.components.offset
+import com.example.nani.ui.theme.components.sizeCircular
+import com.example.nani.ui.theme.components.textSize
 
 
 //apply separation of concerns
-
 
 @Composable
 fun ProfileScreen(navController: NavHostController)
@@ -69,43 +76,6 @@ fun ProfileScreen(navController: NavHostController)
 
 @Composable
 fun ProfileGroup(onLogout: () -> Unit) {
-
-    //Move to COnditionals .....................................................
-
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tablet=  screenWidth in 901..1400
-    val desktop = screenWidth >= 1401
-
-val arcOffset = when {
-    landscape ->20.dp
-    tablet -> 22.dp
-    desktop->22.dp
-    else -> 30.dp
-}
-
-    //........................
-val imageOffset = when{
-    tablet -> 160.dp
-    landscape ->150.dp
-    desktop -> 200.dp
-    else -> 100.dp
-}
-    val imageSize = when {
-        landscape -> 200.dp
-        tablet -> 220.dp
-        desktop -> 250.dp
-        else -> 150.dp
-    }
-  val betweenSpace = when {
-      tablet -> 170.dp
-   landscape -> 170.dp
-   desktop ->250.dp
-   isLargeScreen -> 30.dp
-   else -> 30.dp
-}
 
     Column {
         Box(
@@ -155,7 +125,7 @@ val imageOffset = when{
                         .fillMaxWidth()
                         .height(100.dp)
                         .align(Alignment.BottomCenter)
-                        .offset(y = arcOffset)
+                        .offset(y = arcOffset())
                         .zIndex(0f)
                         ,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
@@ -166,20 +136,17 @@ val imageOffset = when{
             modifier = Modifier
                 .fillMaxWidth()
                 .zIndex(1f)
-                .offset(y = -(imageOffset)),
+                .offset(y = -(imageOffset())),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.face),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
-                    .size(imageSize)
+                    .size(imageSize())
                     .clip(CircleShape)
                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
                     .zIndex(2f)
-
-
-
             )
         }}
 
@@ -192,7 +159,6 @@ Column {
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.primary, //Add sa theme later
             modifier = Modifier,
-
             )
         Text(
             text = "Description",
@@ -210,54 +176,17 @@ Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Cen
             "10",
             "Projects"
         )
-        Spacer(modifier = Modifier.width((betweenSpace)))
+        Spacer(modifier = Modifier.width((betweenSpace())))
         progressCard(
             "50",
             "Tasks"
         )
      }
-
     }
 }
 
 @Composable
 fun progressCard(percent:String, label:String){
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tablet=  screenWidth in 901..1400
-    val desktop = screenWidth >= 1401
-
-    val sizeCircular = when {
-        tablet-> 250.dp
-        landscape -> 150.dp
-        desktop ->250.dp
-        isLargeScreen -> 150.dp
-        else -> 150.dp
-    }
-
-    val cardPadding = when {
-        tablet -> 100.dp
-        landscape -> 50.dp
-        desktop ->100.dp
-        isLargeScreen -> 20.dp
-        else -> 1.dp
-    }
-
-    val textSize = when{
-        tablet-> MaterialTheme.typography.titleLarge
-        desktop -> MaterialTheme.typography.displayLarge
-        else -> MaterialTheme.typography.titleMedium
-    }
-
-    val offset = when {
-        tablet ->  -140.dp
-        desktop ->  -150.dp
-            else -> -83.dp
-    }
-
-
     OutlinedCard ( colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
         ),
@@ -265,10 +194,10 @@ fun progressCard(percent:String, label:String){
         )
     {
             Column (horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(cardPadding)) {
+                modifier = Modifier.padding(cardPadding())) {
                 Box {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(sizeCircular).padding(20.dp),
+                        modifier = Modifier.size(sizeCircular()).padding(20.dp),
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.background,
                     )
@@ -277,27 +206,19 @@ fun progressCard(percent:String, label:String){
                 Text(
                     text = "$percent%",
                     color = MaterialTheme.colorScheme.primary,
-                    style = textSize,
-                    modifier = Modifier.offset(y = offset, x = 1.dp)
+                    style = textSize(),
+                    modifier = Modifier.offset(y = offset(), x = 1.dp)
                 )
 
                     Text(
                         text = label,
                         color = MaterialTheme.colorScheme.primary,
-                        style = textSize,
+                        style = textSize(),
                         modifier = Modifier.offset(y=-20.dp)
-
                     )
             }
        }
     }
-
-
-
-
-
-
-
 
 @Preview(name = "Light Theme")
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)

@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.tablePadding
 import java.util.Locale
 
 @Composable
@@ -213,6 +214,7 @@ fun AnalyticsTableSection() {
                 .verticalScroll(verticalScrollState)
                 .horizontalScroll(horizontalScrollState)
 
+
         ) {
             AnalyticsTable()
         }
@@ -233,9 +235,8 @@ fun DownloadReportButton() {
 
 @Composable
 fun AnalyticsTable() {
-    Column(Modifier.fillMaxSize()) {
-        Row(Modifier. fillMaxWidth()
-           , verticalAlignment = Alignment.CenterVertically,) {
+    Column() {
+        Row( verticalAlignment = Alignment.CenterVertically,) {
             TableHeaderCell("Date")
             Spacer(modifier = Modifier.width(46.dp))
             TableHeaderCell("Time In")
@@ -243,7 +244,7 @@ fun AnalyticsTable() {
             TableHeaderCell("Location")
             Spacer(modifier = Modifier.width(5.dp))
             TableHeaderCell("Time Out")
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(15.dp))
             TableHeaderCell("Late\nMinutes")
             Spacer(modifier = Modifier.width(18.dp))
             TableHeaderCell("Undertime\nMinutes")
@@ -253,6 +254,7 @@ fun AnalyticsTable() {
         }
         repeat(15) {
             Row(Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.height(5.dp))
                 TableCell("Feb ${14 + it}, 2025")
                 Spacer(modifier = Modifier.width(5.dp))
                 TableCell("7:${30 + it} am")
@@ -266,7 +268,7 @@ fun AnalyticsTable() {
                 TableCell("${20 + it * 10}")
                 Spacer(modifier = Modifier.width(95.dp))
                 TableCell("${35 + it * 15}")
-                Spacer(modifier = Modifier.width(90.dp))
+                Spacer(modifier = Modifier.width(70.dp))
                 TableCell("${if (it % 2 == 0) "1hr 10m" else "0"}")
             }
         }
@@ -275,12 +277,12 @@ fun AnalyticsTable() {
 
 @Composable
 fun TableHeaderCell(text: String) {
-    Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start= 8.dp, bottom = 8.dp , top =8.dp), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
+    Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 8.dp ,top = 8.dp , bottom = 8.dp, end = tablePadding() ), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
 }
 
 @Composable
 fun TableCell(text: String) {
-    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp, top = 8.dp), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
+    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(start = 8.dp ,top = 8.dp , bottom = 8.dp, end = tablePadding()), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
 }
 
 

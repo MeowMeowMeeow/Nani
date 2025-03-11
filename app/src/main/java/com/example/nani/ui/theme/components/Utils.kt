@@ -72,27 +72,9 @@ fun ProgressBar(
     }
 }
 
-
-
 //For navigation bar
 @Composable
 fun JairosoftAppBar(navController: NavController) {
-
-    //move to conditionals .............................................................................
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tabletScreenL = screenWidth >= 901
-
-    val middlePadding = when {
-        landscape -> 95.dp
-        tabletScreenL ->250.dp
-        isLargeScreen -> 40.dp
-        else -> 10.dp
-    }
-
-
 
     BottomAppBar(
         modifier = Modifier
@@ -125,7 +107,7 @@ fun JairosoftAppBar(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.padding(40.dp))
                 Row {
-                    Spacer(modifier = Modifier.padding(start= middlePadding))
+                    Spacer(modifier = Modifier.padding(start= middlePadding()))
                     BottomNavItem(
                         navController,
                         JairosoftAppScreen.Projects,
@@ -143,23 +125,13 @@ fun JairosoftAppBar(navController: NavController) {
                 }
             }
         }
-
     )
-
 }
 
 @Composable
 fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
 
-//move to conditionals .........................................................................
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val isLargeScreen =  screenWidth in 601..900
-    val tabletScreen = screenWidth >= 901
-    val padding = when {
-        tabletScreen -> 80.dp
-        isLargeScreen -> 50.dp
-        else -> 1.dp
-    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -169,7 +141,7 @@ fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon
                     popUpTo(screen.name) { inclusive = true }
                 }
             }
-            .padding(start = padding , end = padding)
+            .padding(start = padding() , end = padding())
             .fillMaxHeight()
     ) {
         Image(
@@ -204,13 +176,14 @@ fun bottomIconImageColor(navController: NavController, label: JairosoftAppScreen
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES,showBackground = true)
 fun PreviewJairoBar() {
     NaNiTheme {
-        Surface(      color = MaterialTheme.colorScheme.background,)
-            {
+        Surface(
+            color = MaterialTheme.colorScheme.background
+        ){
         JairosoftAppBar(
             navController = rememberNavController()
-        )
-    }
+            )
         }
+    }
 }
 
 

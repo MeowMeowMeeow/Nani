@@ -10,58 +10,59 @@ import androidx.compose.ui.unit.dp
 
 //Separation of Concern para di kay gubot atong code
 
-@Composable
-fun BottomNavBarConditionals (){
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tabletScreenL = screenWidth >= 901
-    val tabletScreen = screenWidth >= 901
-
-
     @Composable
-    fun MiddlePadding(middlePadding: String): Dp {
+    fun middlePadding(): Dp {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+        val landscape =  screenWidth in 801..900
+        val isLargeScreen =  screenWidth in 601..800
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when
         {
-            landscape -> 95.dp
-            tabletScreenL ->250.dp
+            landscape -> 80.dp
+            tablet ->250.dp
             isLargeScreen -> 40.dp
             else -> 10.dp
         }
     }
 
     @Composable
-    fun Padding (padding :String): Dp {
+    fun padding (): Dp {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+        val landscape =  screenWidth in 801..900
+        val isLargeScreen =  screenWidth in 601..800
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
-            tabletScreen -> 80.dp
+            landscape -> 50.dp
+            tablet -> 80.dp
             isLargeScreen -> 50.dp
             else -> 1.dp
         }
     }
-}
-
-@Composable
-fun ProfileConditionals(){
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tablet=  screenWidth in 901..1400
-    val desktop = screenWidth >= 1401
 
     @Composable
-    fun ArcOffset (arcOffset : String): Dp{
+    fun arcOffset (): Dp{
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
-            landscape ->20.dp
+            landscape ->24.dp
             tablet -> 22.dp
             desktop->22.dp
             else -> 30.dp
         }
-
     }
 
     @Composable
-    fun ImageOffset (imageOffset : String) : Dp {
+    fun imageOffset () : Dp {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet -> 160.dp
             landscape ->150.dp
@@ -71,7 +72,12 @@ fun ProfileConditionals(){
     }
 
     @Composable
-    fun ImageSize (imageSize :String) : Dp {
+    fun imageSize () : Dp {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             landscape -> 200.dp
             tablet -> 220.dp
@@ -82,7 +88,13 @@ fun ProfileConditionals(){
     }
 
     @Composable
-    fun BetweenSpace (betweenSpace: String): Dp{
+    fun betweenSpace (): Dp{
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val isLargeScreen =  screenWidth in 601..800
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet -> 170.dp
             landscape -> 170.dp
@@ -93,7 +105,13 @@ fun ProfileConditionals(){
     }
 
     @Composable
-    fun SizeCircular (sizeCircular :String): Dp{
+    fun sizeCircular (): Dp{
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val isLargeScreen =  screenWidth in 601..800
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet-> 250.dp
             landscape -> 150.dp
@@ -103,7 +121,13 @@ fun ProfileConditionals(){
         }
     }
     @Composable
-    fun CardPadding(cardPadding: String): Dp{
+    fun cardPadding(): Dp{
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val landscape =  screenWidth in 801..900
+        val isLargeScreen =  screenWidth in 601..800
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet -> 100.dp
             landscape -> 50.dp
@@ -113,7 +137,11 @@ fun ProfileConditionals(){
         }
     }
     @Composable
-    fun TextSize (textSize : String): TextStyle {
+    fun textSize (): TextStyle {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet-> MaterialTheme.typography.titleLarge
             desktop -> MaterialTheme.typography.displayLarge
@@ -121,7 +149,10 @@ fun ProfileConditionals(){
         }
     }
     @Composable
-    fun Offset (offset : String): Dp {
+    fun offset (): Dp {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+        val tablet=  screenWidth in 901..1400
+        val desktop = screenWidth >= 1401
         return when {
             tablet ->  -140.dp
             desktop ->  -150.dp
@@ -129,5 +160,16 @@ fun ProfileConditionals(){
         }
     }
 
+@Composable
+fun tablePadding(): Dp {
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val tablet=  screenWidth in 901..1400
+    val desktop = screenWidth >= 1401
+    return when {
+        tablet -> 80.dp
+        desktop -> 150.dp
+        else -> 8.dp
+    }
 }
+
 

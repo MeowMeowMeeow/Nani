@@ -212,7 +212,7 @@ fun AttendanceCard(
             }
             Spacer(modifier = Modifier.height(15.dp))
             Button(
-                onClick = {JairosoftAppScreen.Analytics},
+                onClick = { navController.navigate(JairosoftAppScreen.Analytics.name)},
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
