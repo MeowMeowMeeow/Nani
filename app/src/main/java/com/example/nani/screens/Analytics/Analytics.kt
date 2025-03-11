@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -211,7 +212,7 @@ fun AnalyticsTableSection() {
                 .height(300.dp)
                 .verticalScroll(verticalScrollState)
                 .horizontalScroll(horizontalScrollState)
-                .padding(16.dp)
+
         ) {
             AnalyticsTable()
         }
@@ -226,14 +227,15 @@ fun DownloadReportButton() {
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
-        Text(text = "Download Report", color = Color.White)
+        Text(text = "Download Report", color = Color.White, )
     }
 }
 
 @Composable
 fun AnalyticsTable() {
-    Column {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    Column(Modifier.fillMaxSize()) {
+        Row(Modifier. fillMaxWidth()
+           , verticalAlignment = Alignment.CenterVertically,) {
             TableHeaderCell("Date")
             Spacer(modifier = Modifier.width(46.dp))
             TableHeaderCell("Time In")
@@ -273,39 +275,23 @@ fun AnalyticsTable() {
 
 @Composable
 fun TableHeaderCell(text: String) {
-    Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
+    Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start= 8.dp, bottom = 8.dp , top =8.dp), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
 }
 
 @Composable
 fun TableCell(text: String) {
-    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
+    Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp, top = 8.dp), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 @Preview(name = "Light Theme", showBackground = true)
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun PreviewDatePicker() {
     NaNiTheme {
-        val datePickerState = rememberDatePickerState()
+AnalyticsScreen(
+    navController = rememberNavController()
+)
 
-        DatePicker(
-            state = datePickerState,
-            colors = DatePickerDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surface ,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                headlineContentColor = MaterialTheme.colorScheme.onSurface,
-                navigationContentColor = MaterialTheme.colorScheme.secondary,
-                weekdayContentColor = MaterialTheme.colorScheme.onSurface,
-                dayContentColor = MaterialTheme.colorScheme.onSurface,
-                selectedDayContentColor = MaterialTheme.colorScheme.primary,
-                selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                todayContentColor = MaterialTheme.colorScheme.secondary,
-                disabledDayContentColor = MaterialTheme.colorScheme.background,
-                yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                selectedYearContentColor = MaterialTheme.colorScheme.primary,
-                selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer
-            )
-        )
     }
 }

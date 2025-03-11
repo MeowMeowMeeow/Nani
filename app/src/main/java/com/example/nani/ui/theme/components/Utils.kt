@@ -77,6 +77,8 @@ fun ProgressBar(
 //For navigation bar
 @Composable
 fun JairosoftAppBar(navController: NavController) {
+
+    //move to conditionals .............................................................................
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
     val landscape =  screenWidth in 801..900
@@ -149,6 +151,7 @@ fun JairosoftAppBar(navController: NavController) {
 @Composable
 fun BottomNavItem(navController: NavController, screen: JairosoftAppScreen, icon: Int, label: String) {
 
+//move to conditionals .........................................................................
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val isLargeScreen =  screenWidth in 601..900
     val tabletScreen = screenWidth >= 901

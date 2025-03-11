@@ -51,6 +51,10 @@ import com.example.nani.R
 import com.example.nani.screens.Dashboard.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
 
+
+//apply separation of concerns
+
+
 @Composable
 fun ProfileScreen(navController: NavHostController)
 {
@@ -65,22 +69,41 @@ fun ProfileScreen(navController: NavHostController)
 
 @Composable
 fun ProfileGroup(onLogout: () -> Unit) {
+
+    //Move to COnditionals .....................................................
+
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
-val landscape =  screenWidth in 801..900
-val isLargeScreen =  screenWidth in 601..800
-val tabletScreenL = screenWidth >= 901
+    val landscape =  screenWidth in 801..900
+    val isLargeScreen =  screenWidth in 601..800
+    val tablet=  screenWidth in 901..1400
+    val desktop = screenWidth >= 1401
 
-val borderSpace = when {
-   landscape -> 100.dp
-   tabletScreenL ->250.dp
-   isLargeScreen -> 100.dp
-   else -> 30.dp
+val arcOffset = when {
+    landscape ->20.dp
+    tablet -> 22.dp
+    desktop->22.dp
+    else -> 30.dp
 }
+
+    //........................
+val imageOffset = when{
+    tablet -> 160.dp
+    landscape ->150.dp
+    desktop -> 200.dp
+    else -> 100.dp
+}
+    val imageSize = when {
+        landscape -> 200.dp
+        tablet -> 220.dp
+        desktop -> 250.dp
+        else -> 150.dp
+    }
   val betweenSpace = when {
+      tablet -> 170.dp
    landscape -> 170.dp
-   tabletScreenL ->250.dp
-   isLargeScreen -> 120.dp
+   desktop ->250.dp
+   isLargeScreen -> 30.dp
    else -> 30.dp
 }
 
@@ -132,7 +155,7 @@ val borderSpace = when {
                         .fillMaxWidth()
                         .height(100.dp)
                         .align(Alignment.BottomCenter)
-                        .offset(y = (30).dp)
+                        .offset(y = arcOffset)
                         .zIndex(0f)
                         ,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
@@ -143,14 +166,14 @@ val borderSpace = when {
             modifier = Modifier
                 .fillMaxWidth()
                 .zIndex(1f)
-                .offset(y = (-100).dp),
+                .offset(y = -(imageOffset)),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(R.drawable.face),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(imageSize)
                     .clip(CircleShape)
                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
                     .zIndex(2f)
@@ -181,8 +204,8 @@ Column {
             )
     }
     Spacer(modifier = Modifier.height(60.dp))
-Row {
-        Spacer(modifier = Modifier.width((borderSpace)))
+Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+
         progressCard(
             "10",
             "Projects"
@@ -201,8 +224,38 @@ Row {
 fun progressCard(percent:String, label:String){
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
-    val isLargeScreen = screenWidth > 600
-    val cardPadding = if (isLargeScreen) 50.dp else 1.dp //kadako sa card
+    val landscape =  screenWidth in 801..900
+    val isLargeScreen =  screenWidth in 601..800
+    val tablet=  screenWidth in 901..1400
+    val desktop = screenWidth >= 1401
+
+    val sizeCircular = when {
+        tablet-> 250.dp
+        landscape -> 150.dp
+        desktop ->250.dp
+        isLargeScreen -> 150.dp
+        else -> 150.dp
+    }
+
+    val cardPadding = when {
+        tablet -> 100.dp
+        landscape -> 50.dp
+        desktop ->100.dp
+        isLargeScreen -> 20.dp
+        else -> 1.dp
+    }
+
+    val textSize = when{
+        tablet-> MaterialTheme.typography.titleLarge
+        desktop -> MaterialTheme.typography.displayLarge
+        else -> MaterialTheme.typography.titleMedium
+    }
+
+    val offset = when {
+        tablet ->  -140.dp
+        desktop ->  -150.dp
+            else -> -83.dp
+    }
 
 
     OutlinedCard ( colors = CardDefaults.cardColors(
@@ -215,7 +268,7 @@ fun progressCard(percent:String, label:String){
                 modifier = Modifier.padding(cardPadding)) {
                 Box {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(150.dp).padding(20.dp),
+                        modifier = Modifier.size(sizeCircular).padding(20.dp),
                         color = MaterialTheme.colorScheme.secondary,
                         trackColor = MaterialTheme.colorScheme.background,
                     )
@@ -224,14 +277,14 @@ fun progressCard(percent:String, label:String){
                 Text(
                     text = "$percent%",
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.offset(y = -83.dp, x = 1.dp)
+                    style = textSize,
+                    modifier = Modifier.offset(y = offset, x = 1.dp)
                 )
 
                     Text(
                         text = label,
                         color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = textSize,
                         modifier = Modifier.offset(y=-20.dp)
 
                     )

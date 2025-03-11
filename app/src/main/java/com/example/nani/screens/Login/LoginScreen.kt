@@ -46,6 +46,7 @@
     import androidx.compose.ui.tooling.preview.Preview
     import androidx.lifecycle.viewmodel.compose.viewModel
     import androidx.navigation.NavController
+    import androidx.navigation.compose.rememberNavController
     import com.example.nani.R
     import com.example.nani.data.UserDao
     import com.example.nani.repository.LoginViewModelFactory
@@ -268,5 +269,18 @@
                 )
 
             }
+        }
+    }
+
+
+    @Composable
+    @Preview(name = "Light Theme", showBackground = true)
+    @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+    fun LoginPreview(){
+
+        NaNiTheme {
+            LoginScreen(
+                navController = rememberNavController()
+            )
         }
     }
