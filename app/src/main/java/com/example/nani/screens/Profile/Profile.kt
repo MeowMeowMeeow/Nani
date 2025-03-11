@@ -20,12 +20,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
@@ -35,18 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 import com.example.nani.R
 import com.example.nani.screens.Dashboard.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
@@ -172,12 +165,12 @@ Column {
     Spacer(modifier = Modifier.height(60.dp))
 Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
 
-        progressCard(
+        ProgressCard(
             "10",
             "Projects"
         )
         Spacer(modifier = Modifier.width((betweenSpace())))
-        progressCard(
+        ProgressCard(
             "50",
             "Tasks"
         )
@@ -186,7 +179,7 @@ Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Cen
 }
 
 @Composable
-fun progressCard(percent:String, label:String){
+fun ProgressCard(percent:String, label:String){
     OutlinedCard ( colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
         ),
