@@ -231,6 +231,7 @@ fun DownloadReportButton() {
     ) {
         Text(text = "Download Report", color = Color.White, )
     }
+    Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Composable
