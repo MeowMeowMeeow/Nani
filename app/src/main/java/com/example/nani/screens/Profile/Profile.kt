@@ -21,13 +21,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,31 +53,40 @@ import com.example.nani.ui.theme.components.offset
 import com.example.nani.ui.theme.components.sizeCircular
 import com.example.nani.ui.theme.components.textSize
 
-
-//apply separation of concerns
-
 @Composable
-fun ProfileScreen(navController: NavHostController)
-{
-    Surface (    color = MaterialTheme.colorScheme.background,
+fun ProfileScreen(navController: NavHostController) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    Surface(
+        color = MaterialTheme.colorScheme.background,
         modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState()))
-            {
-        ProfileGroup(onLogout = {navController.navigate(JairosoftAppScreen.Login.name)})
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        ProfileGroup(
+            onLogoutClick = { showLogoutDialog = true }
+        )
+    }
+
+    if (showLogoutDialog) {
+        LogoutConfirmationDialog(
+            onConfirm = {
+                showLogoutDialog = false
+                navController.navigate(JairosoftAppScreen.Login.name)
+            },
+            onDismiss = { showLogoutDialog = false }
+        )
     }
 }
 
 @Composable
-fun ProfileGroup(onLogout: () -> Unit) {
-
+fun ProfileGroup(onLogoutClick: () -> Unit) {
     Column {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
         ) {
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -89,23 +99,28 @@ fun ProfileGroup(onLogout: () -> Unit) {
                         )
                     )
             ) {
-                Row(modifier = Modifier.fillMaxWidth()
-                    .padding(end= 10.dp, top = 20.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 10.dp, top = 20.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable{
-                        onLogout()
-                    }
-                    ){
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { onLogoutClick() }
+                    ) {
                         Text(
                             text = "Log out",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.titleSmall
-                            )
+                        )
                         Image(
                             painter = painterResource(R.drawable.logout),
                             contentDescription = "",
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
-                            modifier = Modifier.padding(5.dp)
+                            modifier = Modifier
+                                .padding(5.dp)
                                 .size(24.dp)
                         )
                     }
@@ -212,6 +227,29 @@ fun ProgressCard(percent:String, label:String){
             }
        }
     }
+
+@Composable
+fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            Text(
+                text = "Confirm",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onConfirm() }
+            )
+        },
+        dismissButton = {
+            Text(
+                text = "Cancel",
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.clickable { onDismiss() }
+            )
+        },
+        title = { Text("Log out") },
+        text = { Text("Are you sure you want to log out?", color = MaterialTheme.colorScheme.primary) }
+    )
+}
 
 @Preview(name = "Light Theme")
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
