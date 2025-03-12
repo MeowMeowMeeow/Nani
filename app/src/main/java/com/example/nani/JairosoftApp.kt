@@ -14,6 +14,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,10 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +51,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -74,6 +80,7 @@ import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.bottomIconColor
 import com.example.nani.ui.theme.components.bottomIconImageColor
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class JairosoftAppScreen(@StringRes val title: Int) {
     Login(title = R.string.app_name),
@@ -86,6 +93,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
     SplashScreen (title = R.string.splashscreen)
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JairosoftApp() {
@@ -109,8 +117,10 @@ fun JairosoftApp() {
     )
     val loginResult by loginViewModel.loginResult.collectAsState()
     var showBottomBar by remember { mutableStateOf(false) }
-
-    val fabIcon = if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val fabIcon =
+        if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
     var shouldShowBottomBar by remember { mutableStateOf(false) }
 
     LaunchedEffect(currentScreen) {
@@ -127,76 +137,95 @@ fun JairosoftApp() {
             shouldShowBottomBar = false
         }
     }
-
-    Scaffold(
-
-        bottomBar = {
-
-            if (shouldShowBottomBar) {
-
-                JairosoftAppBar(navController)
-            }
-        },
-        floatingActionButton = {
-            if (shouldShowBottomBar) {
-
-                FloatingActionButton(
-                    onClick = {
-                        isGreen = !isGreen
-                    },
-                    shape = CircleShape,
-                    containerColor = fabColor,
-                    elevation = FloatingActionButtonDefaults.elevation(12.dp),
+//edit na max width
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
                     modifier = Modifier
-                        .size(90.dp)
-                        .offset(y = 60.dp, x = 8.dp)
-                ){
-                    Icon(
-                        painter = fabIcon,
-                        contentDescription = "Fab Icon",
-                        tint = Color.White,
-                        modifier = Modifier.rotate(fabRotation)
-                    )
+                        .fillMaxWidth()
+                        .offset(y = 110.dp)
+
+                )
+            },
+            bottomBar = {
+                if (shouldShowBottomBar) {
+                    JairosoftAppBar(navController)
                 }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = JairosoftAppScreen.SplashScreen.name,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route= JairosoftAppScreen.SplashScreen.name) {
-                SplashScreen(navController)
-            }
-            composable(route = JairosoftAppScreen.Login.name) {
-                LoginScreen(navController)
+            },
+            floatingActionButton = {
+                if (shouldShowBottomBar) {
+                    FloatingActionButton(
+                        onClick = {
+                            isGreen = !isGreen
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = if (isGreen) "Clocked Out" else "Clocked In",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        },
+                        shape = CircleShape,
+                        containerColor = fabColor,
+                        elevation = FloatingActionButtonDefaults.elevation(12.dp),
+                        modifier = Modifier
+                            .size(90.dp)
+                            .offset(y = 60.dp, x = 8.dp)
+                    ) {
+                        Icon(
+                            painter = fabIcon,
+                            contentDescription = "Fab Icon",
+                            tint = Color.White,
+                            modifier = Modifier.rotate(fabRotation)
+                        )
+                    }
+                }
+            }, floatingActionButtonPosition = FabPosition.Center
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = JairosoftAppScreen.SplashScreen.name,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable(route = JairosoftAppScreen.SplashScreen.name) {
+                    SplashScreen(navController)
+                }
+                composable(route = JairosoftAppScreen.Login.name) {
+                    LoginScreen(navController)
 
 
-                LaunchedEffect(loginResult) {
-                    if (loginResult != null) {
-                        navController.navigate(JairosoftAppScreen.Dashboard.name) {
-                            popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+                    LaunchedEffect(loginResult) {
+                        if (loginResult != null) {
+                            navController.navigate(JairosoftAppScreen.Dashboard.name) {
+                                popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+                            }
                         }
                     }
                 }
+
+                composable(route = JairosoftAppScreen.Forgot.name) {
+                    ForgotPasswordScreen(
+                        navController
+                    )
+                }
+                composable(route = JairosoftAppScreen.Dashboard.name) {
+                    DashboardScreen(
+                        navController
+                    )
+                }
+                composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
+                composable(route = JairosoftAppScreen.Analytics.name) {
+                    AnalyticsScreen(
+                        navController
+                    )
+                }
+                composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
+                composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
             }
-
-
-
-            composable(route = JairosoftAppScreen.Forgot.name) { ForgotPasswordScreen(navController) }
-            composable(route = JairosoftAppScreen.Dashboard.name) {
-
-                DashboardScreen(navController)
-            }
-            composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
-            composable(route = JairosoftAppScreen.Analytics.name) { AnalyticsScreen(navController) }
-            composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
-            composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
         }
     }
-}
+
+
 
 
 
