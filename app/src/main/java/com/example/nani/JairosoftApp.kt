@@ -137,7 +137,7 @@ fun JairosoftApp() {
             shouldShowBottomBar = false
         }
     }
-//edit na max width
+//edit na max width;
         Scaffold(
             snackbarHost = {
                 SnackbarHost(
