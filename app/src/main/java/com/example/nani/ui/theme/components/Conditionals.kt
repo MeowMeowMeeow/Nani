@@ -1,8 +1,10 @@
 package com.example.nani.ui.theme.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
@@ -174,6 +176,17 @@ fun tablePadding(): Dp {
         tablet -> 80.dp
         desktop -> 150.dp
         else -> 8.dp
+    }
+}
+
+//Projects screen
+@Composable
+fun colorPicked(title:String ): Color {
+    val isDarkMode = isSystemInDarkTheme()
+   return when (title) {
+        "In Progress" -> if(isDarkMode) Color(0xFFDAD7FF).copy(alpha=0.4f) else Color(0xFFDAD7FF)
+        "To Do" -> if (isDarkMode) Color(0xFFFFF2D7).copy(alpha=0.4f) else Color(0xFFFFF2D7)
+        else -> if (isDarkMode) Color(0xFFD7FFDA).copy(alpha=0.4f) else Color(0xFFD7FFDA)
     }
 }
 

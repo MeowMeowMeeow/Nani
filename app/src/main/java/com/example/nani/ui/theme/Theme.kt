@@ -26,7 +26,8 @@ private val DarkColorScheme = darkColorScheme(
     surfaceDim = Dark_background,
     secondaryContainer = Dark_Gray,
     onSurfaceVariant =  Dark_Lightblue,
-    tertiaryContainer = DarkGreen
+    tertiaryContainer = DarkGreen,
+    inverseOnSurface = Dark
 
 )
 
@@ -45,7 +46,8 @@ private val LightColorScheme = lightColorScheme(
     surfaceDim = Light_background,
     secondaryContainer = White,
     onSurfaceVariant = blue,
-    tertiaryContainer = LightGreen
+    tertiaryContainer = LightGreen,
+    inverseOnSurface = llightblue
 
 
 

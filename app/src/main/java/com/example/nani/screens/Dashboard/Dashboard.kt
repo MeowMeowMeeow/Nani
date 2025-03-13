@@ -1,6 +1,10 @@
 package com.example.nani.screens.Dashboard
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,6 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -25,12 +33,30 @@ import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.ProgressBar
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
+    val visibleDateCard = remember { mutableStateOf(false) }
+    val visibleProjectsCard = remember { mutableStateOf(false) }
+    val visibleAttendanceCard = remember { mutableStateOf(false) }
+    val visibleTrackedHoursCard = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!visibleDateCard.value) {
+            delay(300)
+            visibleDateCard.value = true
+            delay(350)
+            visibleProjectsCard.value = true
+            delay(400)
+            visibleAttendanceCard.value = true
+            delay(450)
+            visibleTrackedHoursCard.value = true
+        }
+    }
     Surface (
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
@@ -80,27 +106,55 @@ fun DashboardScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             // Today's Date Card
+            AnimatedVisibility(
+                visible = visibleDateCard.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -100 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 600))
+            ) {
             DateDashboardCard(
                 icon = R.drawable.calendar,
                 title = "Today is $currentDate",
                 subtitle = "Have a productive day!"
-            )
+            )}
             Spacer(modifier = Modifier.height(30.dp))
             // On-Going Projects Card
+            AnimatedVisibility(
+                visible = visibleProjectsCard.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -100 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 600))
+            ) {
             ProjectsCard(
                 icon = R.drawable.folder,
                 title = "On-Going Projects",
                 subtitle = "--               --                --"
-            )
+            )}
             Spacer(modifier = Modifier.height(30.dp))
             // Attendance Card
+            AnimatedVisibility(
+                visible = visibleAttendanceCard.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -100 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 600))
+            ) {
             AttendanceCard(
                 navController = navController
-            )
+            )}
             Spacer(modifier = Modifier.height(30.dp))
             // Tracked Hours Card
+            AnimatedVisibility(
+                visible = visibleTrackedHoursCard.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -100 },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 600))
+            ) {
             TrackedHoursCard()
-        }
+        }}
         // Bottom Navigation Bar
 
     }
@@ -109,7 +163,7 @@ fun DashboardScreen(navController: NavHostController) {
 
 @Composable
 fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
-    Card(
+    ElevatedCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
@@ -139,7 +193,7 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
 
 @Composable
 fun ProjectsCard(icon: Int, title: String, subtitle: String) {
-    Card(
+    ElevatedCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
@@ -172,7 +226,7 @@ fun ProjectsCard(icon: Int, title: String, subtitle: String) {
 fun AttendanceCard(
     navController: NavController
 ) {
-    Card(
+    ElevatedCard (
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
@@ -230,7 +284,7 @@ fun AttendanceCard(
 
 @Composable
 fun TrackedHoursCard() {
-    Card(
+    ElevatedCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
         modifier = Modifier
@@ -344,7 +398,8 @@ fun TrackedHoursCard() {
 fun PreviewDash(){
     NaNiTheme {
         DashboardScreen(
-            navController = rememberNavController()
+            navController = rememberNavController(),
+
         )
 
     }

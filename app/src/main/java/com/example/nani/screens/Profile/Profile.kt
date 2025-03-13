@@ -243,11 +243,11 @@ fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
             Text(
                 text = "Cancel",
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.clickable { onDismiss() }
+                modifier = Modifier.clickable { onDismiss() } .padding(end = 10.dp)
             )
         },
         title = { Text("Log out") },
-        text = { Text("Are you sure you want to log out?", color = MaterialTheme.colorScheme.primary) }
+        text = { Text("Are you sure you want to log out?", color = MaterialTheme.colorScheme.primary,style= MaterialTheme.typography.labelSmall ) }
     )
 }
 
