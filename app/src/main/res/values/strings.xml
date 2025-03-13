@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NaNi</string>
+    <string name="app_name">Timesheet</string>
     <string name="txtLogin">Let’s bring your digital\ndreams to life</string>
     <string name="lblEmail">Email</string>
     <string name="lblPassword">Password</string>
