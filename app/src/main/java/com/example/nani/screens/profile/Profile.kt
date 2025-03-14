@@ -1,4 +1,4 @@
-package com.example.nani.screens.Profile
+package com.example.nani.screens.profile
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -42,7 +42,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
-import com.example.nani.screens.Dashboard.JairosoftAppScreen
+import com.example.nani.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.arcOffset
 import com.example.nani.ui.theme.components.betweenSpace
@@ -222,7 +222,7 @@ fun ProgressCard(percent:String, label:String){
                         text = label,
                         color = MaterialTheme.colorScheme.primary,
                         style = textSize(),
-                        modifier = Modifier.offset(y=-20.dp)
+                        modifier = Modifier.offset(y=-(20.dp))
                     )
             }
        }

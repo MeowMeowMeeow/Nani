@@ -1,39 +1,15 @@
-package com.example.nani.screens.Dashboard
+package com.example.nani
 
 
-import androidx.compose.foundation.layout.size
-
-
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-
-import android.content.res.Configuration
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -43,8 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -53,32 +27,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nani.R
 import com.example.nani.repository.LoginViewModelFactory
-import com.example.nani.screens.Analytics.AnalyticsScreen
-import com.example.nani.screens.PopUps.ForgotPasswordScreen
-import com.example.nani.screens.Login.LoginGroup
-import com.example.nani.screens.Login.LoginScreen
-import com.example.nani.screens.Login.LoginViewModel
-import com.example.nani.screens.PopUps.SplashScreen
-import com.example.nani.screens.Profile.ProfileScreen
-import com.example.nani.screens.Projects.ProjectsScreen
-import com.example.nani.screens.Signup.SignUpScreen
+import com.example.nani.screens.analytics.AnalyticsScreen
+import com.example.nani.screens.dashboard.DashboardScreen
+import com.example.nani.screens.login.LoginScreen
+import com.example.nani.screens.login.LoginViewModel
+import com.example.nani.screens.popUps.ForgotPasswordScreen
+import com.example.nani.screens.popUps.SplashScreen
+import com.example.nani.screens.profile.ProfileScreen
+import com.example.nani.screens.projects.ProjectsScreen
+import com.example.nani.screens.signup.SignUpScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
-import com.example.nani.ui.theme.components.bottomIconColor
-import com.example.nani.ui.theme.components.bottomIconImageColor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -95,7 +65,6 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JairosoftApp() {
     val context = LocalContext.current
@@ -117,7 +86,6 @@ fun JairosoftApp() {
         label = "FAB Rotation Animation"
     )
     val loginResult by loginViewModel.loginResult.collectAsState()
-    var showBottomBar by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
@@ -198,8 +166,6 @@ fun JairosoftApp() {
                 }
                 composable(route = JairosoftAppScreen.Login.name) {
                     LoginScreen(navController)
-
-
                     LaunchedEffect(loginResult) {
                         if (loginResult != null) {
                             navController.navigate(JairosoftAppScreen.Dashboard.name) {
@@ -208,22 +174,15 @@ fun JairosoftApp() {
                         }
                     }
                 }
-
                 composable(route = JairosoftAppScreen.Forgot.name) {
-                    ForgotPasswordScreen(
-                        navController
-                    )
+                    ForgotPasswordScreen(navController)
                 }
                 composable(route = JairosoftAppScreen.Dashboard.name) {
-                    DashboardScreen(
-                        navController
-                    )
+                    DashboardScreen(navController)
                 }
                 composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
                 composable(route = JairosoftAppScreen.Analytics.name) {
-                    AnalyticsScreen(
-                        navController
-                    )
+                    AnalyticsScreen(navController)
                 }
                 composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
                 composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }

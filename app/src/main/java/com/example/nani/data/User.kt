@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+//change for the API
 @Entity(tableName = "users")
 data class UserEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

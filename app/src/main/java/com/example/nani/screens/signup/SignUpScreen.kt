@@ -1,4 +1,4 @@
-    package com.example.nani.screens.Signup
+    package com.example.nani.screens.signup
 
     import android.content.res.Configuration
     import androidx.compose.foundation.Image
@@ -55,8 +55,8 @@
     import com.example.nani.data.UserEntity
     import com.example.nani.repository.LoginViewModelFactory
     import com.example.nani.repository.SignUpViewModelFactory
-    import com.example.nani.screens.Dashboard.JairosoftAppScreen
-    import com.example.nani.screens.Login.LoginViewModel
+    import com.example.nani.JairosoftAppScreen
+    import com.example.nani.screens.login.LoginViewModel
     import com.example.nani.ui.theme.NaNiTheme
 
 
@@ -95,7 +95,6 @@
 
 
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SignUpScreenGroup(
         email: String = "",

@@ -1,9 +1,8 @@
-package com.example.nani.screens.Analytics
+package com.example.nani.screens.analytics
 
 import android.content.res.Configuration
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -229,15 +227,15 @@ fun DownloadReportButton() {
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
     ) {
-        Text(text = "Download Report", color = Color.White, )
+        Text(text = "Download Report", color = Color.White )
     }
     Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Composable
 fun AnalyticsTable() {
-    Column() {
-        Row( verticalAlignment = Alignment.CenterVertically,) {
+    Column {
+        Row( verticalAlignment = Alignment.CenterVertically) {
             TableHeaderCell("Date")
             Spacer(modifier = Modifier.width(46.dp))
             TableHeaderCell("Time In")
@@ -270,7 +268,7 @@ fun AnalyticsTable() {
                 Spacer(modifier = Modifier.width(95.dp))
                 TableCell("${35 + it * 15}")
                 Spacer(modifier = Modifier.width(70.dp))
-                TableCell("${if (it % 2 == 0) "1hr 10m" else "0"}")
+                TableCell(if (it % 2 == 0) "1hr 10m" else "0")
             }
         }
     }

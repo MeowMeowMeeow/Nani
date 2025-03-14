@@ -1,4 +1,4 @@
-package com.example.nani.screens.Login
+package com.example.nani.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

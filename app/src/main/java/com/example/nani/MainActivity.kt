@@ -8,12 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.example.nani.screens.Dashboard.DashboardScreen
-import com.example.nani.screens.Dashboard.JairosoftApp
-import com.example.nani.screens.PopUps.SplashScreen
 import com.example.nani.ui.theme.NaNiTheme
-import com.example.nani.ui.theme.components.ProgressBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

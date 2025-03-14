@@ -1,4 +1,4 @@
-package com.example.nani.screens.Dashboard
+package com.example.nani.screens.dashboard
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -17,21 +17,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.nani.JairosoftAppScreen
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
-import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.ProgressBar
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -313,7 +311,7 @@ fun TrackedHoursCard() {
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Column() {
+            Column{
 
                 Text(
                     text = "0            2            4            6            8            10",
@@ -326,8 +324,7 @@ fun TrackedHoursCard() {
                 )
                 Spacer(modifier = Modifier.height(15.dp))
                 Row {
-                    Column(
-                    ) {
+                    Column{
                         Text(
                             text = "M",
                             style = MaterialTheme.typography.labelSmall,

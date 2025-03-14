@@ -9,12 +9,8 @@ import androidx.compose.ui.unit.sp
 import com.example.nani.R
 
 val PoppinsRegular = FontFamily(Font(R.font.poppins_regular, FontWeight.Normal))
-val PoppinsMedium = FontFamily(Font(R.font.poppins_medium, FontWeight.Medium))
 val PoppinsSemiBold = FontFamily(Font(R.font.poppins_semibold, FontWeight.SemiBold))
 val PoppinsExtraBold = FontFamily(Font(R.font.poppins_extrabold, FontWeight.ExtraBold))
-val PoppinsThin = FontFamily(Font(R.font.poppins_thin, FontWeight.Thin))
-
-
 
 val CustomTypography = Typography(
     bodyLarge = TextStyle(

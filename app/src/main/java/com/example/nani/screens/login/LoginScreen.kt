@@ -1,7 +1,6 @@
-    package com.example.nani.screens.Login
+    package com.example.nani.screens.login
 
     import android.content.res.Configuration
-    import android.widget.Toast
     import androidx.compose.material3.ButtonDefaults
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
@@ -16,7 +15,6 @@
     import androidx.compose.foundation.layout.height
     import androidx.compose.foundation.layout.padding
     import androidx.compose.foundation.layout.size
-    import androidx.compose.foundation.layout.width
     import androidx.compose.foundation.rememberScrollState
     import androidx.compose.foundation.verticalScroll
     import androidx.compose.material3.Button
@@ -48,10 +46,8 @@
     import androidx.navigation.NavController
     import androidx.navigation.compose.rememberNavController
     import com.example.nani.R
-    import com.example.nani.data.UserDao
     import com.example.nani.repository.LoginViewModelFactory
-    import com.example.nani.repository.UserRepository
-    import com.example.nani.screens.Dashboard.JairosoftAppScreen
+    import com.example.nani.JairosoftAppScreen
     import com.example.nani.ui.theme.NaNiTheme
 
 
@@ -60,6 +56,8 @@
         val context = LocalContext.current
         val factory = LoginViewModelFactory(context)
         val viewModel: LoginViewModel = viewModel(factory = factory)
+
+        //will use this in the future
         val email by viewModel.email.collectAsState()
         val password by viewModel.password.collectAsState()
         val loginResult by viewModel.loginResult.collectAsState()
@@ -79,7 +77,6 @@
 
 
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun LoginGroup(
         modifier: Modifier = Modifier,
@@ -92,7 +89,7 @@
         var email by remember { mutableStateOf("") }
         var pass by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(true) }
-        val isDarkTheme = isSystemInDarkTheme()
+
         val backgroundColor = MaterialTheme.colorScheme.background
         Surface(
             color = MaterialTheme.colorScheme.background,

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.nani.data.UserDao
 import com.example.nani.data.UserDatabase
 import com.example.nani.data.UserEntity
-import com.example.nani.screens.Login.LoginViewModel
-import com.example.nani.screens.Signup.SignUpViewModel
+import com.example.nani.screens.login.LoginViewModel
+import com.example.nani.screens.signup.SignUpViewModel
 
 class UserRepository(private val userDao: UserDao) {
 

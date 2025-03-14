@@ -3,7 +3,6 @@ package com.example.nani.ui.theme.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
         val landscape =  screenWidth in 801..900
         val isLargeScreen =  screenWidth in 601..800
         val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
         return when
         {
             tabletP -> 10.dp
@@ -37,7 +35,6 @@ import androidx.compose.ui.unit.dp
         val landscape =  screenWidth in 801..900
         val isLargeScreen =  screenWidth in 601..800
         val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
         return when {
             tabletP -> 20.dp
             landscape -> 50.dp
@@ -50,7 +47,6 @@ import androidx.compose.ui.unit.dp
     @Composable
     fun arcOffset (): Dp{
         val screenWidth = LocalConfiguration.current.screenWidthDp
-        val tabletP = screenWidth in 501..600
         val landscape =  screenWidth in 801..900
         val tablet=  screenWidth in 901..1400
         val desktop = screenWidth >= 1401
@@ -161,9 +157,9 @@ import androidx.compose.ui.unit.dp
         val tablet=  screenWidth in 901..1400
         val desktop = screenWidth >= 1401
         return when {
-            tablet ->  -140.dp
-            desktop ->  -150.dp
-            else -> -83.dp
+            tablet ->  -(140.dp)
+            desktop ->  -(150.dp)
+            else -> -(83.dp)
         }
     }
 
