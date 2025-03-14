@@ -79,6 +79,7 @@ import com.example.nani.screens.Signup.SignUpScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.bottomIconColor
 import com.example.nani.ui.theme.components.bottomIconImageColor
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -119,6 +120,7 @@ fun JairosoftApp() {
     var showBottomBar by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    var snackbarJob by remember { mutableStateOf<Job?>(null) }
     val fabIcon =
         if (isGreen) painterResource(R.drawable.plus) else painterResource(R.drawable.square)
     var shouldShowBottomBar by remember { mutableStateOf(false) }
@@ -158,7 +160,11 @@ fun JairosoftApp() {
                     FloatingActionButton(
                         onClick = {
                             isGreen = !isGreen
-                            scope.launch {
+
+                            snackbarJob?.cancel()
+                            snackbarJob = scope.launch {
+                                snackbarHostState.currentSnackbarData?.dismiss()
+
                                 snackbarHostState.showSnackbar(
                                     message = if (isGreen) "Clocked Out" else "Clocked In",
                                     duration = SnackbarDuration.Short

@@ -126,19 +126,21 @@ fun ProjectsGroup(    selected: Boolean,
                     .clip(RoundedCornerShape(60.dp))
 
             ) {
-Box (modifier = Modifier
-    .background(
-        brush = Brush.verticalGradient(
-            colors = listOf(
-                MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.2f),
-                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-                MaterialTheme.colorScheme.secondaryContainer,
+    Box (modifier = Modifier
+        .background(
+            brush = Brush.verticalGradient(
+                colors = listOf(
+                    MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = 0.2f),
+                    MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                    MaterialTheme.colorScheme.secondaryContainer,
 
 
 
+                ),
+                        startY = 5f, // Move gradient up by 100 pixels
+                endY = 30f // Customize where it ends depending on height
             )
-        )
-        )){
+            )){
 
         TabRow(
             selectedTabIndex = state,

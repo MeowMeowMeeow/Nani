@@ -37,6 +37,7 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
+//update sa viewmodel only after nag login once ra siya mu animate
 @Composable
 fun DashboardScreen(navController: NavHostController) {
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
@@ -155,7 +156,6 @@ fun DashboardScreen(navController: NavHostController) {
             ) {
             TrackedHoursCard()
         }}
-        // Bottom Navigation Bar
 
     }
 }
