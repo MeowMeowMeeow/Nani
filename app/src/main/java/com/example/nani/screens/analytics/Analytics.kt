@@ -5,6 +5,8 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,17 +23,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
+import com.example.nani.data.UserLogs
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.tablePadding
 import java.util.Locale
 
 @Composable
-fun AnalyticsScreen(navController: NavHostController) {
+fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel) {
     var selectedMonth by remember {
         mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
     }
     val scrollState = rememberScrollState()
-
+    val logs by viewModel.logs
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
@@ -43,7 +46,13 @@ fun AnalyticsScreen(navController: NavHostController) {
                 selectedMonth = it
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AnalyticsTableSection()
+            LazyColumn {
+                items(logs) { userLog ->
+                    AnalyticsTableSection(userLog)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+
             Spacer(modifier = Modifier.height(20.dp))
             DownloadReportButton()
         }
@@ -191,7 +200,7 @@ fun DatePickerDemo(selectedMonth: String, onMonthSelected: (String) -> Unit) {
 }
 
 @Composable
-fun AnalyticsTableSection() {
+fun AnalyticsTableSection(userLogs: UserLogs) {
     val verticalScrollState = rememberScrollState()
     val horizontalScrollState = rememberScrollState()
 
@@ -214,7 +223,9 @@ fun AnalyticsTableSection() {
 
 
         ) {
-            AnalyticsTable()
+            AnalyticsTable(
+                userLogs = userLogs
+            )
         }
     }
 }
@@ -233,7 +244,7 @@ fun DownloadReportButton() {
 }
 
 @Composable
-fun AnalyticsTable() {
+fun AnalyticsTable(userLogs: UserLogs) {
     Column {
         Row( verticalAlignment = Alignment.CenterVertically) {
             TableHeaderCell("Date")
@@ -254,13 +265,13 @@ fun AnalyticsTable() {
         repeat(15) {
             Row(Modifier.fillMaxWidth()) {
                 Spacer(modifier = Modifier.height(5.dp))
-                TableCell("Feb ${14 + it}, 2025")
+                TableCell(userLogs.date)
                 Spacer(modifier = Modifier.width(5.dp))
-                TableCell("7:${30 + it} am")
+                TableCell(userLogs.time_in)
                 Spacer(modifier = Modifier.width(5.dp))
                 TableCell("Davao City")
                 Spacer(modifier = Modifier.width(10.dp))
-                TableCell("5:${20 + it} pm")
+                TableCell(userLogs.time_out)
                 Spacer(modifier = Modifier.width(46.dp))
                 TableCell("${15 + it * 5}")
                 Spacer(modifier = Modifier.width(64.dp))
@@ -268,7 +279,7 @@ fun AnalyticsTable() {
                 Spacer(modifier = Modifier.width(95.dp))
                 TableCell("${35 + it * 15}")
                 Spacer(modifier = Modifier.width(70.dp))
-                TableCell(if (it % 2 == 0) "1hr 10m" else "0")
+                TableCell(userLogs.totalHours)
             }
         }
     }
@@ -285,14 +296,14 @@ fun TableCell(text: String) {
 }
 
 
-@Composable
-@Preview(name = "Light Theme", showBackground = true)
-@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-fun PreviewDatePicker() {
-    NaNiTheme {
-AnalyticsScreen(
-    navController = rememberNavController()
-)
-
-    }
-}
+//@Composable
+//@Preview(name = "Light Theme", showBackground = true)
+//@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+//fun PreviewDatePicker() {
+//    NaNiTheme {
+//AnalyticsScreen(
+//    navController = rememberNavController()
+//)
+//
+//    }
+//}

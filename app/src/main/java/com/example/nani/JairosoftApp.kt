@@ -40,6 +40,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.repository.LoginViewModelFactory
 import com.example.nani.screens.analytics.AnalyticsScreen
+import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.dashboard.DashboardScreen
 import com.example.nani.screens.login.LoginScreen
 import com.example.nani.screens.login.LoginViewModel
@@ -47,7 +48,6 @@ import com.example.nani.screens.popUps.ForgotPasswordScreen
 import com.example.nani.screens.popUps.SplashScreen
 import com.example.nani.screens.profile.ProfileScreen
 import com.example.nani.screens.projects.ProjectsScreen
-import com.example.nani.screens.signup.SignUpScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -69,6 +69,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 fun JairosoftApp() {
     val context = LocalContext.current
     val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
+
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = JairosoftAppScreen.valueOf(
@@ -180,9 +181,12 @@ fun JairosoftApp() {
                 composable(route = JairosoftAppScreen.Dashboard.name) {
                     DashboardScreen(navController)
                 }
-                composable(route = JairosoftAppScreen.Signup.name) { SignUpScreen(navController) }
                 composable(route = JairosoftAppScreen.Analytics.name) {
-                    AnalyticsScreen(navController)
+                    val analyticsViewModel: AnalyticsViewModel = viewModel()
+                    AnalyticsScreen(
+                        navController = navController,
+                        viewModel = analyticsViewModel
+                    )
                 }
                 composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
                 composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
