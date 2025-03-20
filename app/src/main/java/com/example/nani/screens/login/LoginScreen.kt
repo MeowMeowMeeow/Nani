@@ -5,7 +5,6 @@
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
     import androidx.compose.foundation.clickable
-    import androidx.compose.foundation.isSystemInDarkTheme
     import androidx.compose.foundation.layout.Arrangement
     import androidx.compose.foundation.layout.Column
     import androidx.compose.foundation.layout.Row
@@ -22,14 +21,12 @@
     import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.unit.dp
-    import androidx.compose.material3.ExperimentalMaterial3Api
     import androidx.compose.material3.Icon
     import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.OutlinedTextField
     import androidx.compose.material3.Surface
     import androidx.compose.material3.Text
     import androidx.compose.material3.TextFieldDefaults
-    import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
     import androidx.compose.runtime.mutableStateOf
     import androidx.compose.runtime.remember
@@ -42,11 +39,9 @@
     import androidx.compose.ui.text.input.VisualTransformation
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.tooling.preview.Preview
-    import androidx.lifecycle.viewmodel.compose.viewModel
     import androidx.navigation.NavController
     import androidx.navigation.compose.rememberNavController
     import com.example.nani.R
-    import com.example.nani.repository.LoginViewModelFactory
     import com.example.nani.JairosoftAppScreen
     import com.example.nani.ui.theme.NaNiTheme
 
@@ -54,23 +49,16 @@
     @Composable
     fun LoginScreen(navController: NavController) {
         val context = LocalContext.current
-        val factory = LoginViewModelFactory(context)
-        val viewModel: LoginViewModel = viewModel(factory = factory)
 
-        //will use this in the future
-        val email by viewModel.email.collectAsState()
-        val password by viewModel.password.collectAsState()
-        val loginResult by viewModel.loginResult.collectAsState()
-        val errorMessage by viewModel.errorMessage.collectAsState()
+
 
         LoginGroup(
             modifier = Modifier,
-            onUserEmail = { viewModel.updateEmail(it) },
-            onUserPass = { viewModel.updatePassword(it) },
-            onLogin = { email, password -> viewModel.loginUser(email, password)
-                navController.navigate(JairosoftAppScreen.Dashboard.name)},
+            onUserEmail = { },
+            onUserPass = {},
+            onLogin = { navController.navigate(JairosoftAppScreen.Dashboard.name)},
             onForgotPassword = {  navController.navigate(JairosoftAppScreen.Forgot.name)},
-            loginViewModel = viewModel
+
         )
     }
 
@@ -83,8 +71,8 @@
         onUserEmail: (String) -> Unit = {},
         onUserPass: (String) -> Unit = {},
         onForgotPassword: () -> Unit,
-        onLogin: (String, String) -> Unit, // Accept email & password
-        loginViewModel: LoginViewModel // Use ViewModel
+        onLogin: () -> Unit, // Accept email & password
+
     ) {
         var email by remember { mutableStateOf("") }
         var pass by remember { mutableStateOf("") }
@@ -243,7 +231,7 @@
                 Spacer(modifier = Modifier.padding(bottom = 34.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {onLogin(email, pass)
+                    onClick = {onLogin()
                               },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary

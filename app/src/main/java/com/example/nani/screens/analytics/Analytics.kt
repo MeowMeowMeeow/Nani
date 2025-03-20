@@ -37,7 +37,7 @@ fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewMo
     val logs by viewModel.logs
     Surface(
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize().verticalScroll(scrollState)
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             HeaderSection()
@@ -193,7 +193,7 @@ fun DatePickerDemo(selectedMonth: String, onMonthSelected: (String) -> Unit) {
                     selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
 
                 ),
-                modifier = Modifier.verticalScroll(rememberScrollState())
+
             )
         }
     }
@@ -218,8 +218,7 @@ fun AnalyticsTableSection(userLogs: UserLogs) {
         Box(
             modifier = Modifier
                 .height(300.dp)
-                .verticalScroll(verticalScrollState)
-                .horizontalScroll(horizontalScrollState)
+
 
 
         ) {
@@ -262,7 +261,7 @@ fun AnalyticsTable(userLogs: UserLogs) {
             Spacer(modifier = Modifier.width(18.dp))
             TableHeaderCell("Total\nHours")
         }
-        repeat(15) {
+
             Row(Modifier.fillMaxWidth()) {
                 Spacer(modifier = Modifier.height(5.dp))
                 TableCell(userLogs.date)
@@ -273,14 +272,14 @@ fun AnalyticsTable(userLogs: UserLogs) {
                 Spacer(modifier = Modifier.width(10.dp))
                 TableCell(userLogs.time_out)
                 Spacer(modifier = Modifier.width(46.dp))
-                TableCell("${15 + it * 5}")
+                TableCell("--")
                 Spacer(modifier = Modifier.width(64.dp))
-                TableCell("${20 + it * 10}")
+                TableCell("--")
                 Spacer(modifier = Modifier.width(95.dp))
-                TableCell("${35 + it * 15}")
+                TableCell("--")
                 Spacer(modifier = Modifier.width(70.dp))
                 TableCell(userLogs.totalHours)
-            }
+
         }
     }
 }
@@ -296,14 +295,4 @@ fun TableCell(text: String) {
 }
 
 
-//@Composable
-//@Preview(name = "Light Theme", showBackground = true)
-//@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-//fun PreviewDatePicker() {
-//    NaNiTheme {
-//AnalyticsScreen(
-//    navController = rememberNavController()
-//)
-//
-//    }
-//}
+

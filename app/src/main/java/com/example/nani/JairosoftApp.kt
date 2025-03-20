@@ -38,12 +38,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nani.repository.LoginViewModelFactory
+
 import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.dashboard.DashboardScreen
 import com.example.nani.screens.login.LoginScreen
-import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.popUps.ForgotPasswordScreen
 import com.example.nani.screens.popUps.SplashScreen
 import com.example.nani.screens.profile.ProfileScreen
@@ -68,7 +67,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 @Composable
 fun JairosoftApp() {
     val context = LocalContext.current
-    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
+
 
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -86,7 +85,7 @@ fun JairosoftApp() {
         animationSpec = tween(durationMillis = 300),
         label = "FAB Rotation Animation"
     )
-    val loginResult by loginViewModel.loginResult.collectAsState()
+
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
@@ -167,13 +166,7 @@ fun JairosoftApp() {
                 }
                 composable(route = JairosoftAppScreen.Login.name) {
                     LoginScreen(navController)
-                    LaunchedEffect(loginResult) {
-                        if (loginResult != null) {
-                            navController.navigate(JairosoftAppScreen.Dashboard.name) {
-                                popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
-                            }
-                        }
-                    }
+
                 }
                 composable(route = JairosoftAppScreen.Forgot.name) {
                     ForgotPasswordScreen(navController)
