@@ -1,6 +1,7 @@
     package com.example.nani.screens.login
 
     import android.content.res.Configuration
+    import android.widget.Toast
     import androidx.compose.material3.ButtonDefaults
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
@@ -27,6 +28,7 @@
     import androidx.compose.material3.Surface
     import androidx.compose.material3.Text
     import androidx.compose.material3.TextFieldDefaults
+    import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
     import androidx.compose.runtime.mutableStateOf
     import androidx.compose.runtime.remember
@@ -47,18 +49,29 @@
 
 
     @Composable
-    fun LoginScreen(navController: NavController) {
+    fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
         val context = LocalContext.current
-
-
+        val user by viewModel.details.collectAsState()
 
         LoginGroup(
-            modifier = Modifier,
-            onUserEmail = { },
-            onUserPass = {},
-            onLogin = { navController.navigate(JairosoftAppScreen.Dashboard.name)},
-            onForgotPassword = {  navController.navigate(JairosoftAppScreen.Forgot.name)},
-
+            onUserEmail = {}, // Unused, skip for now
+            onUserPass = {},  // Unused, skip for now
+            onLogin = { email, password ->
+                viewModel.login(
+                    email,
+                    password,
+                    onSuccess = {
+                        // Success: Navigate
+                        navController.navigate(JairosoftAppScreen.Dashboard.name)
+                    },
+                    onFailure = { error ->
+                        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+                    }
+                )
+            },
+            onForgotPassword = {
+                navController.navigate(JairosoftAppScreen.Forgot.name)
+            }
         )
     }
 
@@ -71,7 +84,7 @@
         onUserEmail: (String) -> Unit = {},
         onUserPass: (String) -> Unit = {},
         onForgotPassword: () -> Unit,
-        onLogin: () -> Unit, // Accept email & password
+        onLogin: (String, String) -> Unit // Pass email & password
 
     ) {
         var email by remember { mutableStateOf("") }
@@ -231,7 +244,7 @@
                 Spacer(modifier = Modifier.padding(bottom = 34.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {onLogin()
+                    onClick = {onLogin(email, pass)
                               },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
@@ -257,15 +270,15 @@
         }
     }
 
-
-    @Composable
-    @Preview(name = "Light Theme", showBackground = true)
-    @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-    fun LoginPreview(){
-
-        NaNiTheme {
-            LoginScreen(
-                navController = rememberNavController()
-            )
-        }
-    }
+//
+//    @Composable
+//    @Preview(name = "Light Theme", showBackground = true)
+//    @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//    fun LoginPreview(){
+//
+//        NaNiTheme {
+//            LoginScreen(
+//                navController = rememberNavController()
+//            )
+//        }
+//    }

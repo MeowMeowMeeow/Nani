@@ -25,4 +25,12 @@ data class UserLogs(
 )
 
 
+@Serializable
+data class User(
+    val id: Int,
+    val token: String,
+    val status: String
+)
+
+
 

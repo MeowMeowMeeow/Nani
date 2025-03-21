@@ -30,7 +30,6 @@ val logs: State<List<UserLogs>> = _userLogs
             try {
                 _userLogs.value = RetrofitInstance.api.getLogs()
             } catch (_: Exception){
-
             }
         }
     }

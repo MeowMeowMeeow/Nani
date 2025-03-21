@@ -3,6 +3,7 @@ package com.example.nani.screens.analytics
 import android.content.res.Configuration
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,8 @@ import java.util.Locale
 
 @Composable
 fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel) {
+
+    //need mu add og viewmodel and better repository para ma actionan ang token for the authentication
     var selectedMonth by remember {
         mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
     }
@@ -47,10 +50,14 @@ fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewMo
             }
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
+                //wala naga take in og data from api
                 items(logs) { userLog ->
                     AnalyticsTableSection(userLog)
                     Spacer(modifier = Modifier.height(16.dp))
+                    Log.e("responded", "Network error: ")
                 }
+
+                Log.e("no response", "hidden")
             }
 
             Spacer(modifier = Modifier.height(20.dp))
