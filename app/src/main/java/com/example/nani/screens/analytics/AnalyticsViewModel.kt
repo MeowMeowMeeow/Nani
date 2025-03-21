@@ -17,23 +17,31 @@ import com.example.nani.network.data.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class AnalyticsViewModel : ViewModel() {
- private val _userLogs = mutableStateOf<List<UserLogs>>(emptyList())
-val logs: State<List<UserLogs>> = _userLogs
 
-    init{
-        fetchLogs()
-    }
+    private val _userLogs = mutableStateOf<List<UserLogs>>(emptyList())
+    val logs: State<List<UserLogs>> = _userLogs
 
-    private fun fetchLogs(){
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
 
-        viewModelScope.launch{
+    private val _errorMessage = mutableStateOf("")
+    val errorMessage: State<String> = _errorMessage
+
+    fun fetchLogs(token: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
             try {
-                _userLogs.value = RetrofitInstance.api.getLogs()
-            } catch (_: Exception){
+                val bearerToken = "Bearer $token"
+                val logsResponse = RetrofitInstance.api.getLogs(bearerToken)
+                _userLogs.value = logsResponse
+                _errorMessage.value = ""
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to load logs: ${e.message}"
+            } finally {
+                _isLoading.value = false
             }
         }
     }
-
-
-
 }
+
+

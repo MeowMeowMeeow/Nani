@@ -43,6 +43,7 @@ import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.dashboard.DashboardScreen
 import com.example.nani.screens.login.LoginScreen
+import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.popUps.ForgotPasswordScreen
 import com.example.nani.screens.popUps.SplashScreen
 import com.example.nani.screens.profile.ProfileScreen
@@ -165,7 +166,11 @@ fun JairosoftApp() {
                     SplashScreen(navController)
                 }
                 composable(route = JairosoftAppScreen.Login.name) {
-                    LoginScreen(navController)
+                    val loginViewModel: LoginViewModel = viewModel()
+                    LoginScreen(
+                        navController,
+                        viewModel = loginViewModel
+                    )
 
                 }
                 composable(route = JairosoftAppScreen.Forgot.name) {
