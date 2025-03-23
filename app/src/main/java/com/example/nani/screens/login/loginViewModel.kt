@@ -3,6 +3,7 @@ package com.example.nani.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nani.data.AnalyticsRepository
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
 import com.example.nani.data.UserRepository
@@ -11,9 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class LoginViewModel(
-    private val repository: UserRepository = UserRepository()
+    private val userRepository: UserRepository = UserRepository(),
+    private val analyticsRepository: AnalyticsRepository = AnalyticsRepository() // ✅ Add this
 ) : ViewModel() {
 
     private val _details = MutableStateFlow<User?>(null)
@@ -30,12 +31,12 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val user = repository.loginUser(email, password)
+                val user = userRepository.loginUser(email, password)
 
                 if (user.status == "success") {
                     _details.value = user
 
-                    fetchLogs(user.token)
+                    fetchLogs(user.response.token) // ✅ Correct!
                     onSuccess()
                 } else {
                     onFailure("Login failed: ${user.status}")
@@ -50,12 +51,11 @@ class LoginViewModel(
     private fun fetchLogs(token: String) {
         viewModelScope.launch {
             try {
-                val logsResponse = repository.getLogs(token)
-                _logs.value = logsResponse
+                val logsResponse = analyticsRepository.getLogs(token) // ✅ Use analytics repo!
+                _logs.value = logsResponse // You already return List<UserLogs>
             } catch (e: Exception) {
-                // Handle error (optional: show error to UI)
+                // Handle error
             }
         }
     }
 }
-

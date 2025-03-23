@@ -6,6 +6,7 @@
     import androidx.compose.foundation.*
     import androidx.compose.foundation.layout.*
     import androidx.compose.foundation.lazy.LazyColumn
+    import androidx.compose.foundation.lazy.items
     import androidx.compose.foundation.shape.RoundedCornerShape
     import androidx.compose.material3.*
     import androidx.compose.runtime.*
@@ -21,29 +22,40 @@
     import androidx.navigation.NavHostController
     import com.example.nani.R
     import com.example.nani.data.UserLogs
+    import com.example.nani.screens.login.LoginViewModel
+    import com.example.nani.ui.theme.components.formatDate
+    import com.example.nani.ui.theme.components.formatTime
     import com.example.nani.ui.theme.components.tablePadding
     import java.util.Locale
 
     @Composable
-    fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel, token :String) {
+    fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel, loginViewModel: LoginViewModel,) {
 
         //need mu add og viewmodel and better repository para ma actionan ang token for the authentication
+
         var selectedMonth by remember {
             mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
         }
-        val scrollState = rememberScrollState()
+
         val logs by viewModel.logs
+        Log.d("AnalyticsScreen", "Logs size: ${logs.size}") // Add this!
+
         val isLoading by viewModel.isLoading
         val errorMessage by viewModel.errorMessage
+        Log.d("AnalyticsScreen", "Error: $errorMessage")
+
+        val user = loginViewModel.details.collectAsState().value
+        val token = user?.token ?: ""
+
         LaunchedEffect(token) {
-            viewModel.setToken(token)
-            viewModel.fetchLogs()
+            if (token.isNotEmpty()) {
+                viewModel.setToken(token)
+                viewModel.fetchLogs(token)
+            }
         }
 
 
-        Log.e("LOG", "Logs Size: ${logs.size}")
-
-
+        val scrollState = rememberScrollState()
         Surface(
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxSize()
@@ -51,20 +63,28 @@
             Column(modifier = Modifier.padding(16.dp)) {
                 HeaderSection()
                 Spacer(modifier = Modifier.height(16.dp))
+
                 MonthSelection(selectedMonth) {
                     selectedMonth = it
+
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
-                LazyColumn {
-                    item {
-                        AnalyticsTableSection(logs)
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                } else if (!errorMessage.isNullOrEmpty()) {
+                    Text(
+                        text = errorMessage ?: "An error occurred",
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                } else {
+                    AnalyticsTableSection(logs)
                 }
-
-
 
                 Spacer(modifier = Modifier.height(20.dp))
+
                 DownloadReportButton()
             }
         }
@@ -209,12 +229,10 @@
             }
         }
     }
-
     @Composable
-    fun AnalyticsTableSection(userLogsList: List<UserLogs>) {
+    fun AnalyticsTableSection(logs: List<UserLogs>) {
         val verticalScrollState = rememberScrollState()
         val horizontalScrollState = rememberScrollState()
-
         Card(
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -229,14 +247,92 @@
             Box(
                 modifier = Modifier
                     .height(300.dp)
-                    .verticalScroll(rememberScrollState())
-
-
+                    .horizontalScroll(horizontalScrollState)
             ) {
-                AnalyticsTable(userLogsList =userLogsList)
+                AnalyticsTable(logs)
             }
         }
     }
+
+
+    @Composable
+    fun AnalyticsTable(logs: List<UserLogs>) {
+        Column {
+            // ✅ HEADER ROW (kept the old headers as you asked)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TableHeaderCell("Date")
+                Spacer(modifier = Modifier.width(46.dp))
+                TableHeaderCell("Time In")
+                Spacer(modifier = Modifier.width(5.dp))
+                TableHeaderCell("Location")  // ➡️ Placeholder since it's not in your model
+                Spacer(modifier = Modifier.width(5.dp))
+                TableHeaderCell("Time Out")
+                Spacer(modifier = Modifier.width(15.dp))
+                TableHeaderCell("Late\nMinutes")  // ➡️ Placeholder
+                Spacer(modifier = Modifier.width(18.dp))
+                TableHeaderCell("Undertime\nMinutes")  // ➡️ Placeholder
+                TableHeaderCell("Total Late &\nUndertime Minutes")  // ➡️ Placeholder
+                Spacer(modifier = Modifier.width(18.dp))
+                TableHeaderCell("Total\nHours")
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // ✅ DATA ROWS
+            LazyColumn {
+                items(logs) { userLogs ->
+
+                    val formattedDate = formatDate(userLogs.date)
+                    val formattedTimeIn = formatTime(userLogs.timeIn)
+                    val formattedTimeOut = formatTime(userLogs.timeOut)
+
+                    val totalHours = "${userLogs.totalHours ?: 0} hrs"
+
+
+                    // These fields aren't in your data class, so I'm putting N/A or 0 as a placeholder
+                    val location = "N/A"
+                    val lateMinutes = 0
+                    val undertimeMinutes = 0
+                    val totalLateUndertime = lateMinutes + undertimeMinutes
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TableCell(formattedDate)
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        TableCell(formattedTimeIn)
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        TableCell(location)
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        TableCell(formattedTimeOut)
+                        Spacer(modifier = Modifier.width(46.dp))
+
+                        TableCell(lateMinutes.toString())
+                        Spacer(modifier = Modifier.width(64.dp))
+
+                        TableCell(undertimeMinutes.toString())
+                        Spacer(modifier = Modifier.width(95.dp))
+
+                        TableCell(totalLateUndertime.toString())
+                        Spacer(modifier = Modifier.width(70.dp))
+
+                        TableCell(totalHours)
+                        Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
+
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
     @Composable
     fun DownloadReportButton() {
@@ -251,43 +347,6 @@
         Spacer(modifier = Modifier.height(50.dp))
     }
 
-    @Composable
-    fun AnalyticsTable(userLogsList: List<UserLogs>) {
-        Column {
-            // Header Row
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                TableHeaderCell("Date")
-                Spacer(modifier = Modifier.width(20.dp))
-                TableHeaderCell("Time In")
-                Spacer(modifier = Modifier.width(20.dp))
-                TableHeaderCell("Time Out")
-                Spacer(modifier = Modifier.width(20.dp))
-                TableHeaderCell("Total Hours")
-                Spacer(modifier = Modifier.width(20.dp))
-                TableHeaderCell("Status")
-            }
-
-            // Iterate through logs and display each as a row
-            userLogsList.forEach { userLogs ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TableCell(userLogs.date)
-                    Spacer(modifier = Modifier.width(20.dp))
-                    TableCell(userLogs.time_in)
-                    Spacer(modifier = Modifier.width(20.dp))
-                    TableCell(userLogs.time_out)
-                    Spacer(modifier = Modifier.width(20.dp))
-                    TableCell(userLogs.totalHours)
-                    Spacer(modifier = Modifier.width(20.dp))
-                    TableCell(userLogs.status)
-                }
-            }
-        }
-    }
 
 
     @Composable

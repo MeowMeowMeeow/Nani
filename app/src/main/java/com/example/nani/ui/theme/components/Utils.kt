@@ -36,6 +36,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 //The Weekly progress
@@ -161,7 +164,44 @@ fun bottomIconImageColor(navController: NavController, label: JairosoftAppScreen
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     return if (currentRoute == label.name) ColorFilter.tint(MaterialTheme.colorScheme.secondary)
     else ColorFilter.tint(MaterialTheme.colorScheme.primary)
+
 }
+
+fun formatDate(unixTime: Long?): String {
+    return if (unixTime != null && unixTime != 0L) {
+        try {
+            // Assume it's in seconds, so multiply by 1000 to get milliseconds
+            val millis = if (unixTime < 1000000000000L) unixTime * 1000 else unixTime
+            val date = java.util.Date(millis)
+            val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            "-"
+        }
+    } else {
+        "-"
+    }
+}
+
+fun formatTime(unixTime: Long?): String {
+    return if (unixTime != null && unixTime != 0L) {
+        try {
+            val millis = if (unixTime < 1000000000000L) unixTime * 1000 else unixTime
+            val date = java.util.Date(millis)
+            val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            "-"
+        }
+    } else {
+        "-"
+    }
+}
+
+
+
+
+
 
 @Composable
 @Preview(name = "Light Theme", showBackground = true)

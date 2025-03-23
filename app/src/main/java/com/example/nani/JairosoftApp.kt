@@ -72,7 +72,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 fun JairosoftApp() {
     val context = LocalContext.current
 
-
+    val loginViewModel: LoginViewModel = viewModel()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = JairosoftAppScreen.valueOf(
@@ -169,7 +169,6 @@ fun JairosoftApp() {
                     SplashScreen(navController)
                 }
                 composable(route = JairosoftAppScreen.Login.name) {
-                    val loginViewModel: LoginViewModel = viewModel()
                     LoginScreen(
                         navController,
                         viewModel = loginViewModel
@@ -182,17 +181,13 @@ fun JairosoftApp() {
                 composable(route = JairosoftAppScreen.Dashboard.name) {
                     DashboardScreen(navController)
                 }
-                composable(
-                    JairosoftAppScreen.Analytics.name
-                ) { backStackEntry ->
-                    val token = backStackEntry.arguments?.getString("token") ?: ""
-
+                composable(route = JairosoftAppScreen.Analytics.name) {
                     val analyticsViewModel: AnalyticsViewModel = viewModel()
 
                     AnalyticsScreen(
                         navController = navController,
                         viewModel = analyticsViewModel,
-                        token = token
+                        loginViewModel = loginViewModel
                     )
                 }
 

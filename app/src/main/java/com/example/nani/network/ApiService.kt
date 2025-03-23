@@ -1,5 +1,6 @@
 package com.example.nani.network
 
+import com.example.nani.data.LogsResponse
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
 import retrofit2.http.Field
@@ -19,7 +20,8 @@ interface ApiService {
 
     @GET("logs")
     suspend fun getLogs(
-        @Header("Authorization") token: String): List<UserLogs>
+        @Header("Authorization") token: String
+    ): LogsResponse
 
 
 }

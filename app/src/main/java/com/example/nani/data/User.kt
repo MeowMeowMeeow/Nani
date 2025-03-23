@@ -3,6 +3,8 @@ package com.example.nani.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 //change for the API
@@ -14,23 +16,43 @@ data class UserEntity(
     @ColumnInfo(name = "password") val password: String
 )
 
-@Serializable
+
+
 data class UserLogs(
-    val _id: Int,
-    val time_in: String,
-    val totalHours: String,
-    val time_out:String,
-    val date: String,
+    @SerializedName("_id") val id: String?,
+    @SerializedName("User_id") val userId: String?,
+    @SerializedName("Attendance Status") val attendanceStatus: String?,
+    @SerializedName("Total Hours 100%") val totalHours: Int?,
+    @SerializedName("Created By") val createdBy: String?,
+    @SerializedName("time-in") val timeIn: Long?,
+    @SerializedName("time-out") val timeOut: Long?,
+    @SerializedName("Date") val date: Long?,
+    @SerializedName("Modified Date") val modifiedDate: Long?,
+    @SerializedName("Created Date") val createdDate: Long?,
+    @SerializedName("toggle") val toggle: String?
+)
+
+
+data class LogsResponse(
     val status: String,
+    val response: LogsList
 )
 
+data class LogsList(
+    @SerializedName("Logs")
+    val logs: List<UserLogs>
+)
 
-@Serializable
-data class User(
-    val id: Int,
+data class UserResponse(
     val token: String,
-    val status: String
+    val user_id: String,
+    val expires: Long
 )
 
-
-
+data class User(
+    val status: String,
+    val response: UserResponse
+) {
+    val token: String
+        get() = response.token
+}
