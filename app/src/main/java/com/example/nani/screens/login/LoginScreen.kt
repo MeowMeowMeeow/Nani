@@ -61,7 +61,7 @@
                     email,
                     password,
                     onSuccess = {
-                        // Success: Navigate
+
                         navController.navigate(JairosoftAppScreen.Dashboard.name)
                     },
                     onFailure = { error ->

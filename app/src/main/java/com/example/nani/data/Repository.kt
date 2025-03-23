@@ -8,7 +8,7 @@ class UserRepository {
 
     private val api = RetrofitInstance.api
 
-    // Login function
+
     suspend fun loginUser(email: String, password: String): User {
         Log.d("UserRepository", "Logging in user: $email")
         return api.loginUser(email, password).also {

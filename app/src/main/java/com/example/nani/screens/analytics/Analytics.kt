@@ -258,27 +258,27 @@
     @Composable
     fun AnalyticsTable(logs: List<UserLogs>) {
         Column {
-            // ✅ HEADER ROW (kept the old headers as you asked)
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 TableHeaderCell("Date")
                 Spacer(modifier = Modifier.width(46.dp))
                 TableHeaderCell("Time In")
                 Spacer(modifier = Modifier.width(5.dp))
-                TableHeaderCell("Location")  // ➡️ Placeholder since it's not in your model
+                TableHeaderCell("Location")
                 Spacer(modifier = Modifier.width(5.dp))
                 TableHeaderCell("Time Out")
                 Spacer(modifier = Modifier.width(15.dp))
-                TableHeaderCell("Late\nMinutes")  // ➡️ Placeholder
+                TableHeaderCell("Late\nMinutes")
                 Spacer(modifier = Modifier.width(18.dp))
-                TableHeaderCell("Undertime\nMinutes")  // ➡️ Placeholder
-                TableHeaderCell("Total Late &\nUndertime Minutes")  // ➡️ Placeholder
+                TableHeaderCell("Undertime\nMinutes")
+                TableHeaderCell("Total Late &\nUndertime Minutes")
                 Spacer(modifier = Modifier.width(18.dp))
                 TableHeaderCell("Total\nHours")
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ✅ DATA ROWS
+
             LazyColumn {
                 items(logs) { userLogs ->
 
@@ -289,7 +289,6 @@
                     val totalHours = "${userLogs.totalHours ?: 0} hrs"
 
 
-                    // These fields aren't in your data class, so I'm putting N/A or 0 as a placeholder
                     val location = "N/A"
                     val lateMinutes = 0
                     val undertimeMinutes = 0

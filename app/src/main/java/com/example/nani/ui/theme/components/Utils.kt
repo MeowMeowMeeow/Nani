@@ -170,7 +170,6 @@ fun bottomIconImageColor(navController: NavController, label: JairosoftAppScreen
 fun formatDate(unixTime: Long?): String {
     return if (unixTime != null && unixTime != 0L) {
         try {
-            // Assume it's in seconds, so multiply by 1000 to get milliseconds
             val millis = if (unixTime < 1000000000000L) unixTime * 1000 else unixTime
             val date = java.util.Date(millis)
             val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
