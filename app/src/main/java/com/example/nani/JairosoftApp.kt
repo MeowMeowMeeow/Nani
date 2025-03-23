@@ -34,13 +34,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
+
 import com.example.nani.screens.dashboard.DashboardScreen
 import com.example.nani.screens.login.LoginScreen
 import com.example.nani.screens.login.LoginViewModel
@@ -179,13 +182,20 @@ fun JairosoftApp() {
                 composable(route = JairosoftAppScreen.Dashboard.name) {
                     DashboardScreen(navController)
                 }
-                composable(route = JairosoftAppScreen.Analytics.name) {
+                composable(
+                    JairosoftAppScreen.Analytics.name
+                ) { backStackEntry ->
+                    val token = backStackEntry.arguments?.getString("token") ?: ""
+
                     val analyticsViewModel: AnalyticsViewModel = viewModel()
+
                     AnalyticsScreen(
                         navController = navController,
-                        viewModel = analyticsViewModel
+                        viewModel = analyticsViewModel,
+                        token = token
                     )
                 }
+
                 composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
                 composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
             }

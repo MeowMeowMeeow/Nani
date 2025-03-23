@@ -5,12 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
+import com.example.nani.data.UserRepository
 import com.example.nani.network.data.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+
+class LoginViewModel(
+    private val repository: UserRepository = UserRepository()
+) : ViewModel() {
 
     private val _details = MutableStateFlow<User?>(null)
     val details = _details.asStateFlow()
@@ -18,15 +22,18 @@ class LoginViewModel : ViewModel() {
     private val _logs = MutableStateFlow<List<UserLogs>>(emptyList())
     val logs = _logs.asStateFlow()
 
-    fun login(email: String, password: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun login(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         viewModelScope.launch {
             try {
-
-                val user = RetrofitInstance.api.loginUser(email, password)
+                val user = repository.loginUser(email, password)
 
                 if (user.status == "success") {
                     _details.value = user
-
 
                     fetchLogs(user.token)
                     onSuccess()
@@ -35,7 +42,7 @@ class LoginViewModel : ViewModel() {
                 }
 
             } catch (e: Exception) {
-                onFailure("Exception: ${e.localizedMessage}")
+                onFailure("Incorrect Password or Email")
             }
         }
     }
@@ -43,11 +50,12 @@ class LoginViewModel : ViewModel() {
     private fun fetchLogs(token: String) {
         viewModelScope.launch {
             try {
-                val logsResponse = RetrofitInstance.api.getLogs("Bearer $token")
+                val logsResponse = repository.getLogs(token)
                 _logs.value = logsResponse
             } catch (e: Exception) {
-
+                // Handle error (optional: show error to UI)
             }
         }
     }
 }
+

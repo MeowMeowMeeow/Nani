@@ -10,38 +10,54 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.nani.data.AnalyticsRepository
 
 import com.example.nani.data.UserLogs
 import com.example.nani.network.data.RetrofitInstance
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 import kotlinx.coroutines.launch
 
-class AnalyticsViewModel : ViewModel() {
 
-    private val _userLogs = mutableStateOf<List<UserLogs>>(emptyList())
-    val logs: State<List<UserLogs>> = _userLogs
+class AnalyticsViewModel(
+    private val repository: AnalyticsRepository = AnalyticsRepository()
+) : ViewModel() {
+
+    private val _logs = mutableStateOf<List<UserLogs>>(emptyList())
+    val logs: State<List<UserLogs>> = _logs
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
-    private val _errorMessage = mutableStateOf("")
-    val errorMessage: State<String> = _errorMessage
+    private val _errorMessage = mutableStateOf<String?>(null)
+    val errorMessage: State<String?> = _errorMessage
 
-    fun fetchLogs(token: String) {
+    private var token: String? = null
+
+    fun setToken(token: String) {
+        this.token = token
+    }
+
+    fun fetchLogs(token: String? = this.token) {
+        val authToken = token ?: run {
+            _errorMessage.value = "Token is missing"
+            return
+        }
+
+        _isLoading.value = true
+        _errorMessage.value = null
+
         viewModelScope.launch {
-            _isLoading.value = true
             try {
-                val bearerToken = "Bearer $token"
-                val logsResponse = RetrofitInstance.api.getLogs(bearerToken)
-                _userLogs.value = logsResponse
-                _errorMessage.value = ""
+                val result = repository.getLogs(authToken)
+                _logs.value = result
+                _isLoading.value = false
             } catch (e: Exception) {
-                _errorMessage.value = "Failed to load logs: ${e.message}"
-            } finally {
+                _errorMessage.value = "Failed to fetch logs: ${e.localizedMessage}"
                 _isLoading.value = false
             }
         }
     }
 }
-
 

@@ -10,15 +10,16 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
-    @GET("logs")
-    suspend fun getLogs(
-        @Header("Authorization") token: String): List<UserLogs>
-
 
     @FormUrlEncoded
     @POST("login")
     suspend fun loginUser(
         @Field("email") email: String,
         @Field("password") password: String): User
+
+    @GET("logs")
+    suspend fun getLogs(
+        @Header("Authorization") token: String): List<UserLogs>
+
 
 }
