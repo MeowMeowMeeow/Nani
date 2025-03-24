@@ -360,8 +360,10 @@ fun AttendanceCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
+
+            val sortedLogs = logs.sortedByDescending { it.date }.take(5)
             LazyColumn (  modifier = Modifier.heightIn(max = 200.dp)){
-                items(logs) { userLogs ->
+                items(sortedLogs) { userLogs ->
 
                     val formattedDate = formatDate(userLogs.date)
                     val formattedTimeIn = formatTime(userLogs.timeIn)
@@ -375,13 +377,12 @@ fun AttendanceCard(
 
                     ) {
                         TableCell(formattedDate)
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(25.dp))
 
                         TableCell(formattedTimeIn)
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(80.dp))
 
                         TableCell(formattedTimeOut)
-                        Spacer(modifier = Modifier.width(46.dp))
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 
