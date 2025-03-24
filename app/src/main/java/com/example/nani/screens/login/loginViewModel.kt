@@ -39,10 +39,7 @@ class LoginViewModel(
                 if (user.status == "success") {
                     _details.value = user
 
-                    // OLD:
-                    // SessionManager.saveUser(user)
 
-                    // NEW: Pass context!
                     SessionManager.saveUser(context, user)
 
                     fetchLogs(user.response.token)
@@ -53,7 +50,21 @@ class LoginViewModel(
 
 
             } catch (e: Exception) {
-                onFailure("Incorrect Password or Email")
+
+                val errorMessage = when (e) {
+                    is java.net.UnknownHostException -> "No internet connection"
+                    is java.net.SocketTimeoutException -> "Server timeout. Please try again."
+                    is retrofit2.HttpException -> {
+                        when (e.code()) {
+                            401 -> "Incorrect Email or Password"
+                            500 -> "Server error. Try again later."
+                            else -> "Something went wrong: ${e.message()}"
+                        }
+                    }
+                    else -> "An unexpected error occurred: ${e.localizedMessage ?: e.toString()}"
+                }
+
+                onFailure(errorMessage)
             }
         }
     }

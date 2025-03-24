@@ -46,7 +46,7 @@ fun SplashScreen(navController: NavController) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        delay(2000) // Simulate loading, or use animations.
+        delay(2000)
 
         val currentUser = SessionManager.getUser(context)
         val token = SessionManager.getToken(context)

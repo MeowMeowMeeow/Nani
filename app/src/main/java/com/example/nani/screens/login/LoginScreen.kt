@@ -46,6 +46,7 @@
     import com.example.nani.R
     import com.example.nani.JairosoftAppScreen
     import com.example.nani.ui.theme.NaNiTheme
+    import com.example.nani.ui.theme.components.isNetworkAvailable
 
 
     @Composable
@@ -54,11 +55,16 @@
         val user by viewModel.details.collectAsState()
 
         LoginGroup(
-            onUserEmail = {}, // Unused, skip for now
-            onUserPass = {},  // Unused, skip for now
+            onUserEmail = {}, // Unused
+            onUserPass = {},  // Unused
             onLogin = { email, password ->
-                viewModel.login(
 
+                if (!isNetworkAvailable(context)) {
+                    Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show()
+                    return@LoginGroup
+                }
+
+                viewModel.login(
                     email,
                     password,
                     onSuccess = {
@@ -69,6 +75,7 @@
                     },
                     onFailure = { error ->
                         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+
                     },
                     context = context
                 )
@@ -88,7 +95,7 @@
         onUserEmail: (String) -> Unit = {},
         onUserPass: (String) -> Unit = {},
         onForgotPassword: () -> Unit,
-        onLogin: (String, String) -> Unit // Pass email & password
+        onLogin:  (String, String) -> Unit // Pass email & password
 
     ) {
         var email by remember { mutableStateOf("") }
@@ -248,7 +255,8 @@
                 Spacer(modifier = Modifier.padding(bottom = 34.dp))
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {onLogin(email, pass)
+                    onClick = {
+                        onLogin(email, pass)
                               },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
