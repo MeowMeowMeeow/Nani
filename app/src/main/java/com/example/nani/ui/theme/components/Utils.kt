@@ -1,5 +1,6 @@
 package com.example.nani.ui.theme.components
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -35,6 +36,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
+import com.example.nani.data.User
+import com.example.nani.data.UserResponse
 import com.example.nani.ui.theme.NaNiTheme
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -198,8 +201,61 @@ fun formatTime(unixTime: Long?): String {
 }
 
 
+object SessionManager {
+
+    private const val PREF_NAME = "nani_app_prefs"
+    private const val KEY_USER_ID = "user_id"
+    private const val KEY_TOKEN = "token"
+
+    private var currentUser: UserResponse? = null
+    private var token: String? = null
+
+    private fun getPrefs(context: Context) =
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+
+    fun saveUser(context: Context, user: User) {
+        currentUser = user.response
+        token = user.token
+
+        getPrefs(context).edit().apply {
+            putString(KEY_USER_ID, user.response.user_id)
+            putString(KEY_TOKEN, user.token)
+            apply()
+        }
+    }
+
+    fun getUser(context: Context): UserResponse? {
+        if (currentUser == null) {
+            val userId = getPrefs(context).getString(KEY_USER_ID, null)
+            val savedToken = getPrefs(context).getString(KEY_TOKEN, null)
+
+            if (userId != null && savedToken != null) {
+                currentUser = UserResponse(
+                    token = savedToken,
+                    user_id = userId,
+                    expires = 0
+                )
+                token = savedToken
+            }
+        }
+        return currentUser
+    }
+
+    fun getToken(context: Context): String? {
+        if (token == null) {
+            token = getPrefs(context).getString(KEY_TOKEN, null)
+        }
+        return token
+    }
 
 
+    fun clearUser(context: Context) {
+        currentUser = null
+        token = null
+
+        getPrefs(context).edit().clear().apply()
+    }
+}
 
 
 @Composable

@@ -58,15 +58,19 @@
             onUserPass = {},  // Unused, skip for now
             onLogin = { email, password ->
                 viewModel.login(
+
                     email,
                     password,
                     onSuccess = {
-
-                        navController.navigate(JairosoftAppScreen.Dashboard.name)
+                        navController.navigate(JairosoftAppScreen.Dashboard.name) {
+                            popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     },
                     onFailure = { error ->
                         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                    }
+                    },
+                    context = context
                 )
             },
             onForgotPassword = {

@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.SessionManager
 import com.example.nani.ui.theme.components.arcOffset
 import com.example.nani.ui.theme.components.betweenSpace
 import com.example.nani.ui.theme.components.cardPadding
@@ -53,8 +55,10 @@ import com.example.nani.ui.theme.components.offset
 import com.example.nani.ui.theme.components.sizeCircular
 import com.example.nani.ui.theme.components.textSize
 
+
 @Composable
 fun ProfileScreen(navController: NavHostController) {
+    val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     Surface(
@@ -70,9 +74,14 @@ fun ProfileScreen(navController: NavHostController) {
 
     if (showLogoutDialog) {
         LogoutConfirmationDialog(
-            onConfirm = {
-                showLogoutDialog = false
-                navController.navigate(JairosoftAppScreen.Login.name)
+                onConfirm = {
+                    SessionManager.clearUser(
+                        context= context
+                    )
+
+                    navController.navigate(JairosoftAppScreen.Login.name) {
+                        popUpTo(JairosoftAppScreen.Dashboard.name) { inclusive = true }
+                    }
             },
             onDismiss = { showLogoutDialog = false }
         )

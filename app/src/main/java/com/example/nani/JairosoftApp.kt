@@ -52,6 +52,7 @@ import com.example.nani.screens.popUps.SplashScreen
 import com.example.nani.screens.profile.ProfileScreen
 import com.example.nani.screens.projects.ProjectsScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
+import com.example.nani.ui.theme.components.SessionManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -71,7 +72,8 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 @Composable
 fun JairosoftApp() {
     val context = LocalContext.current
-
+    val currentUser = remember { SessionManager.getUser(context) }
+    val token = remember { SessionManager.getToken(context) }
     val analyticsViewModel: AnalyticsViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
     val navController = rememberNavController()
@@ -112,6 +114,15 @@ fun JairosoftApp() {
             shouldShowBottomBar = false
         }
     }
+
+    val startDestination = remember {
+        if (!token.isNullOrEmpty() && currentUser != null) {
+            JairosoftAppScreen.Dashboard.name
+        } else {
+            JairosoftAppScreen.Login.name
+        }
+    }
+
 //edit na max width;
     Scaffold(
         snackbarHost = {
