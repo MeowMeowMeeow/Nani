@@ -361,26 +361,27 @@ fun AttendanceCard(
                 )
             }
 
-            val sortedLogs = logs.sortedByDescending { it.date }.take(5)
+            val sortedLogs = logs.sortedByDescending { it.date }.take(3)
             LazyColumn (  modifier = Modifier.heightIn(max = 200.dp)){
                 items(sortedLogs) { userLogs ->
 
                     val formattedDate = formatDate(userLogs.date)
                     val formattedTimeIn = formatTime(userLogs.timeIn)
                     val formattedTimeOut = formatTime(userLogs.timeOut)
-
+                    val horizontalScrollState = rememberScrollState()
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
+                            .horizontalScroll(horizontalScrollState)
 
                     ) {
                         TableCell(formattedDate)
                         Spacer(modifier = Modifier.width(25.dp))
 
                         TableCell(formattedTimeIn)
-                        Spacer(modifier = Modifier.width(80.dp))
+                        Spacer(modifier = Modifier.width(75.dp))
 
                         TableCell(formattedTimeOut)
                     }
