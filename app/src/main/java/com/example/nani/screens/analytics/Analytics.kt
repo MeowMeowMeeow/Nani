@@ -66,6 +66,7 @@
         Surface(
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 HeaderSection()
