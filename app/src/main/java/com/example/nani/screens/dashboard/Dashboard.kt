@@ -84,18 +84,16 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
             viewModel.fetchLogs(token)
         }
     }
-    val scrollState = rememberScrollState()
     Surface (
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .fillMaxSize()
-
+            .verticalScroll(rememberScrollState())
 
     ){
         Column (
             modifier = Modifier
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-                .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
 
         ){
@@ -308,13 +306,14 @@ fun AttendanceCard(
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
                 Text(
                     text = "Time Out",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
-            LazyColumn {
+            LazyColumn (  modifier = Modifier.heightIn(max = 200.dp)){
                 items(logs) { userLogs ->
 
                     val formattedDate = formatDate(userLogs.date)
@@ -337,7 +336,7 @@ fun AttendanceCard(
                         TableCell(formattedTimeOut)
                         Spacer(modifier = Modifier.width(46.dp))
                     }
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(5.dp))
 
                     Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
