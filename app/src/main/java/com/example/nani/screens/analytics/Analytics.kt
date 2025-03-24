@@ -26,14 +26,25 @@
     import com.example.nani.ui.theme.components.formatDate
     import com.example.nani.ui.theme.components.formatTime
     import com.example.nani.ui.theme.components.tablePadding
+    import java.util.Date
     import java.util.Locale
 
     @Composable
-    fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel, loginViewModel: LoginViewModel,) {
-        //need mu add og viewmodel and better repository para ma actionan ang token for the authentication
-        var selectedMonth by remember {
-            mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
+    fun AnalyticsScreen(
+        navController: NavHostController,
+        viewModel: AnalyticsViewModel,
+        loginViewModel: LoginViewModel,
+    ) {
+        var selectedStartDate by remember {
+            mutableStateOf(Calendar.getInstance().apply {
+                set(Calendar.DAY_OF_MONTH, 1)
+            }.time)
         }
+
+        var selectedEndDate by remember {
+            mutableStateOf(Calendar.getInstance().time)
+        }
+
         val logs by viewModel.logs
         Log.d("AnalyticsScreen", "Logs size: ${logs.size}")
 
@@ -60,10 +71,12 @@
                 HeaderSection()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                MonthSelection(selectedMonth) {
-                    selectedMonth = it
-
-                }
+                DateRangeSelection(
+                    selectedStartDate,
+                    selectedEndDate,
+                    onStartDateSelected = { selectedStartDate = it },
+                    onEndDateSelected = { selectedEndDate = it }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,47 +89,21 @@
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
                 } else {
-                    AnalyticsTableSection(logs)
+                    AnalyticsTableSection(logs, selectedStartDate, selectedEndDate)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-
                 DownloadReportButton()
             }
         }
     }
-
     @Composable
-    fun HeaderSection() {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.jairosoft),
-                contentDescription = "Logo",
-                modifier = Modifier.size(40.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Jairosoft",
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge,
-            )
-        }
-        Spacer(modifier = Modifier.height(14.dp))
-        Text(
-            text = "Analytics",
-            fontSize = 30.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleLarge
-        )
-    }
-
-    @Composable
-    fun MonthSelection(selectedMonth: String, onMonthSelected: (String) -> Unit) {
+    fun DateRangeSelection(
+        selectedStartDate: Date,
+        selectedEndDate: Date,
+        onStartDateSelected: (Date) -> Unit,
+        onEndDateSelected: (Date) -> Unit
+    ) {
         Card(
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -128,25 +115,93 @@
                     shape = RoundedCornerShape(12.dp)
                 )
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(16.dp)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = "Calendar Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    DatePickerButton("Start Date", selectedStartDate, onStartDateSelected)
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    DatePickerButton("End Date", selectedEndDate, onEndDateSelected)
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.time),
+                        contentDescription = "Time Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DatePickerButton(label: String, date: Date, onDateSelected: (Date) -> Unit) {
+        var showDatePicker by remember { mutableStateOf(false) }
+        val dateFormat = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+
+        Box {
+            TextButton(onClick = { showDatePicker = true }) {
+                Text("${label}: ${dateFormat.format(date)}")
+                Icon(
+                    painter = painterResource(id = R.drawable.dropdown),
+                    contentDescription = "Dropdown",
+                    modifier = Modifier.size(15.dp).padding(start = 5.dp)
+                )
+            }
+        }
+
+        if (showDatePicker) {
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = date.time
+            )
+
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                colors = DatePickerDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                ),
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            onDateSelected(Date(millis))
+                        }
+                        showDatePicker = false
+                    },  colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color.Cyan
+                    )
+                    ) {
+                        Text("OK", color = MaterialTheme.colorScheme.secondary)
+                    }
+                }
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.calendar),
-                    contentDescription = "Calendar Icon",
-                    modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                DatePickerDemo(selectedMonth, onMonthSelected)
-                Spacer(modifier = Modifier.weight(1f))
-                Image(
-                    painter = painterResource(id = R.drawable.time),
-                    contentDescription = "Time Icon",
-                    modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-                )
+                DatePicker( state = datePickerState,
+                    colors = DatePickerDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surface ,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationContentColor = MaterialTheme.colorScheme.secondary,
+                        weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+                        dayContentColor = MaterialTheme.colorScheme.onSurface,
+                        selectedDayContentColor = MaterialTheme.colorScheme.primary,
+                        selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        todayContentColor = MaterialTheme.colorScheme.secondary,
+                        disabledDayContentColor = MaterialTheme.colorScheme.background,
+                        yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedYearContentColor = MaterialTheme.colorScheme.primary,
+                        selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    ))
             }
         }
     }
@@ -225,12 +280,22 @@
             }
         }
     }
-
-
     @Composable
-    fun AnalyticsTableSection(logs: List<UserLogs>) {
-        val verticalScrollState = rememberScrollState()
+    fun AnalyticsTableSection(logs: List<UserLogs>, startDate: Date, endDate: Date) {
+        val filteredLogs = logs.filter { log ->
+            try {
+                val millis = if (log.date!! < 1000000000000L) log.date * 1000 else log.date
+                val logDate = Date(millis)
+
+                logDate >= startDate && logDate <= endDate
+            } catch (e: Exception) {
+                Log.e("AnalyticsScreen", "Date parsing error: ${e.localizedMessage}")
+                false
+            }
+        }
+
         val horizontalScrollState = rememberScrollState()
+
         Card(
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -247,7 +312,7 @@
                     .height(300.dp)
                     .horizontalScroll(horizontalScrollState)
             ) {
-                AnalyticsTable(logs)
+                AnalyticsTable(filteredLogs)
             }
         }
     }
@@ -255,6 +320,7 @@
 
     @Composable
     fun AnalyticsTable(logs: List<UserLogs>) {
+
         Column {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -358,3 +424,31 @@
 
 
 
+    @Composable
+    fun HeaderSection() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.jairosoft),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Jairosoft",
+                fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        Spacer(modifier = Modifier.height(14.dp))
+        Text(
+            text = "Analytics",
+            fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge
+        )
+    }
