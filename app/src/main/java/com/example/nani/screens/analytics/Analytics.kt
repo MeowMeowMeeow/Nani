@@ -38,7 +38,7 @@
         }
 
         val logs by viewModel.logs
-        Log.d("AnalyticsScreen", "Logs size: ${logs.size}") // Add this!
+        Log.d("AnalyticsScreen", "Logs size: ${logs.size}")
 
         val isLoading by viewModel.isLoading
         val errorMessage by viewModel.errorMessage
@@ -53,7 +53,6 @@
                 viewModel.fetchLogs(token)
             }
         }
-
 
         val scrollState = rememberScrollState()
         Surface(
@@ -229,6 +228,8 @@
             }
         }
     }
+
+
     @Composable
     fun AnalyticsTableSection(logs: List<UserLogs>) {
         val verticalScrollState = rememberScrollState()

@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.colorPicked
+
 
 
 //segmented button, Snack bar pang clock in, Alert Dialog
@@ -194,6 +196,8 @@ fun ProjectsGroup(    selected: Boolean,
 fun ListProjects(){
     //dapat mu take in siya sa value sa row
     //val status =
+
+    var projectexpand by remember { mutableStateOf(false) }
 Card( shape = RoundedCornerShape(12.dp),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
     modifier = Modifier
@@ -203,6 +207,7 @@ Card( shape = RoundedCornerShape(12.dp),
             MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f),
             shape = RoundedCornerShape(12.dp)
         )
+        .clickable {projectexpand = !projectexpand  }
 ) {
     Row(modifier =Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
     Column {
@@ -238,14 +243,30 @@ Card( shape = RoundedCornerShape(12.dp),
             modifier = Modifier.clip(RoundedCornerShape(50.dp)).background(color = colorPicked("In Progress")).padding(vertical = 1.dp , horizontal = 10.dp)
         )
         Spacer(Modifier.width(5.dp))
+
+        //update in utils
         Icon(
-            painter = painterResource(id = R.drawable.dropdown),
+            painter = when (projectexpand){
+                true ->  painterResource(id = R.drawable.drop_up)
+                false -> painterResource(id = R.drawable.drop_down)
+            },
             contentDescription = "Dropdown",
             modifier = Modifier.size(24.dp).padding(start = 10.dp),
             tint = MaterialTheme.colorScheme.onSurface
         )
+
+
 }
-}}
+    if (projectexpand) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Test")
+        }
+    }
+}
+}
 
 
 @Preview(name = "Light Theme")

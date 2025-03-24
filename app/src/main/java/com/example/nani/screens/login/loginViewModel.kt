@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val userRepository: UserRepository = UserRepository(),
-    private val analyticsRepository: AnalyticsRepository = AnalyticsRepository() // ✅ Add this
+    private val analyticsRepository: AnalyticsRepository = AnalyticsRepository()
 ) : ViewModel() {
 
     private val _details = MutableStateFlow<User?>(null)
@@ -36,7 +36,7 @@ class LoginViewModel(
                 if (user.status == "success") {
                     _details.value = user
 
-                    fetchLogs(user.response.token) // ✅ Correct!
+                    fetchLogs(user.response.token)
                     onSuccess()
                 } else {
                     onFailure("Login failed: ${user.status}")
@@ -51,10 +51,10 @@ class LoginViewModel(
     private fun fetchLogs(token: String) {
         viewModelScope.launch {
             try {
-                val logsResponse = analyticsRepository.getLogs(token) // ✅ Use analytics repo!
-                _logs.value = logsResponse // You already return List<UserLogs>
+                val logsResponse = analyticsRepository.getLogs(token)
+                _logs.value = logsResponse
             } catch (e: Exception) {
-                // Handle error
+
             }
         }
     }
