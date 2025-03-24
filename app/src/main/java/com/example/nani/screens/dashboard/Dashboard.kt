@@ -84,10 +84,12 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
             viewModel.fetchLogs(token)
         }
     }
+    val scrollState = rememberScrollState()
     Surface (
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .fillMaxSize()
+
 
     ){
         Column (
@@ -95,6 +97,7 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+
         ){
             Box(
                 modifier = Modifier.padding(bottom = 5.dp)
@@ -289,7 +292,28 @@ fun AttendanceCard(
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
-
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Date",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Time In",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Time Out",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
             LazyColumn {
                 items(logs) { userLogs ->
 
@@ -297,28 +321,7 @@ fun AttendanceCard(
                     val formattedTimeIn = formatTime(userLogs.timeIn)
                     val formattedTimeOut = formatTime(userLogs.timeOut)
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Date",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Time In",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = "Time Out",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -335,21 +338,22 @@ fun AttendanceCard(
                         Spacer(modifier = Modifier.width(46.dp))
                     }
                     Spacer(modifier = Modifier.height(15.dp))
-                    Button(
-                        onClick = { navController.navigate(JairosoftAppScreen.Analytics.name) },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
-                        Text(
-                            text = ("Show attendance"),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
+
                     Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
+            }
+            Button(
+                onClick = { navController.navigate(JairosoftAppScreen.Analytics.name) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text(
+                    text = ("Show attendance"),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
             }
         }
     }
