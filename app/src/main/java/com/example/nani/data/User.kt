@@ -55,3 +55,8 @@ data class User(
     val token: String
         get() = response.token
 }
+data class ErrorResponse(
+    val statusCode: Int?,
+    val reason: String?,
+    val message: String?
+)

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nani.data.AnalyticsRepository
+import com.example.nani.data.ErrorResponse
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
 import com.example.nani.data.UserRepository
@@ -13,6 +14,9 @@ import com.example.nani.ui.theme.components.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class LoginViewModel(
     private val userRepository: UserRepository = UserRepository(),
@@ -36,30 +40,37 @@ class LoginViewModel(
             try {
                 val user = userRepository.loginUser(email, password)
 
-                if (user.status == "success") {
+                if (user.status.equals("success", ignoreCase = true)) {
                     _details.value = user
-
-
                     SessionManager.saveUser(context, user)
 
                     fetchLogs(user.response.token)
+
                     onSuccess()
                 } else {
-                    onFailure("Login failed: ${user.status}")
+                    val errorMessage = when (user.status.lowercase()) {
+                        "failed" -> "Incorrect Email or Password"
+                        else -> "Login failed. Status: ${user.status}"
+                    }
+
+                    onFailure(errorMessage)
                 }
 
-
             } catch (e: Exception) {
-
                 val errorMessage = when (e) {
-                    is java.net.UnknownHostException -> "No internet connection"
-                    is java.net.SocketTimeoutException -> "Server timeout. Please try again."
-                    is retrofit2.HttpException -> {
-                        when (e.code()) {
-                            401 -> "Incorrect Email or Password"
-                            500 -> "Server error. Try again later."
-                            else -> "Something went wrong: ${e.message()}"
+                    is UnknownHostException -> "No internet connection"
+                    is SocketTimeoutException -> "Server timeout. Please try again."
+                    is HttpException -> {
+                        val errorBody = e.response()?.errorBody()?.string()
+
+                        val parsedError = try {
+                            val gson = com.google.gson.Gson()
+                            gson.fromJson(errorBody, ErrorResponse::class.java)
+                        } catch (jsonException: Exception) {
+                            null
                         }
+
+                        parsedError?.message ?: "HTTP error ${e.code()}: ${e.message()}"
                     }
                     else -> "An unexpected error occurred: ${e.localizedMessage ?: e.toString()}"
                 }
