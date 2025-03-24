@@ -26,12 +26,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
+import com.example.nani.ui.theme.components.SessionManager
 import kotlinx.coroutines.delay
 
 
@@ -41,7 +43,24 @@ fun SplashScreen(navController: NavController) {
     val offsetY = remember { Animatable(160f) }
     val alpha = remember { Animatable(0f) }
     val scale = remember { Animatable(0.8f) }
+    val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        delay(2000) // Simulate loading, or use animations.
+
+        val currentUser = SessionManager.getUser(context)
+        val token = SessionManager.getToken(context)
+
+        if (!token.isNullOrEmpty() && currentUser != null) {
+            navController.navigate(JairosoftAppScreen.Dashboard.name) {
+                popUpTo(JairosoftAppScreen.SplashScreen.name) { inclusive = true }
+            }
+        } else {
+            navController.navigate(JairosoftAppScreen.Login.name) {
+                popUpTo(JairosoftAppScreen.SplashScreen.name) { inclusive = true }
+            }
+        }
+    }
     LaunchedEffect(true) {
         alpha.animateTo(1f, animationSpec = tween(600))
         offsetY.animateTo(

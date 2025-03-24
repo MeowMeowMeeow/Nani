@@ -40,6 +40,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.nani.data.UserResponse
 
 import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
@@ -72,8 +73,8 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 @Composable
 fun JairosoftApp() {
     val context = LocalContext.current
-    val currentUser = remember { SessionManager.getUser(context) }
-    val token = remember { SessionManager.getToken(context) }
+    var currentUser by remember { mutableStateOf<UserResponse?>(null) }
+    var token by remember { mutableStateOf<String?>(null) }
     val analyticsViewModel: AnalyticsViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
     val navController = rememberNavController()
@@ -114,14 +115,17 @@ fun JairosoftApp() {
             shouldShowBottomBar = false
         }
     }
-
-    val startDestination = remember {
+    LaunchedEffect(Unit) {
+        currentUser = SessionManager.getUser(context)
+        token = SessionManager.getToken(context)
+    }
+    val startDestination =
         if (!token.isNullOrEmpty() && currentUser != null) {
             JairosoftAppScreen.Dashboard.name
         } else {
             JairosoftAppScreen.Login.name
         }
-    }
+
 
 //edit na max width;
     Scaffold(

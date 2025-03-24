@@ -1,6 +1,7 @@
 package com.example.nani.ui.theme.components
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -256,7 +257,22 @@ object SessionManager {
         getPrefs(context).edit().clear().apply()
     }
 }
+class TokenStorage(context: Context) {
 
+    private val prefs: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+    fun saveToken(token: String) {
+        prefs.edit().putString("auth_token", token).apply()
+    }
+
+    fun getToken(): String? {
+        return prefs.getString("auth_token", null)
+    }
+
+    fun clearToken() {
+        prefs.edit().remove("auth_token").apply()
+    }
+}
 
 @Composable
 @Preview(name = "Light Theme", showBackground = true)

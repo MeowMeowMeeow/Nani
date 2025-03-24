@@ -23,9 +23,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,6 +43,7 @@ import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.ProgressBar
+import com.example.nani.ui.theme.components.TokenStorage
 import com.example.nani.ui.theme.components.formatDate
 import com.example.nani.ui.theme.components.formatTime
 import kotlinx.coroutines.delay
@@ -49,7 +52,16 @@ import java.util.*
 
 //update sa viewmodel only after nag login once ra siya mu animate
 @Composable
-fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewModel, loginViewModel: LoginViewModel) {
+fun DashboardScreen(
+    navController: NavHostController,
+    viewModel: AnalyticsViewModel,
+    loginViewModel: LoginViewModel
+) {
+    val context = LocalContext.current
+
+    // Create an instance of TokenStorage
+    val tokenStorage = remember { TokenStorage(context) }
+
     val logs by viewModel.logs
     Log.d("DashboardScreen", "Logs size: ${logs.size}")
 
@@ -58,13 +70,17 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
     Log.d("DashboardScreen", "Error: $errorMessage")
 
     val user = loginViewModel.details.collectAsState().value
-    val token = user?.token ?: ""
+    val loginToken = user?.token.orEmpty()
 
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
+
     val visibleDateCard = remember { mutableStateOf(false) }
     val visibleProjectsCard = remember { mutableStateOf(false) }
     val visibleAttendanceCard = remember { mutableStateOf(false) }
     val visibleTrackedHoursCard = remember { mutableStateOf(false) }
+
+    // Flag to ensure we only set the token once on screen entry
+    var hasInitialized by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!visibleDateCard.value) {
@@ -78,28 +94,50 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
             visibleTrackedHoursCard.value = true
         }
     }
-    LaunchedEffect(token) {
-        if (token.isNotEmpty()) {
-            viewModel.setToken(token)
-            viewModel.fetchLogs(token)
+
+    LaunchedEffect(Unit) {
+        if (!hasInitialized) {
+            hasInitialized = true
+
+            // First, try to get token from TokenStorage
+            val storedToken = tokenStorage.getToken()
+
+            if (!storedToken.isNullOrEmpty()) {
+                // Use the stored token if available
+                viewModel.setToken(storedToken)
+                viewModel.fetchLogs(storedToken)
+
+                Log.d("DashboardScreen", "Using stored token: $storedToken")
+            } else if (loginToken.isNotEmpty()) {
+                // If no stored token, fallback to loginViewModel token
+                viewModel.setToken(loginToken)
+                viewModel.fetchLogs(loginToken)
+
+                // Save it to TokenStorage for future use
+                tokenStorage.saveToken(loginToken)
+
+                Log.d("DashboardScreen", "Saved login token to storage: $loginToken")
+            } else {
+                Log.d("DashboardScreen", "No token found!")
+            }
         }
     }
-    Surface (
+
+    Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-
-    ){
-        Column (
+    ) {
+        Column(
             modifier = Modifier
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                 .background(MaterialTheme.colorScheme.background)
+        ) {
 
-        ){
             Box(
                 modifier = Modifier.padding(bottom = 5.dp)
-            ){
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.jairosoft),
                     contentDescription = "Logo",
@@ -114,26 +152,26 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                         text = "Jairosoft",
                         fontSize = 24.sp,
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleLarge
                     )
                 }
             }
-            Spacer(
-                modifier = Modifier.height(14.dp)
-            )
-            Column(
-                modifier = Modifier
-            ) {
-                // Left-aligned Company Logo and Name
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Column {
                 Spacer(modifier = Modifier.width(16.dp))
+
                 Text(
                     text = "Dashboard",
                     fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
-                // Today's Date Card
+
+                // Date Card
                 AnimatedVisibility(
                     visible = visibleDateCard.value,
                     enter = slideInVertically(
@@ -145,9 +183,12 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                         icon = R.drawable.calendar,
                         title = "Today is $currentDate",
                         subtitle = "Have a productive day!"
-                    )}
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(30.dp))
-                // On-Going Projects Card
+
+                // Projects Card
                 AnimatedVisibility(
                     visible = visibleProjectsCard.value,
                     enter = slideInVertically(
@@ -159,8 +200,11 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                         icon = R.drawable.folder,
                         title = "On-Going Projects",
                         subtitle = "--               --                --"
-                    )}
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(30.dp))
+
                 // Attendance Card
                 AnimatedVisibility(
                     visible = visibleAttendanceCard.value,
@@ -172,9 +216,11 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                     AttendanceCard(
                         navController = navController,
                         logs = logs
-                    )}
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(30.dp))
-                // Tracked Hours Card
+
                 AnimatedVisibility(
                     visible = visibleTrackedHoursCard.value,
                     enter = slideInVertically(
@@ -182,8 +228,9 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
                         animationSpec = tween(durationMillis = 500)
                     ) + fadeIn(animationSpec = tween(durationMillis = 600))
                 ) {
+                    TrackedCard()
                 }
-                TrackedCard()}
+            }
         }
     }
 }
