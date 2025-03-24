@@ -72,6 +72,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 fun JairosoftApp() {
     val context = LocalContext.current
 
+    val analyticsViewModel: AnalyticsViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -112,90 +113,93 @@ fun JairosoftApp() {
         }
     }
 //edit na max width;
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 110.dp)
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = 110.dp)
 
-                )
-            },
-            bottomBar = {
-                if (shouldShowBottomBar) {
-                    JairosoftAppBar(navController)
-                }
-            },
-            floatingActionButton = {
-                if (shouldShowBottomBar) {
-                    FloatingActionButton(
-                        onClick = {
-                            isGreen = !isGreen
-
-                            snackbarJob?.cancel()
-                            snackbarJob = scope.launch {
-                                snackbarHostState.currentSnackbarData?.dismiss()
-
-                                snackbarHostState.showSnackbar(
-                                    message = if (isGreen) "Clocked Out" else "Clocked In",
-                                    duration = SnackbarDuration.Short
-                                )
-                            }
-                        },
-                        shape = CircleShape,
-                        containerColor = fabColor,
-                        elevation = FloatingActionButtonDefaults.elevation(12.dp),
-                        modifier = Modifier
-                            .size(90.dp)
-                            .offset(y = 60.dp, x = 8.dp)
-                    ) {
-                        Icon(
-                            painter = fabIcon,
-                            contentDescription = "Fab Icon",
-                            tint = Color.White,
-                            modifier = Modifier.rotate(fabRotation)
-                        )
-                    }
-                }
-            }, floatingActionButtonPosition = FabPosition.Center
-        ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = JairosoftAppScreen.SplashScreen.name,
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable(route = JairosoftAppScreen.SplashScreen.name) {
-                    SplashScreen(navController)
-                }
-                composable(route = JairosoftAppScreen.Login.name) {
-                    LoginScreen(
-                        navController,
-                        viewModel = loginViewModel
-                    )
-
-                }
-                composable(route = JairosoftAppScreen.Forgot.name) {
-                    ForgotPasswordScreen(navController)
-                }
-                composable(route = JairosoftAppScreen.Dashboard.name) {
-                    DashboardScreen(navController)
-                }
-                composable(route = JairosoftAppScreen.Analytics.name) {
-                    val analyticsViewModel: AnalyticsViewModel = viewModel()
-
-                    AnalyticsScreen(
-                        navController = navController,
-                        viewModel = analyticsViewModel,
-                        loginViewModel = loginViewModel
-                    )
-                }
-
-                composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
-                composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
+            )
+        },
+        bottomBar = {
+            if (shouldShowBottomBar) {
+                JairosoftAppBar(navController)
             }
+        },
+        floatingActionButton = {
+            if (shouldShowBottomBar) {
+                FloatingActionButton(
+                    onClick = {
+                        isGreen = !isGreen
+
+                        snackbarJob?.cancel()
+                        snackbarJob = scope.launch {
+                            snackbarHostState.currentSnackbarData?.dismiss()
+
+                            snackbarHostState.showSnackbar(
+                                message = if (isGreen) "Clocked Out" else "Clocked In",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    },
+                    shape = CircleShape,
+                    containerColor = fabColor,
+                    elevation = FloatingActionButtonDefaults.elevation(12.dp),
+                    modifier = Modifier
+                        .size(90.dp)
+                        .offset(y = 60.dp, x = 8.dp)
+                ) {
+                    Icon(
+                        painter = fabIcon,
+                        contentDescription = "Fab Icon",
+                        tint = Color.White,
+                        modifier = Modifier.rotate(fabRotation)
+                    )
+                }
+            }
+        }, floatingActionButtonPosition = FabPosition.Center
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = JairosoftAppScreen.SplashScreen.name,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = JairosoftAppScreen.SplashScreen.name) {
+                SplashScreen(navController)
+            }
+            composable(route = JairosoftAppScreen.Login.name) {
+                LoginScreen(
+                    navController,
+                    viewModel = loginViewModel
+                )
+
+            }
+            composable(route = JairosoftAppScreen.Forgot.name) {
+                ForgotPasswordScreen(navController)
+            }
+            composable(route = JairosoftAppScreen.Dashboard.name) {
+                DashboardScreen(
+                    navController = navController,
+                    viewModel = analyticsViewModel,
+                    loginViewModel = loginViewModel)
+            }
+            composable(route = JairosoftAppScreen.Analytics.name) {
+
+
+                AnalyticsScreen(
+                    navController = navController,
+                    viewModel = analyticsViewModel,
+                    loginViewModel = loginViewModel
+                )
+            }
+
+            composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
+            composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
         }
     }
+}
 
 
 
