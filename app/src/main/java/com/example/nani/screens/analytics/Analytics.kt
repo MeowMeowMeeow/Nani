@@ -333,6 +333,7 @@
         Column {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Spacer(modifier = Modifier.width(25.dp))
                 TableHeaderCell("Date")
                 Spacer(modifier = Modifier.width(46.dp))
                 TableHeaderCell("Time In")
@@ -347,6 +348,7 @@
                 TableHeaderCell("Total Late &\nUndertime Minutes")
                 Spacer(modifier = Modifier.width(18.dp))
                 TableHeaderCell("Total\nHours")
+                Spacer(modifier = Modifier.width(8.dp))
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -362,7 +364,7 @@
                                 .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.width(15.dp))
+                            Spacer(modifier = Modifier.width(40.dp))
                             TableCell("-")
                             Spacer(modifier = Modifier.width(90.dp))
 
@@ -370,19 +372,19 @@
                             Spacer(modifier = Modifier.width(60.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(46.dp))
+                            Spacer(modifier = Modifier.width(65.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(46.dp))
+                            Spacer(modifier = Modifier.width(75.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(100.dp))
+                            Spacer(modifier = Modifier.width(85.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(95.dp))
+                            Spacer(modifier = Modifier.width(105.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(70.dp))
+                            Spacer(modifier = Modifier.width(110.dp))
 
                             TableCell("-")
                         }
@@ -409,27 +411,28 @@
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             TableCell(formattedDate)
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Spacer(modifier = Modifier.width(20.dp))
 
                             TableCell(formattedTimeIn)
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Spacer(modifier = Modifier.width(20.dp))
 
                             TableCell(location)
-                            Spacer(modifier = Modifier.width(10.dp))
+                            Spacer(modifier = Modifier.width(30.dp))
 
                             TableCell(formattedTimeOut)
-                            Spacer(modifier = Modifier.width(46.dp))
+                            Spacer(modifier = Modifier.width(45.dp))
 
                             TableCell(lateMinutes.toString())
-                            Spacer(modifier = Modifier.width(64.dp))
+                            Spacer(modifier = Modifier.width(80.dp))
 
                             TableCell(undertimeMinutes.toString())
-                            Spacer(modifier = Modifier.width(95.dp))
+                            Spacer(modifier = Modifier.width(110.dp))
 
                             TableCell(totalLateUndertime.toString())
-                            Spacer(modifier = Modifier.width(70.dp))
+                            Spacer(modifier = Modifier.width(80.dp))
 
                             TableCell(totalHours)
+                            Spacer(modifier = Modifier.width(8.dp))
 
                             Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                         }
