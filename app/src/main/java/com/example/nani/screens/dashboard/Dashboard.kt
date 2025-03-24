@@ -78,6 +78,12 @@ fun DashboardScreen(navController: NavHostController, viewModel: AnalyticsViewMo
             visibleTrackedHoursCard.value = true
         }
     }
+    LaunchedEffect(token) {
+        if (token.isNotEmpty()) {
+            viewModel.setToken(token)
+            viewModel.fetchLogs(token)
+        }
+    }
     Surface (
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
@@ -342,6 +348,7 @@ fun AttendanceCard(
                             color = MaterialTheme.colorScheme.tertiary
                         )
                     }
+                    Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
             }
         }

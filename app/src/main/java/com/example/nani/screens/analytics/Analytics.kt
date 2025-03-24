@@ -361,9 +361,12 @@
                                 .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Spacer(modifier = Modifier.width(15.dp))
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(66.dp))
+                            Spacer(modifier = Modifier.width(90.dp))
+
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(60.dp))
 
                             TableCell("-")
                             Spacer(modifier = Modifier.width(46.dp))
@@ -372,10 +375,7 @@
                             Spacer(modifier = Modifier.width(46.dp))
 
                             TableCell("-")
-                            Spacer(modifier = Modifier.width(46.dp))
-
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(64.dp))
+                            Spacer(modifier = Modifier.width(100.dp))
 
                             TableCell("-")
                             Spacer(modifier = Modifier.width(95.dp))
