@@ -30,13 +30,10 @@
 
     @Composable
     fun AnalyticsScreen(navController: NavHostController, viewModel: AnalyticsViewModel, loginViewModel: LoginViewModel,) {
-
         //need mu add og viewmodel and better repository para ma actionan ang token for the authentication
-
         var selectedMonth by remember {
             mutableStateOf(SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time))
         }
-
         val logs by viewModel.logs
         Log.d("AnalyticsScreen", "Logs size: ${logs.size}")
 
