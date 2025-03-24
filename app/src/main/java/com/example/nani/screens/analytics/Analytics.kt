@@ -116,7 +116,7 @@
                 )
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.CenterVertically){
                     Image(
                         painter = painterResource(id = R.drawable.calendar),
                         contentDescription = "Calendar Icon",
@@ -126,9 +126,6 @@
                     Spacer(modifier = Modifier.width(8.dp))
 
                     DatePickerButton("Start Date", selectedStartDate, onStartDateSelected)
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    DatePickerButton("End Date", selectedEndDate, onEndDateSelected)
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -138,6 +135,17 @@
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = "Calendar Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    DatePickerButton("End Date", selectedEndDate, onEndDateSelected)
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
@@ -344,53 +352,90 @@
 
 
             LazyColumn {
-                items(logs) { userLogs ->
+                if (logs.isEmpty()) {
+                    // If logs are empty, show a placeholder row with "-"
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.width(5.dp))
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(66.dp))
 
-                    val formattedDate = formatDate(userLogs.date)
-                    val formattedTimeIn = formatTime(userLogs.timeIn)
-                    val formattedTimeOut = formatTime(userLogs.timeOut)
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(46.dp))
 
-                    val totalHours = "${userLogs.totalHours ?: 0} hrs"
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(46.dp))
 
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(46.dp))
 
-                    val location = "N/A"
-                    val lateMinutes = 0
-                    val undertimeMinutes = 0
-                    val totalLateUndertime = lateMinutes + undertimeMinutes
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(64.dp))
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TableCell(formattedDate)
-                        Spacer(modifier = Modifier.width(5.dp))
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(95.dp))
 
-                        TableCell(formattedTimeIn)
-                        Spacer(modifier = Modifier.width(5.dp))
+                            TableCell("-")
+                            Spacer(modifier = Modifier.width(70.dp))
 
-                        TableCell(location)
-                        Spacer(modifier = Modifier.width(10.dp))
+                            TableCell("-")
+                        }
+                    }
+                } else {
+                    // Your existing logic to show userLogs
+                    items(logs) { userLogs ->
 
-                        TableCell(formattedTimeOut)
-                        Spacer(modifier = Modifier.width(46.dp))
+                        val formattedDate = formatDate(userLogs.date)
+                        val formattedTimeIn = formatTime(userLogs.timeIn)
+                        val formattedTimeOut = formatTime(userLogs.timeOut)
 
-                        TableCell(lateMinutes.toString())
-                        Spacer(modifier = Modifier.width(64.dp))
+                        val totalHours = "${userLogs.totalHours ?: 0} hrs"
 
-                        TableCell(undertimeMinutes.toString())
-                        Spacer(modifier = Modifier.width(95.dp))
+                        val location = "N/A"
+                        val lateMinutes = 0
+                        val undertimeMinutes = 0
+                        val totalLateUndertime = lateMinutes + undertimeMinutes
 
-                        TableCell(totalLateUndertime.toString())
-                        Spacer(modifier = Modifier.width(70.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TableCell(formattedDate)
+                            Spacer(modifier = Modifier.width(5.dp))
 
-                        TableCell(totalHours)
-                        Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
+                            TableCell(formattedTimeIn)
+                            Spacer(modifier = Modifier.width(5.dp))
 
+                            TableCell(location)
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            TableCell(formattedTimeOut)
+                            Spacer(modifier = Modifier.width(46.dp))
+
+                            TableCell(lateMinutes.toString())
+                            Spacer(modifier = Modifier.width(64.dp))
+
+                            TableCell(undertimeMinutes.toString())
+                            Spacer(modifier = Modifier.width(95.dp))
+
+                            TableCell(totalLateUndertime.toString())
+                            Spacer(modifier = Modifier.width(70.dp))
+
+                            TableCell(totalHours)
+
+                            Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
+                        }
                     }
                 }
             }
+
         }
     }
 
