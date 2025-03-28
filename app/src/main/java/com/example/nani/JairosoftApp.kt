@@ -51,6 +51,7 @@ import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.popUps.ForgotPasswordScreen
 import com.example.nani.screens.popUps.SplashScreen
 import com.example.nani.screens.profile.ProfileScreen
+import com.example.nani.screens.projects.ProjectViewModel
 import com.example.nani.screens.projects.ProjectsScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.SessionManager
@@ -77,6 +78,7 @@ fun JairosoftApp() {
     var token by remember { mutableStateOf<String?>(null) }
     val analyticsViewModel: AnalyticsViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
+    val projectViewModel:ProjectViewModel= viewModel()
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = JairosoftAppScreen.valueOf(
@@ -210,7 +212,10 @@ fun JairosoftApp() {
                 )
             }
 
-            composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(navController) }
+            composable(route = JairosoftAppScreen.Projects.name) { ProjectsScreen(
+                navController,
+                viewModel = projectViewModel
+            ) }
             composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
         }
     }
