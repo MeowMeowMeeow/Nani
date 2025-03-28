@@ -53,6 +53,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
@@ -205,18 +206,21 @@ fun ProjectsGroup(
 
         Spacer(Modifier.height(10.dp))
 
-        // List of projects directly below the TabRow
-        ListProjects(
-            projects = projects,
-            onDelete = onDelete
-        )
-
+        // Use Box to stack LazyColumn and FAB
         Box(modifier = Modifier.fillMaxSize()) {
+            ListProjects(
+                projects = projects,
+                onDelete = onDelete,
+                modifier = Modifier
+                    .padding(bottom = 80.dp)  // Ensure space for the FAB
+            )
+
             FloatingActionButton(
                 onClick = { onClick() },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(vertical = 40.dp, horizontal = 30.dp)
+                    .padding(20.dp)
+                    .zIndex(1f)  // Bring FAB to the front
             ) {
                 Image(
                     painter = painterResource(R.drawable.edit),
@@ -229,9 +233,10 @@ fun ProjectsGroup(
 }
 
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListProjects(projects: List<Project>, onDelete: (Project) -> Unit) {
+fun ListProjects(projects: List<Project>, onDelete: (Project) -> Unit, modifier: Modifier) {
     LazyColumn {
         items(projects) { project ->
             var projectexpand by remember { mutableStateOf(false) }
@@ -298,11 +303,11 @@ fun ListProjects(projects: List<Project>, onDelete: (Project) -> Unit) {
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         modifier = Modifier.padding(8.dp)
                     ) {
-                        Text(text = "Details: ${project.description}")
+                        Text(text = "Details: ${project.description}", color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
             }
-
+Spacer(modifier =  Modifier.padding(10.dp))
 
         }
     }
