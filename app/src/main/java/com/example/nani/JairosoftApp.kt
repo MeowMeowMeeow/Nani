@@ -216,7 +216,12 @@ fun JairosoftApp() {
                 navController,
                 viewModel = projectViewModel
             ) }
-            composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(navController) }
+            composable(route = JairosoftAppScreen.Profile.name) { ProfileScreen(
+                navController,
+                viewModel = analyticsViewModel,
+                loginViewModel = loginViewModel,
+                projectsViewModel = projectViewModel,
+            ) }
         }
     }
 }

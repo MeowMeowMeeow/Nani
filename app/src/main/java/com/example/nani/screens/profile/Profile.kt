@@ -39,11 +39,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
+import com.example.nani.data.Project
+import com.example.nani.data.UserLogs
+import com.example.nani.screens.analytics.AnalyticsViewModel
+import com.example.nani.screens.login.LoginViewModel
+import com.example.nani.screens.projects.ProjectViewModel
 import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.SessionManager
 import com.example.nani.ui.theme.components.arcOffset
@@ -55,11 +61,34 @@ import com.example.nani.ui.theme.components.offset
 import com.example.nani.ui.theme.components.sizeCircular
 import com.example.nani.ui.theme.components.textSize
 
-
 @Composable
-fun ProfileScreen(navController: NavHostController) {
+fun ProfileScreen(
+    navController: NavHostController,
+    viewModel: AnalyticsViewModel,
+    loginViewModel: LoginViewModel,
+    projectsViewModel: ProjectViewModel // Add ProjectViewModel as a parameter
+) {
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
+
+    val isLoading by viewModel.isLoading
+    val errorMessage by viewModel.errorMessage
+
+    val logs by viewModel.logs
+    val user = loginViewModel.details.collectAsState().value
+    val token = user?.token ?: ""
+
+    // Fetch all projects
+    val projects by projectsViewModel.projects.collectAsState(emptyList())
+
+    LaunchedEffect(token) {
+        if (token.isNotEmpty()) {
+            viewModel.setToken(token)
+            viewModel.fetchLogs(token)
+        }
+        // Always fetch projects when the profile screen is opened
+        projectsViewModel.getAllProjects()
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -68,28 +97,31 @@ fun ProfileScreen(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
         ProfileGroup(
-            onLogoutClick = { showLogoutDialog = true }
+            onLogoutClick = { showLogoutDialog = true },
+            logs = logs,
+            projects = projects // Pass the list of projects to the ProfileGroup
         )
     }
 
     if (showLogoutDialog) {
         LogoutConfirmationDialog(
-                onConfirm = {
-                    SessionManager.clearUser(
-                        context= context
-                    )
-
-                    navController.navigate(JairosoftAppScreen.Login.name) {
-                        popUpTo(JairosoftAppScreen.Dashboard.name) { inclusive = true }
-                    }
+            onConfirm = {
+                SessionManager.clearUser(context)
+                navController.navigate(JairosoftAppScreen.Login.name) {
+                    popUpTo(JairosoftAppScreen.Dashboard.name) { inclusive = true }
+                }
             },
             onDismiss = { showLogoutDialog = false }
         )
     }
 }
 
+
 @Composable
-fun ProfileGroup(onLogoutClick: () -> Unit) {
+fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
+                 projects: List<Project>) {
+    val inProgressCount = projects.count { it.status == "In Progress" }
+    val toDoCount = projects.count { it.status == "To Do" }
     Column {
         Box(
             modifier = Modifier
@@ -143,8 +175,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit) {
                         .height(100.dp)
                         .align(Alignment.BottomCenter)
                         .offset(y = arcOffset())
-                        .zIndex(0f)
-                        ,
+                        .zIndex(0f),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background)
                 )
             }
@@ -165,77 +196,64 @@ fun ProfileGroup(onLogoutClick: () -> Unit) {
                     .border(2.dp, MaterialTheme.colorScheme.onSurfaceVariant, CircleShape)
                     .zIndex(2f)
             )
-        }}
-
-Column {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-        Spacer(modifier = Modifier.padding(130.dp))
-        Text(
-            text = "Name Name",
-            style = MaterialTheme.typography.titleLarge, //from Type.kt refer in bubble.io specifics
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary, //Add sa theme later
-            modifier = Modifier,
-            )
-        Text(
-            text = "Description",
-            style = MaterialTheme.typography.titleMedium, //from Type.kt refer in bubble.io specifics
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary, //Add sa theme later
-            modifier = Modifier,
-
-            )
+        }
     }
-    Spacer(modifier = Modifier.height(60.dp))
-Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
 
-        ProgressCard(
-            "10",
-            "Projects"
-        )
-        Spacer(modifier = Modifier.width((betweenSpace())))
-        ProgressCard(
-            "50",
-            "Tasks"
-        )
-     }
-    }
-}
-
-@Composable
-fun ProgressCard(percent:String, label:String){
-    OutlinedCard ( colors = CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .5f),
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-        )
-    {
-            Column (horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(cardPadding())) {
-                Box {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(sizeCircular()).padding(20.dp),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.background,
-                    )
-                }
-
+    Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.padding(130.dp))
+            Text(
+                text = "Name Name",
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                text = "Description",
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+        Spacer(modifier = Modifier.height(60.dp))
+        Row(  modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "$percent%",
+                    text = "$inProgressCount",
+                    fontSize = 50.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    style = textSize(),
-                    modifier = Modifier.offset(y = offset(), x = 1.dp)
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
+                Text(
+                    text = "In Progress",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Spacer(modifier = Modifier.width(100.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "$toDoCount",
+                    fontSize = 50.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
+                Text(
+                    text = "To Do",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium
                 )
 
-                    Text(
-                        text = label,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = textSize(),
-                        modifier = Modifier.offset(y=-(20.dp))
-                    )
             }
-       }
+        }
     }
+}
 
 @Composable
 fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
@@ -258,15 +276,4 @@ fun LogoutConfirmationDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
         title = { Text("Log out") },
         text = { Text("Are you sure you want to log out?", color = MaterialTheme.colorScheme.primary,style= MaterialTheme.typography.labelSmall ) }
     )
-}
-
-@Preview(name = "Light Theme")
-@Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ProfilePreview() {
-    NaNiTheme {
-        ProfileScreen(
-            navController = rememberNavController()
-        )
-    }
 }

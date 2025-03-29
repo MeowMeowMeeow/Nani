@@ -26,4 +26,8 @@ interface ProjectDao {
 
     @Delete
     suspend fun deleteProject(project: Project)
+
+    @Query("SELECT * FROM projects")
+    fun getAllProjects(): Flow<List<Project>>
+
 }

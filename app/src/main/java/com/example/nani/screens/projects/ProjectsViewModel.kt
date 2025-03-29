@@ -38,6 +38,13 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
             getProjectsByStatus(status)
         }
     }
+    fun getAllProjects() {
+        viewModelScope.launch {
+            projectDao.getAllProjects().collect { projectList ->
+                _projects.value = projectList
+            }
+        }
+    }
 
 
     fun updateProject(project: Project) {
