@@ -84,11 +84,11 @@ fun DashboardScreen(
 
     LaunchedEffect(Unit) {
         if (!visibleDateCard.value) {
-            delay(300)
+            delay(200)
             visibleDateCard.value = true
-            delay(350)
+            delay(300)
             visibleProjectsCard.value = true
-            delay(400)
+            delay(450)
             visibleAttendanceCard.value = true
             delay(450)
             visibleTrackedHoursCard.value = true
@@ -198,8 +198,8 @@ fun DashboardScreen(
                     visible = visibleAttendanceCard.value,
                     enter = slideInVertically(
                         initialOffsetY = { -100 },
-                        animationSpec = tween(durationMillis = 500)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 600))
+                        animationSpec = tween(durationMillis = 700)
+                    ) + fadeIn(animationSpec = tween(durationMillis = 800))
                 ) {
                     AttendanceCard(
                         navController = navController,
