@@ -40,12 +40,11 @@ android {
         compose = true
     }
 }
-
 dependencies {
     // Room (Database)
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")  // Room annotation processor
+    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
 
     // Compose
     implementation(platform("androidx.compose:compose-bom:2025.02.00"))
@@ -53,6 +52,10 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material:1.7.8")
+
+    // Foundation for SwipeToDismiss
+    implementation("androidx.compose.foundation:foundation:1.7.8")
 
     // Core & Lifecycle
     implementation("androidx.core:core-ktx:1.15.0")
@@ -71,17 +74,18 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
-    //location
-    implementation (libs.play.services.location)
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
-// design
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
+
+    // Location
+    implementation(libs.play.services.location)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+
+    // ConstraintLayout for Compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.1")
-    implementation("androidx.compose.material3:material3:1.3.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.02.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")

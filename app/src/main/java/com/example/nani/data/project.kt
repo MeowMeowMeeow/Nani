@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "projects")
 data class Project(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
-    val description: String,
-    val status: String
+    var name: String,
+    var description: String,
+    var status: String,
+    var moreDescription: String,
 )

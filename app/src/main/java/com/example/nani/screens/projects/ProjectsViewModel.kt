@@ -16,6 +16,7 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
     val projects: StateFlow<List<Project>> = _projects
 
+
     fun getProjectsByStatus(status: String) {
         viewModelScope.launch {
             projectDao.getProjectsByStatus(status).collect { projectList ->
@@ -24,23 +25,33 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun addProject(name: String, description: String, status: String) {
+
+    fun addProject(name: String, description: String, moreDescription: String, status: String) {
         viewModelScope.launch {
-            val project = Project(name = name, description = description, status = status)
+            val project = Project(
+                name = name,
+                description = description,
+                moreDescription = moreDescription,
+                status = status
+            )
             projectDao.insertProject(project)
+            getProjectsByStatus(status)
         }
     }
+
 
     fun updateProject(project: Project) {
         viewModelScope.launch {
             projectDao.updateProject(project)
+            getProjectsByStatus(project.status)
         }
     }
+
 
     fun deleteProject(project: Project) {
         viewModelScope.launch {
             projectDao.deleteProject(project)
+            getProjectsByStatus(project.status)
         }
     }
-
 }
