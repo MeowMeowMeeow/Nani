@@ -74,11 +74,16 @@ import com.example.nani.ui.theme.components.colorPicked
 //segmented button, Snack bar pang clock in, Alert Dialog
 @Composable
 fun ProjectsScreen(navController: NavHostController, viewModel: ProjectViewModel) {
-    val projectList by viewModel.projects.collectAsState()
+    val projectList by viewModel.projects.collectAsState(initial = emptyList()) // Avoid displaying old data
     var selectedStatus by remember { mutableStateOf("In Progress") }
+    var isInitialized by remember { mutableStateOf(false) } // Track initialization
+    val currentStatus by remember { mutableStateOf(viewModel.currentStatus) }
 
     LaunchedEffect(selectedStatus) {
-        viewModel.getProjectsByStatus(selectedStatus)
+        if (!isInitialized) {
+            viewModel.getProjectsByStatus(selectedStatus)
+            isInitialized = true
+        }
     }
 
     Surface(
@@ -98,9 +103,9 @@ fun ProjectsScreen(navController: NavHostController, viewModel: ProjectViewModel
             onDelete = { project -> viewModel.deleteProject(project) },
             onEdit = { project -> viewModel.updateProject(project) }
         )
-
     }
 }
+
 
 
 @Composable
@@ -122,7 +127,9 @@ fun ProjectsGroup(
     var projectName by remember { mutableStateOf("") }
     var projectDescription by remember { mutableStateOf("") }
     var projectStatus by remember { mutableStateOf(titles[0]) }
-
+    LaunchedEffect(selectedStatus) {
+        state = titles.indexOf(selectedStatus)
+    }
     Column(
         modifier = Modifier
             .padding(top = 10.dp, start = 10.dp, end = 10.dp)
@@ -230,7 +237,7 @@ fun ProjectsGroup(
                 onDelete = onDelete,
                 onEdit = { updatedProject ->
                     // Update the state based on the edited project's status
-                    state = titles.indexOf(updatedProject.status)
+                    state = titles.indexOf(updatedProject.status) // Update the tab on edit
                     onStatusChange(updatedProject.status)
                     onEdit(updatedProject)
                 },

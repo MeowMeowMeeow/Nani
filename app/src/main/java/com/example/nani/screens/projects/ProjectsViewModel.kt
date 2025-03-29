@@ -16,15 +16,26 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
     val projects: StateFlow<List<Project>> = _projects
 
+    var currentStatus = "In Progress" // Maintain the selected status
 
-    fun getProjectsByStatus(status: String) {
+    init {
+        // Initialize with filtered data to avoid flashing
+        loadProjects(currentStatus)
+    }
+
+    private fun loadProjects(status: String) {
         viewModelScope.launch {
+            _projects.value = emptyList() // Clear the list before fetching
             projectDao.getProjectsByStatus(status).collect { projectList ->
                 _projects.value = projectList
             }
         }
     }
 
+    fun getProjectsByStatus(status: String) {
+        currentStatus = status
+        loadProjects(status)
+    }
 
     fun addProject(name: String, description: String, moreDescription: String, status: String) {
         viewModelScope.launch {
@@ -35,30 +46,30 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
                 status = status
             )
             projectDao.insertProject(project)
-            getProjectsByStatus(status)
+            loadProjects(currentStatus) // Reload based on current status
         }
     }
+
     fun getAllProjects() {
         viewModelScope.launch {
+            _projects.value = emptyList() // Clear the list before fetching
             projectDao.getAllProjects().collect { projectList ->
                 _projects.value = projectList
             }
         }
     }
 
-
     fun updateProject(project: Project) {
         viewModelScope.launch {
             projectDao.updateProject(project)
-            getProjectsByStatus(project.status)
+            loadProjects(currentStatus) // Reload based on current status
         }
     }
-
 
     fun deleteProject(project: Project) {
         viewModelScope.launch {
             projectDao.deleteProject(project)
-            getProjectsByStatus(project.status)
+            loadProjects(currentStatus) // Reload based on current status
         }
     }
 }
