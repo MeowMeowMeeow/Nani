@@ -229,9 +229,13 @@ fun ProjectsGroup(
                 projects = projects,
                 onDelete = onDelete,
                 onEdit = { updatedProject ->
+                    // Update the state based on the edited project's status
+                    state = titles.indexOf(updatedProject.status)
+                    onStatusChange(updatedProject.status)
                     onEdit(updatedProject)
                 },
             )
+
 
 
             FloatingActionButton(
