@@ -1,6 +1,7 @@
 package com.example.nani.screens.popUps
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +68,7 @@ fun ForgotPasswordGroup(
     onUserEmail: (String) -> Unit = {},
     onBackClick: () -> Unit , modifier: Modifier,
     ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -150,7 +153,7 @@ fun ForgotPasswordGroup(
             }
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { },
+                onClick = {   Toast.makeText(context, "Still working on this feature", Toast.LENGTH_SHORT).show()},
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
                 ),

@@ -3,6 +3,7 @@
     import android.icu.text.SimpleDateFormat
     import android.icu.util.Calendar
     import android.util.Log
+    import android.widget.Toast
     import androidx.compose.foundation.*
     import androidx.compose.foundation.layout.*
     import androidx.compose.foundation.lazy.LazyColumn
@@ -448,8 +449,9 @@
 
     @Composable
     fun DownloadReportButton() {
+        val context = LocalContext.current
         Button(
-            onClick = { /* TODO: Handle Download Report */ },
+            onClick = { Toast.makeText(context, "Still working on this feature", Toast.LENGTH_SHORT).show()},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
