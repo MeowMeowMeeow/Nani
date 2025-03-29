@@ -1,7 +1,11 @@
     package com.example.nani.screens.login
 
+    import android.Manifest
+    import android.content.pm.PackageManager
     import android.content.res.Configuration
     import android.widget.Toast
+    import androidx.activity.compose.rememberLauncherForActivityResult
+    import androidx.activity.result.contract.ActivityResultContracts
     import androidx.compose.material3.ButtonDefaults
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
@@ -17,6 +21,7 @@
     import androidx.compose.foundation.layout.size
     import androidx.compose.foundation.rememberScrollState
     import androidx.compose.foundation.verticalScroll
+    import androidx.compose.material3.AlertDialog
     import androidx.compose.material3.Button
     import androidx.compose.runtime.Composable
     import androidx.compose.ui.res.painterResource
@@ -28,6 +33,7 @@
     import androidx.compose.material3.Surface
     import androidx.compose.material3.Text
     import androidx.compose.material3.TextFieldDefaults
+    import androidx.compose.runtime.LaunchedEffect
     import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
     import androidx.compose.runtime.mutableStateOf
@@ -41,6 +47,7 @@
     import androidx.compose.ui.text.input.VisualTransformation
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.tooling.preview.Preview
+    import androidx.core.content.ContextCompat
     import androidx.navigation.NavController
     import androidx.navigation.compose.rememberNavController
     import com.example.nani.R
@@ -53,6 +60,24 @@
     fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
         val context = LocalContext.current
         val user by viewModel.details.collectAsState()
+
+        val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+
+        // Register the permission launcher
+        val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(context, "Location permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Location permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Check and request permission
+        LaunchedEffect(Unit) {
+            if (ContextCompat.checkSelfPermission(context, locationPermission) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(locationPermission)
+            }
+        }
 
         LoginGroup(
             onUserEmail = {}, // Unused
@@ -75,7 +100,6 @@
                     },
                     onFailure = { error ->
                         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-
                     },
                     context = context
                 )
@@ -85,6 +109,7 @@
             }
         )
     }
+
 
 
 

@@ -72,7 +72,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
-
+    //location
+    implementation (libs.play.services.location)
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 // design
     implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.1")

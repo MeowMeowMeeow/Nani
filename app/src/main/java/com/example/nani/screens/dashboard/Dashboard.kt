@@ -42,6 +42,7 @@ import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.ui.theme.NaNiTheme
+import com.example.nani.ui.theme.components.GetUserCity
 import com.example.nani.ui.theme.components.ProgressBar
 import com.example.nani.ui.theme.components.TokenStorage
 import com.example.nani.ui.theme.components.formatDate
@@ -58,28 +59,27 @@ fun DashboardScreen(
     loginViewModel: LoginViewModel
 ) {
     val context = LocalContext.current
-
-    // Create an instance of TokenStorage
     val tokenStorage = remember { TokenStorage(context) }
 
     val logs by viewModel.logs
-    Log.d("DashboardScreen", "Logs size: ${logs.size}")
-
     val isLoading by viewModel.isLoading
     val errorMessage by viewModel.errorMessage
-    Log.d("DashboardScreen", "Error: $errorMessage")
-
     val user = loginViewModel.details.collectAsState().value
     val loginToken = user?.token.orEmpty()
 
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
+    var cityName by remember { mutableStateOf("Unknown") }
+
+    // Get city name using the composable
+    GetUserCity { city ->
+        cityName = city
+    }
 
     val visibleDateCard = remember { mutableStateOf(false) }
     val visibleProjectsCard = remember { mutableStateOf(false) }
     val visibleAttendanceCard = remember { mutableStateOf(false) }
     val visibleTrackedHoursCard = remember { mutableStateOf(false) }
 
-    // Flag to ensure we only set the token once on screen entry
     var hasInitialized by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -98,27 +98,15 @@ fun DashboardScreen(
     LaunchedEffect(Unit) {
         if (!hasInitialized) {
             hasInitialized = true
-
-            // First, try to get token from TokenStorage
             val storedToken = tokenStorage.getToken()
 
             if (!storedToken.isNullOrEmpty()) {
-                // Use the stored token if available
                 viewModel.setToken(storedToken)
                 viewModel.fetchLogs(storedToken)
-
-                Log.d("DashboardScreen", "Using stored token: $storedToken")
             } else if (loginToken.isNotEmpty()) {
-                // If no stored token, fallback to loginViewModel token
                 viewModel.setToken(loginToken)
                 viewModel.fetchLogs(loginToken)
-
-                // Save it to TokenStorage for future use
                 tokenStorage.saveToken(loginToken)
-
-                Log.d("DashboardScreen", "Saved login token to storage: $loginToken")
-            } else {
-                Log.d("DashboardScreen", "No token found!")
             }
         }
     }
@@ -171,7 +159,7 @@ fun DashboardScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Date Card
+                // Date Card with City Name
                 AnimatedVisibility(
                     visible = visibleDateCard.value,
                     enter = slideInVertically(
@@ -182,7 +170,7 @@ fun DashboardScreen(
                     DateDashboardCard(
                         icon = R.drawable.calendar,
                         title = "Today is $currentDate",
-                        subtitle = "Have a productive day!"
+                        subtitle = "Have a productive day at $cityName!"
                     )
                 }
 
