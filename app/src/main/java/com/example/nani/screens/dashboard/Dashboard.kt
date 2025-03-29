@@ -1,7 +1,13 @@
 package com.example.nani.screens.dashboard
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
+import android.location.LocationManager
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -18,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -42,12 +50,25 @@ import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.ui.theme.NaNiTheme
-import com.example.nani.ui.theme.components.GetUserCity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nani.ui.theme.components.ProgressBar
 import com.example.nani.ui.theme.components.TokenStorage
 import com.example.nani.ui.theme.components.formatDate
 import com.example.nani.ui.theme.components.formatTime
+import com.example.nani.ui.theme.components.getUserCity
+import com.example.nani.ui.theme.components.hasLocationPermission
+import com.example.nani.ui.theme.components.isLocationEnabled
+import com.example.nani.ui.theme.components.requestUpdatedLocation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -70,17 +91,57 @@ fun DashboardScreen(
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
     var cityName by remember { mutableStateOf("Unknown") }
 
-    // Get city name using the composable
-    GetUserCity { city ->
-        cityName = city
-    }
-
     val visibleDateCard = remember { mutableStateOf(false) }
     val visibleProjectsCard = remember { mutableStateOf(false) }
     val visibleAttendanceCard = remember { mutableStateOf(false) }
     val visibleTrackedHoursCard = remember { mutableStateOf(false) }
 
     var hasInitialized by remember { mutableStateOf(false) }
+
+    // Get the initial location when the screen is loaded
+    LaunchedEffect(Unit) {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(context, "Please enable location services", Toast.LENGTH_SHORT).show()
+        } else {
+            try {
+                cityName = getUserCity(context)
+                Log.d("Dashboard", "Initial location: $cityName")
+            } catch (e: Exception) {
+                cityName = "Error getting location"
+                Log.e("Dashboard", "Error getting initial location: ${e.message}")
+            }
+        }
+    }
+    DisposableEffect(Unit) {
+        // Create the BroadcastReceiver
+        val locationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == LocationManager.PROVIDERS_CHANGED_ACTION) {
+                    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val updatedCityName = requestUpdatedLocation(context)
+                            cityName = if (updatedCityName.isNotEmpty()) updatedCityName else "Unknown"
+                            Log.d("Dashboard", "Location re-enabled: $cityName")
+                        }
+                    } else {
+                        cityName = "Unknown"
+                        Log.d("Dashboard", "Location services disabled")
+                    }
+                }
+            }
+        }
+
+        // Register the receiver
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        context.registerReceiver(locationReceiver, filter)
+
+        // Unregister the receiver on dispose
+        onDispose {
+            context.unregisterReceiver(locationReceiver)
+        }
+    }
 
     LaunchedEffect(Unit) {
         if (!visibleDateCard.value) {
@@ -122,7 +183,6 @@ fun DashboardScreen(
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-
             Box(
                 modifier = Modifier.padding(bottom = 5.dp)
             ) {
@@ -160,13 +220,7 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Date Card with City Name
-                AnimatedVisibility(
-                    visible = visibleDateCard.value,
-                    enter = slideInVertically(
-                        initialOffsetY = { -100 },
-                        animationSpec = tween(durationMillis = 500)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 600))
-                ) {
+                AnimatedVisibility(visible = visibleDateCard.value) {
                     DateDashboardCard(
                         icon = R.drawable.calendar,
                         title = "Today is $currentDate",
@@ -176,14 +230,7 @@ fun DashboardScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                // Projects Card
-                AnimatedVisibility(
-                    visible = visibleProjectsCard.value,
-                    enter = slideInVertically(
-                        initialOffsetY = { -100 },
-                        animationSpec = tween(durationMillis = 500)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 600))
-                ) {
+                AnimatedVisibility(visible = visibleProjectsCard.value) {
                     ProjectsCard(
                         icon = R.drawable.folder,
                         title = "On-Going Projects",
@@ -193,14 +240,7 @@ fun DashboardScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                // Attendance Card
-                AnimatedVisibility(
-                    visible = visibleAttendanceCard.value,
-                    enter = slideInVertically(
-                        initialOffsetY = { -100 },
-                        animationSpec = tween(durationMillis = 700)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 800))
-                ) {
+                AnimatedVisibility(visible = visibleAttendanceCard.value) {
                     AttendanceCard(
                         navController = navController,
                         logs = logs
@@ -209,19 +249,15 @@ fun DashboardScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                AnimatedVisibility(
-                    visible = visibleTrackedHoursCard.value,
-                    enter = slideInVertically(
-                        initialOffsetY = { -100 },
-                        animationSpec = tween(durationMillis = 500)
-                    ) + fadeIn(animationSpec = tween(durationMillis = 600))
-                ) {
+                AnimatedVisibility(visible = visibleTrackedHoursCard.value) {
                     TrackedCard()
                 }
             }
         }
     }
 }
+
+
 
 
 

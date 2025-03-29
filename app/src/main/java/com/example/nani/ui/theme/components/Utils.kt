@@ -1,5 +1,13 @@
 package com.example.nani.ui.theme.components
 
+import com.google.android.gms.location.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+
+import com.google.android.gms.location.LocationRequest.Builder
+
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -9,9 +17,13 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
+import com.google.android.gms.location.Priority
+
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
@@ -59,7 +71,10 @@ import com.example.nani.JairosoftAppScreen
 import com.example.nani.data.User
 import com.example.nani.data.UserResponse
 import com.example.nani.ui.theme.NaNiTheme
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -79,34 +94,44 @@ fun requestLocationPermission(activity: Activity) {
         1001
     )
 }
+fun isLocationEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+}
 
 @SuppressLint("MissingPermission")
-@Composable
-fun GetUserCity(onCityRetrieved: (String) -> Unit) {
-    val context = LocalContext.current
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-    LaunchedEffect(Unit) {
-        if (hasLocationPermission(context)) {
-            try {
-                val location = fusedLocationClient.lastLocation.await()
-                location?.let {
-                    val geocoder = Geocoder(context, Locale.getDefault())
-                    val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-                    if (!addresses.isNullOrEmpty()) {
-                        val city = addresses[0].locality ?: "Unknown City"
-                        onCityRetrieved(city)
+suspend fun getUserCity(context: Context): String {
+    return try {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        val location = suspendCancellableCoroutine<Location?> { continuation ->
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    continuation.resume(location) {}
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(null) {
+                        Log.e("CityError", "Error: $exception")
                     }
                 }
-            } catch (e: Exception) {
-                Log.e("CityError", "Error getting city: ${e.message}")
-            }
-        } else {
-            requestLocationPermission(context as Activity)
-            Toast.makeText(context, "Location permission required", Toast.LENGTH_SHORT).show()
         }
+
+        location?.let {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+            if (!addresses.isNullOrEmpty()) {
+                addresses[0].locality ?: "Unknown City"
+            } else {
+                "Unknown City"
+            }
+        } ?: "Location not available"
+    } catch (e: Exception) {
+        Log.e("CityError", "Error getting city: ${e.message}")
+        "Error getting city"
     }
 }
+
+
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -130,6 +155,51 @@ fun GetUserLocation() {
         }
     }
 }
+
+
+@SuppressLint("MissingPermission")
+suspend fun requestUpdatedLocation(context: Context): String {
+    return try {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
+        val location = suspendCancellableCoroutine<Location?> { continuation ->
+            val locationRequest = LocationRequest.Builder(
+                Priority.PRIORITY_HIGH_ACCURACY, 1000L
+            ).apply {
+                setMinUpdateIntervalMillis(500L)
+                setMaxUpdates(1)
+            }.build()
+
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    continuation.resume(locationResult.lastLocation) {}
+                    fusedLocationClient.removeLocationUpdates(this)
+                }
+            }
+
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
+
+        location?.let {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+            if (!addresses.isNullOrEmpty()) {
+                addresses[0].locality ?: "Unknown City"
+            } else {
+                "Unknown City"
+            }
+        } ?: "Location not available"
+    } catch (e: Exception) {
+        Log.e("CityError", "Error requesting updated location: ${e.message}")
+        "Error getting city"
+    }
+}
+
+
 
 
 //The Weekly progress
