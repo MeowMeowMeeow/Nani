@@ -16,7 +16,7 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
     private val _projects = MutableStateFlow<List<Project>>(emptyList())
     val projects: StateFlow<List<Project>> = _projects
 
-    var currentStatus = "In Progress" // Maintain the selected status
+    var currentStatus = "In Progress"
 
     init {
         // Initialize with filtered data to avoid flashing

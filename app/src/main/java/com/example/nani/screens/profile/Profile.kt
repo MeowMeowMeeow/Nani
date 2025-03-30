@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -122,6 +123,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                  projects: List<Project>) {
     val inProgressCount = projects.count { it.status == "In Progress" }
     val toDoCount = projects.count { it.status == "To Do" }
+    val completedCount = projects.count{it.status == "Completed"}
     Column {
         Box(
             modifier = Modifier
@@ -221,7 +223,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
         Spacer(modifier = Modifier.height(60.dp))
         Row(  modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally,  modifier = Modifier.padding(15.dp)) {
                 Text(
                     text = "$inProgressCount",
                     fontSize = 50.sp,
@@ -232,11 +234,18 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 Text(
                     text = "In Progress",
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
-            Spacer(modifier = Modifier.width(100.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Divider(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(1.dp)
+                    .background(MaterialTheme.colorScheme.onSurface)
+            )
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(15.dp)) {
                 Text(
                     text = "$toDoCount",
                     fontSize = 50.sp,
@@ -245,9 +254,32 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text = "To Do",
+                    text = "To Do Lists",
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleSmall
+                )
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(1.dp)
+                    .background(MaterialTheme.colorScheme.onSurface)
+            )
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(15.dp)) {
+                Text(
+                    text = "$completedCount",
+                    fontSize = 50.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
+                Text(
+                    text = "Completed",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall
                 )
 
             }

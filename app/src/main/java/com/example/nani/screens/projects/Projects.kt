@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -60,6 +62,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,7 +91,9 @@ fun ProjectsScreen(navController: NavHostController, viewModel: ProjectViewModel
 
     Surface(
         color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         ProjectsGroup(
             selectedStatus = selectedStatus,
@@ -130,10 +135,10 @@ fun ProjectsGroup(
     LaunchedEffect(selectedStatus) {
         state = titles.indexOf(selectedStatus)
     }
+
     Column(
         modifier = Modifier
             .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         Box(
@@ -231,7 +236,11 @@ fun ProjectsGroup(
 
         Spacer(Modifier.height(10.dp))
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            //change in conditionals
+            modifier = Modifier.height(550.dp)
+                .fillMaxWidth()
+        ) {
             ListProjects(
                 projects = projects,
                 onDelete = onDelete,
@@ -277,7 +286,11 @@ fun ProjectsGroup(
                 )
             },
             text = {
-                Column {
+                Column (
+                    modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+                ) {
                     OutlinedTextField(
                         value = projectName,
                         onValueChange = { projectName = it },
@@ -506,7 +519,11 @@ fun ListProjects(
                         )
                     },
                     text = {
-                        Column {
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                                .padding(8.dp)
+                        ) {
                             OutlinedTextField(
                                 value = editedName,
                                 onValueChange = { editedName = it },
