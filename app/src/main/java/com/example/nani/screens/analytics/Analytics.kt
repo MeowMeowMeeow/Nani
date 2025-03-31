@@ -122,7 +122,7 @@
                 Row(verticalAlignment = Alignment.CenterVertically){
                     Image(
                         painter = painterResource(id = R.drawable.start),
-                        contentDescription = "Calendar Icon",
+                        contentDescription = "Start Icon",
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
@@ -134,15 +134,15 @@
 
                     Image(
                         painter = painterResource(id = R.drawable.calendar),
-                        contentDescription = "Time Icon",
-                        modifier = Modifier.size(24.dp),
+                        contentDescription = "Calendar Icon",
+                        modifier = Modifier.size(50.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = painterResource(id = R.drawable.end),
-                        contentDescription = "Calendar Icon",
+                        contentDescription = "End Icon",
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
