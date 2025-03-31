@@ -345,6 +345,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                     .fillMaxWidth(),
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 color = MaterialTheme.colorScheme.onPrimaryContainer )
+            Spacer(modifier = Modifier.height(100.dp))
 
         }
     }

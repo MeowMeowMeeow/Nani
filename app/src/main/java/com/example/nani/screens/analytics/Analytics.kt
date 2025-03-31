@@ -18,6 +18,7 @@
     import androidx.compose.ui.platform.LocalContext
     import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.text.style.TextAlign
+    import androidx.compose.ui.unit.Dp
     import androidx.compose.ui.unit.dp
     import androidx.compose.ui.unit.sp
     import androidx.navigation.NavHostController
@@ -333,61 +334,45 @@
 
         Column {
 
+            // Table Header
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Spacer(modifier = Modifier.width(25.dp))
-                TableHeaderCell("Date")
-                Spacer(modifier = Modifier.width(46.dp))
-                TableHeaderCell("Time In")
-                Spacer(modifier = Modifier.width(5.dp))
-                TableHeaderCell("Location")
-                Spacer(modifier = Modifier.width(5.dp))
-                TableHeaderCell("Time Out")
-                Spacer(modifier = Modifier.width(15.dp))
-                TableHeaderCell("Late\nMinutes")
-                Spacer(modifier = Modifier.width(18.dp))
-                TableHeaderCell("Undertime\nMinutes")
-                TableHeaderCell("Total Late &\nUndertime Minutes")
-                Spacer(modifier = Modifier.width(18.dp))
-                TableHeaderCell("Total\nHours")
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(16.dp))
+                listOf(
+                    "Date" to 80.dp,
+                    "Time In" to 80.dp,
+                    "Location" to 100.dp,
+                    "Time Out" to 80.dp,
+                    "Late\nMinutes" to 80.dp,
+                    "Undertime\nMinutes" to 100.dp,
+                    "Total Late &\nUndertime Minutes" to 140.dp,
+                    "Total\nHours" to 80.dp
+                ).forEach { (title, width) ->
+                    TableHeaderCell(title, width)
+                }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
 
             LazyColumn {
                 if (logs.isEmpty()) {
-                    // If logs are empty, show a placeholder row with "-"
+                    // Placeholder row when logs are empty
                     item {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.width(40.dp))
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(90.dp))
+                            Spacer(modifier = Modifier.width(16.dp))
 
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(60.dp))
+                                TableCell("-", 80.dp)
+                                TableCell("-", 80.dp)
+                                TableCell("-", 100.dp)
+                                TableCell("-", 80.dp)
+                                 TableCell("-", 80.dp)
+                                TableCell("-", 100.dp)
+                                TableCell("-", 140.dp)
+                                TableCell("-", 80.dp)
 
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(65.dp))
-
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(75.dp))
-
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(85.dp))
-
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(105.dp))
-
-                            TableCell("-")
-                            Spacer(modifier = Modifier.width(110.dp))
-
-                            TableCell("-")
                         }
                     }
                 } else {
@@ -396,9 +381,7 @@
                         val formattedDate = formatDate(userLogs.date)
                         val formattedTimeIn = formatTime(userLogs.timeIn)
                         val formattedTimeOut = formatTime(userLogs.timeOut)
-
                         val totalHours = "${userLogs.totalHours ?: 0} hrs"
-
                         val location = "N/A"
                         val lateMinutes = 0
                         val undertimeMinutes = 0
@@ -407,40 +390,33 @@
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TableCell(formattedDate)
-                            Spacer(modifier = Modifier.width(20.dp))
+                            Spacer(modifier = Modifier.width(16.dp))
+                            listOf(
+                                formattedDate to 80.dp,
+                                formattedTimeIn to 80.dp,
+                                location to 100.dp,
+                                formattedTimeOut to 80.dp,
+                                lateMinutes.toString() to 80.dp,
+                                undertimeMinutes.toString() to 100.dp,
+                                totalLateUndertime.toString() to 140.dp,
+                                totalHours to 80.dp
+                            ).forEach { (text, width) ->
+                                TableCell(text, width)
+                            }
 
-                            TableCell(formattedTimeIn)
-                            Spacer(modifier = Modifier.width(20.dp))
-
-                            TableCell(location)
-                            Spacer(modifier = Modifier.width(30.dp))
-
-                            TableCell(formattedTimeOut)
-                            Spacer(modifier = Modifier.width(45.dp))
-
-                            TableCell(lateMinutes.toString())
-                            Spacer(modifier = Modifier.width(80.dp))
-
-                            TableCell(undertimeMinutes.toString())
-                            Spacer(modifier = Modifier.width(110.dp))
-
-                            TableCell(totalLateUndertime.toString())
-                            Spacer(modifier = Modifier.width(80.dp))
-
-                            TableCell(totalHours)
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
+                            Log.d(
+                                "AnalyticsTable",
+                                "Date: $formattedDate, Time In: $formattedTimeIn, Time Out: $formattedTimeOut, Location: $location"
+                            )
                         }
                     }
                 }
             }
-
         }
+
     }
 
 
@@ -463,15 +439,30 @@
 
 
     @Composable
-    fun TableHeaderCell(text: String) {
-        Text(text = text, style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(start = 8.dp ,top = 8.dp , bottom = 8.dp, end = tablePadding() ), color = MaterialTheme.colorScheme.onSurface , textAlign = TextAlign.Center)
+    fun TableHeaderCell(text: String, width: Dp) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier
+                .width(width)
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp, end = tablePadding()),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
     }
 
     @Composable
-    fun TableCell(text: String) {
-        Text(text = text, fontSize = 12.sp, modifier = Modifier.padding(start = 8.dp ,top = 8.dp , bottom = 8.dp, end = tablePadding()), color = MaterialTheme.colorScheme.onSurface, textAlign = TextAlign.Center)
+    fun TableCell(text: String, width: Dp) {
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .width(width)
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp, end = tablePadding()),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
     }
-
 
 
     @Composable

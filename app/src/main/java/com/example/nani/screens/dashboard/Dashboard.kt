@@ -65,6 +65,7 @@ import com.example.nani.ui.theme.components.getUserCity
 import com.example.nani.ui.theme.components.hasLocationPermission
 import com.example.nani.ui.theme.components.isLocationEnabled
 import com.example.nani.ui.theme.components.requestUpdatedLocation
+import com.example.nani.ui.theme.components.tablePadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -365,23 +366,31 @@ fun AttendanceCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
                     text = "Date",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
                 )
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time In",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
                 )
-
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time Out",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
                 )
             }
 
@@ -399,15 +408,17 @@ fun AttendanceCard(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .horizontalScroll(horizontalScrollState),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        TableCell(formattedDate)
-
-
-                        TableCell(formattedTimeIn)
-
-
-                        TableCell(formattedTimeOut)
+                        TableCell(formattedDate, width = 60.dp)
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        TableCell(formattedTimeIn, width = 80.dp)
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        TableCell(formattedTimeOut, width = 80.dp)
                     }
                     Spacer(modifier = Modifier.height(5.dp))
 
