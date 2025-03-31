@@ -226,7 +226,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
         }
         Spacer(modifier = Modifier.height(60.dp))
         Row(  modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center) {
+            horizontalArrangement = Arrangement.SpaceEvenly) {
             Column(horizontalAlignment = Alignment.CenterHorizontally,  modifier = Modifier.padding(15.dp)) {
                 Text(
                     text = "$inProgressCount",
