@@ -90,7 +90,7 @@ fun DashboardScreen(
     val loginToken = user?.token.orEmpty()
 
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
-    var cityName by remember { mutableStateOf("Unknown") }
+    var cityName by remember { mutableStateOf("Undisclosed Location") }
 
     val visibleDateCard = remember { mutableStateOf(false) }
     val visibleProjectsCard = remember { mutableStateOf(false) }
@@ -413,7 +413,8 @@ fun AttendanceCard(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .horizontalScroll(horizontalScrollState),
-                                horizontalArrangement = Arrangement.SpaceEvenly
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         TableCell(formattedDate, width = 60.dp)
                         Spacer(modifier = Modifier.width(tablePadding()))
@@ -427,7 +428,7 @@ fun AttendanceCard(
                         Spacer(modifier = Modifier.width(tablePadding()))
                         TableCell(formattedTimeOut, width = 80.dp)
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.height(1.dp))
 
                     Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
