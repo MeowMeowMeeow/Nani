@@ -120,7 +120,7 @@ fun ProjectsGroup(
     onClick: (String, String, String, String) -> Unit,
     projects: List<Project>,
     onDelete: (Project) -> Unit,
-    onEdit: (Project) -> Unit // Add this parameter
+    onEdit: (Project) -> Unit
 ) {
 
     var state by remember { mutableIntStateOf(0) }
@@ -245,7 +245,7 @@ fun ProjectsGroup(
                 projects = projects,
                 onDelete = onDelete,
                 onEdit = { updatedProject ->
-                    // Update the state based on the edited project's status
+
                     state = titles.indexOf(updatedProject.status) // Update the tab on edit
                     onStatusChange(updatedProject.status)
                     onEdit(updatedProject)

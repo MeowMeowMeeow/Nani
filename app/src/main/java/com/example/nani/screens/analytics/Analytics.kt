@@ -391,7 +391,6 @@
                         }
                     }
                 } else {
-                    // Your existing logic to show userLogs
                     items(logs) { userLogs ->
 
                         val formattedDate = formatDate(userLogs.date)

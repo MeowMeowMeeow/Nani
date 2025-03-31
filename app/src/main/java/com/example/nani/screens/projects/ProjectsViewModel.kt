@@ -19,7 +19,6 @@ class ProjectViewModel(application: Application) : AndroidViewModel(application)
     var currentStatus = "In Progress"
 
     init {
-        // Initialize with filtered data to avoid flashing
         loadProjects(currentStatus)
     }
 
