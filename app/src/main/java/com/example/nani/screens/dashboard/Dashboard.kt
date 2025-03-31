@@ -368,7 +368,7 @@ fun AttendanceCard(
                     .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Spacer(modifier = Modifier.width(tablePadding()))
+
                 Text(
 
                     text = "Date",
