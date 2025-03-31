@@ -260,7 +260,7 @@ fun ProjectsGroup(
                     .align(Alignment.BottomEnd)
                     .padding(20.dp)
                     .zIndex(1f),
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                containerColor = MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.6f),
                 elevation = FloatingActionButtonDefaults.elevation(0.dp)
             ) {
                 Image(

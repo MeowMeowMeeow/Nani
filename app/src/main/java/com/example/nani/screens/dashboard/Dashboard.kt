@@ -225,17 +225,17 @@ fun DashboardScreen(
                     DateDashboardCard(
                         icon = R.drawable.calendar,
                         title = "Today is $currentDate",
-                        subtitle = "Have a productive day at $cityName!"
+                        subtitle = "Have a productive day!"
                     )
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 AnimatedVisibility(visible = visibleProjectsCard.value) {
-                    ProjectsCard(
-                        icon = R.drawable.folder,
-                        title = "On-Going Projects",
-                        subtitle = "--               --                --"
+                    LocationsCard(
+                        icon = R.drawable.map,
+                        title = "$cityName Vibes!",
+                        subtitle = "How's the weather at $cityName?"
                     )
                 }
 
@@ -257,9 +257,6 @@ fun DashboardScreen(
         }
     }
 }
-
-
-
 
 
 @Composable
@@ -293,7 +290,7 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
 }
 
 @Composable
-fun ProjectsCard(icon: Int, title: String, subtitle: String) {
+fun LocationsCard(icon: Int, title: String, subtitle: String) {
     ElevatedCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -365,17 +362,21 @@ fun AttendanceCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(start= 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
+                horizontalArrangement = Arrangement.SpaceEvenly,
 
+            ) {
                 Text(
 
                     text = "Date",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
+                    modifier = Modifier .width( 80.dp)
                 )
+
+
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
@@ -383,8 +384,9 @@ fun AttendanceCard(
                     text = "Time In",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
+                    modifier = Modifier .width( 80.dp)
                 )
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
                 Spacer(modifier = Modifier.width(tablePadding()))
@@ -392,8 +394,9 @@ fun AttendanceCard(
                     text = "Time Out",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier .padding( top = 8.dp, bottom = 8.dp, end = tablePadding())
+                    modifier = Modifier .width( 80.dp)
                 )
+
             }
 
             val sortedLogs = logs.sortedByDescending { it.date }.take(3)
@@ -416,7 +419,9 @@ fun AttendanceCard(
                         Spacer(modifier = Modifier.width(tablePadding()))
                         Spacer(modifier = Modifier.width(tablePadding()))
                         Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
                         TableCell(formattedTimeIn, width = 80.dp)
+                        Spacer(modifier = Modifier.width(tablePadding()))
                         Spacer(modifier = Modifier.width(tablePadding()))
                         Spacer(modifier = Modifier.width(tablePadding()))
                         Spacer(modifier = Modifier.width(tablePadding()))

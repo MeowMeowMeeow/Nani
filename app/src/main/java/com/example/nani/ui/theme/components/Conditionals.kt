@@ -177,6 +177,7 @@ fun tablePadding(): Dp {
     }
 }
 
+
 //Analytics screen
 @Composable
 fun aTable (): Dp{

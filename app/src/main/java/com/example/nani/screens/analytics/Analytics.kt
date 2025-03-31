@@ -121,19 +121,19 @@
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically){
                     Image(
-                        painter = painterResource(id = R.drawable.calendar),
+                        painter = painterResource(id = R.drawable.start),
                         contentDescription = "Calendar Icon",
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    DatePickerButton("Start Date", selectedStartDate, onStartDateSelected)
+                    DatePickerButton("Start", selectedStartDate, onStartDateSelected)
 
                     Spacer(modifier = Modifier.weight(1f))
 
                     Image(
-                        painter = painterResource(id = R.drawable.time),
+                        painter = painterResource(id = R.drawable.calendar),
                         contentDescription = "Time Icon",
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
@@ -141,13 +141,13 @@
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        painter = painterResource(id = R.drawable.calendar),
+                        painter = painterResource(id = R.drawable.end),
                         contentDescription = "Calendar Icon",
                         modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    DatePickerButton("End Date", selectedEndDate, onEndDateSelected)
+                    DatePickerButton("End", selectedEndDate, onEndDateSelected)
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
