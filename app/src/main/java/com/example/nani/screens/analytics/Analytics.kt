@@ -336,7 +336,8 @@
 
             // Table Header
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(10.dp))
+
                 listOf(
                     "Date" to 80.dp,
                     "Time In" to 80.dp,
@@ -362,7 +363,7 @@
                                 .padding(vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
 
                                 TableCell("-", 80.dp)
                                 TableCell("-", 80.dp)
@@ -393,7 +394,7 @@
                                 .padding(vertical = 5.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             listOf(
                                 formattedDate to 80.dp,
                                 formattedTimeIn to 80.dp,
