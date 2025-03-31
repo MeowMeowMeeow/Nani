@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -120,10 +121,12 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
-                 projects: List<Project>) {
+                 projects: List<Project>, ) {
     val inProgressCount = projects.count { it.status == "In Progress" }
     val toDoCount = projects.count { it.status == "To Do" }
     val completedCount = projects.count{it.status == "Completed"}
+    val total =inProgressCount + toDoCount
+    val progressPercent = if (total > 0) (inProgressCount.toFloat() / total) * 100 else 0f
     Column {
         Box(
             modifier = Modifier
@@ -282,6 +285,19 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                     style = MaterialTheme.typography.titleSmall
                 )
 
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "In progress",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall
+                )
+                LinearProgressIndicator(
+                    progress = progressPercent / 100f,
+                    modifier = Modifier
+                        .padding( start=30.dp, end = 30.dp)
+                        .fillMaxWidth())
             }
         }
     }
