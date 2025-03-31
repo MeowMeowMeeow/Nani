@@ -126,7 +126,8 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
     val toDoCount = projects.count { it.status == "To Do" }
     val completedCount = projects.count{it.status == "Completed"}
     val total =inProgressCount + toDoCount
-    val progressPercent = if (total > 0) (inProgressCount.toFloat() / total) * 100 else 0f
+    val completed = if (total > 0) (completedCount.toFloat() / total) * 100 else 0f
+    val toDoPercent = if (total > 0) (toDoCount.toFloat() / total) * 100 else 0f
     Column {
         Box(
             modifier = Modifier
@@ -286,19 +287,65 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
 
             }
-            Spacer(modifier = Modifier.height(30.dp))
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "In progress",
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleSmall
-                )
-                LinearProgressIndicator(
-                    progress = progressPercent / 100f,
-                    modifier = Modifier
-                        .padding( start=30.dp, end = 30.dp)
-                        .fillMaxWidth())
+
             }
+        Spacer(modifier = Modifier.height(30.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row (modifier = Modifier.fillMaxWidth()){
+                Text(
+                    text = "Completed",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${completed.toInt()}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+
+                )
+            }
+            LinearProgressIndicator(
+                progress = completed / 100f,
+                modifier = Modifier
+                    .padding( start=30.dp, end = 30.dp)
+                    .fillMaxWidth(),
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer //progress color
+            )
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row (modifier = Modifier.fillMaxWidth()){
+                Text(
+                    text = "To Do",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${toDoPercent.toInt()}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+
+                )
+            }
+            LinearProgressIndicator(
+                progress = toDoPercent / 100f,
+                modifier = Modifier
+                    .padding( start=30.dp, end = 30.dp)
+                    .fillMaxWidth(),
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer )
+
         }
     }
 }

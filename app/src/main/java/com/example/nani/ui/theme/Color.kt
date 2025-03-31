@@ -31,3 +31,8 @@ val Dark_background = Color(0xFF666666)
 
 val Gray = Color(0xFF666666)
 val Dark_icon = Color(0xFF7269E3)
+
+val Dark_pbar = Color(0xFF3C3770)
+val Light_pbar = Color(0xFFC2BDFF)
+val Dark_Pbar = Color(0xFF7D2DFE)
+val Light_Pbar = Color(0xFF7C47E6)

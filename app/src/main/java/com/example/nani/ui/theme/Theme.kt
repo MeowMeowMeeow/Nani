@@ -22,7 +22,10 @@ private val DarkColorScheme = darkColorScheme(
     secondaryContainer = Dark_Gray,
     onSurfaceVariant =  Dark_Lightblue,
     tertiaryContainer = DarkGreen,
-    inverseOnSurface = Dark
+    inverseOnSurface = Dark,
+    primaryContainer = Dark_pbar,
+    onPrimaryContainer = Dark_Pbar,
+
 
 )
 
@@ -42,7 +45,9 @@ private val LightColorScheme = lightColorScheme(
     secondaryContainer = White,
     onSurfaceVariant = blue,
     tertiaryContainer = LightGreen,
-    inverseOnSurface = llightblue
+    inverseOnSurface = llightblue,
+    primaryContainer = Light_pbar,
+    onPrimaryContainer = Light_Pbar
 
 
 
