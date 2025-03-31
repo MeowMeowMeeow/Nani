@@ -398,14 +398,14 @@ fun AttendanceCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .horizontalScroll(horizontalScrollState)
-
+                            .horizontalScroll(horizontalScrollState),
+                                horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TableCell(formattedDate)
-                        Spacer(modifier = Modifier.width(25.dp))
+
 
                         TableCell(formattedTimeIn)
-                        Spacer(modifier = Modifier.width(75.dp))
+
 
                         TableCell(formattedTimeOut)
                     }

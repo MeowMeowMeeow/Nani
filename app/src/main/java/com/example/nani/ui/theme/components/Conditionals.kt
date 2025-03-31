@@ -177,6 +177,24 @@ fun tablePadding(): Dp {
     }
 }
 
+//Analytics screen
+@Composable
+fun aTable (): Dp{
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+
+    val landscape =  screenWidth in 801..900
+    val isLargeScreen =  screenWidth in 601..800
+    val tablet=  screenWidth in 901..1400
+    val desktop = screenWidth >= 1401
+    return when {
+        tablet -> 170.dp
+        landscape -> 170.dp
+        desktop ->250.dp
+        isLargeScreen -> 30.dp
+        else -> 30.dp
+    }
+}
+
 //Projects screen
 @Composable
 fun colorPicked(title:String ): Color {

@@ -67,7 +67,7 @@ class AnalyticsViewModel(
                     Log.w("AnalyticsViewModel", "No logs returned from repository")
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "Failed to fetch logs: ${e.localizedMessage}"
+                _errorMessage.value = "No Internet Connection"
                 Log.e("AnalyticsViewModel", "Error fetching logs", e)
             } finally {
                 _isLoading.value = false
