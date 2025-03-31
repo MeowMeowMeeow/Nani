@@ -289,7 +289,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
             }
 
             }
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(50.dp))
         Column(modifier = Modifier.fillMaxWidth()) {
             Row (modifier = Modifier.fillMaxWidth()){
                 Text(
@@ -318,7 +318,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 color = MaterialTheme.colorScheme.onPrimaryContainer //progress color
             )
         }
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(50.dp))
         Column(modifier = Modifier.fillMaxWidth()) {
             Row (modifier = Modifier.fillMaxWidth()){
                 Text(
