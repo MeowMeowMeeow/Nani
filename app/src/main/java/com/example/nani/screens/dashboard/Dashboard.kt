@@ -127,7 +127,7 @@ fun DashboardScreen(
                             Log.d("Dashboard", "Location re-enabled: $cityName")
                         }
                     } else {
-                        cityName = "Unknown"
+                        cityName = "Discreet location"
                         Log.d("Dashboard", "Location services disabled")
                     }
                 }
