@@ -40,18 +40,6 @@ class AnalyticsRepository {
 }
 
 
-class ProjectsRepository {
-    suspend fun getLogs(token: String): List<UserLogs> {
 
-        val response = api.getLogs("Bearer $token")
-
-
-        response.response.logs.forEachIndexed { index, log ->
-
-        }
-
-        return response.response.logs
-    }
-}
 
 

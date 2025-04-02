@@ -4,25 +4,38 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -36,34 +49,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.R
 import com.example.nani.data.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel
-import com.example.nani.ui.theme.NaNiTheme
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nani.ui.theme.components.ProgressBar
 import com.example.nani.ui.theme.components.TokenStorage
 import com.example.nani.ui.theme.components.formatDate
 import com.example.nani.ui.theme.components.formatTime
 import com.example.nani.ui.theme.components.getUserCity
-import com.example.nani.ui.theme.components.hasLocationPermission
-import com.example.nani.ui.theme.components.isLocationEnabled
 import com.example.nani.ui.theme.components.requestUpdatedLocation
 import com.example.nani.ui.theme.components.tablePadding
 import kotlinx.coroutines.CoroutineScope
@@ -71,7 +71,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 //update sa viewmodel only after nag login once ra siya mu animate
 @Composable
@@ -84,8 +85,6 @@ fun DashboardScreen(
     val tokenStorage = remember { TokenStorage(context) }
 
     val logs by viewModel.logs
-    val isLoading by viewModel.isLoading
-    val errorMessage by viewModel.errorMessage
     val user = loginViewModel.details.collectAsState().value
     val loginToken = user?.token.orEmpty()
 
@@ -123,7 +122,7 @@ fun DashboardScreen(
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         CoroutineScope(Dispatchers.Main).launch {
                             val updatedCityName = requestUpdatedLocation(context)
-                            cityName = if (updatedCityName.isNotEmpty()) updatedCityName else "Unknown"
+                            cityName = updatedCityName.ifEmpty { "Unknown" }
                             Log.d("Dashboard", "Location re-enabled: $cityName")
                         }
                     } else {
@@ -339,7 +338,7 @@ fun AttendanceCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.calendar),
+                    painter = painterResource(id = R.drawable.logs),
                     contentDescription = "Calendar Icon",
                     modifier = Modifier.size(24.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)

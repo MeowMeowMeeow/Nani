@@ -1,35 +1,19 @@
 package com.example.nani.ui.theme.components
 
-import com.google.android.gms.location.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-
-import com.google.android.gms.location.LocationRequest.Builder
-
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
-import com.google.android.gms.location.Priority
-
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,41 +35,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
+import com.example.nani.R
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
 import com.example.nani.data.UserResponse
 import com.example.nani.ui.theme.NaNiTheme
 import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.tasks.await
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 fun hasLocationPermission(context: Context): Boolean {
@@ -95,19 +70,9 @@ fun hasLocationPermission(context: Context): Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-fun requestLocationPermission(activity: Activity) {
-    ActivityCompat.requestPermissions(
-        activity,
-        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-        1001
-    )
-}
-fun isLocationEnabled(context: Context): Boolean {
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-}
 
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @SuppressLint("MissingPermission")
 suspend fun getUserCity(context: Context): String {
     return try {
@@ -141,30 +106,10 @@ suspend fun getUserCity(context: Context): String {
 
 
 
-@SuppressLint("MissingPermission")
-@Composable
-fun GetUserLocation() {
-    val context = LocalContext.current
-    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-
-    LaunchedEffect(Unit) {
-        if (hasLocationPermission(context)) {
-            try {
-                val location = fusedLocationClient.lastLocation.await()
-                location?.let {
-                    Log.d("Location", "Latitude: ${it.latitude}, Longitude: ${it.longitude}")
-                } ?: Log.d("Location", "Location is null")
-            } catch (e: Exception) {
-                Log.e("Location", "Error getting location: ${e.message}")
-            }
-        } else {
-            requestLocationPermission(context as Activity)
-            Toast.makeText(context, "Location permission required", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
 
 
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @SuppressLint("MissingPermission")
 suspend fun requestUpdatedLocation(context: Context): String {
     return try {
@@ -515,14 +460,9 @@ class TokenStorage(context: Context) {
 fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val network = connectivityManager.activeNetwork ?: return false
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    } else {
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected
-    }
+    val network = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
 @Composable
 @Preview(name = "Light Theme", showBackground = true)

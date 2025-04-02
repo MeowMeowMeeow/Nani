@@ -9,12 +9,8 @@ import com.example.nani.data.ErrorResponse
 import com.example.nani.data.User
 import com.example.nani.data.UserLogs
 import com.example.nani.data.UserRepository
-import com.example.nani.network.data.RetrofitInstance
 import com.example.nani.ui.theme.components.SessionManager
-import com.example.nani.ui.theme.components.getUserCity
-import com.example.nani.ui.theme.components.hasLocationPermission
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -30,20 +26,8 @@ class LoginViewModel(
     val details = _details.asStateFlow()
 
     private val _logs = MutableStateFlow<List<UserLogs>>(emptyList())
-    val logs = _logs.asStateFlow()
 
-    private val _cityName = MutableStateFlow("Unknown")
-    val cityName: StateFlow<String> = _cityName
 
-    fun updateCityName(context: Context) {
-        viewModelScope.launch {
-            if (hasLocationPermission(context)) {
-                _cityName.value = getUserCity(context)
-            } else {
-                _cityName.value = "Unknown"
-            }
-        }
-    }
     fun login(
         email: String,
         password: String,
@@ -101,7 +85,7 @@ class LoginViewModel(
             try {
                 val logsResponse = analyticsRepository.getLogs(token)
                 _logs.value = logsResponse
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
