@@ -481,16 +481,38 @@ fun TrackedCard() {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Column {
+                Row(horizontalArrangement = Arrangement.SpaceEvenly,modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3f))
+                    .fillMaxWidth()){
 
                 Text(
-                    text = "0            2            4            6            8            10",
+                    text = "2",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3f))
-                        .fillMaxWidth()
-                        .padding(start = 30.dp)
                 )
+                    Text(
+                        text = "4",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+
+                        )
+                    Text(
+                        text = "6",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "8",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+
+                        )
+                    Text(
+                        text = "10",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+            }
                 Spacer(modifier = Modifier.height(15.dp))
                 Row {
                     Column {
