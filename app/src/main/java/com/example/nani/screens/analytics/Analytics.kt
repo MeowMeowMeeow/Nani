@@ -1,9 +1,15 @@
     package com.example.nani.screens.analytics
 
+    import android.app.Activity
+    import android.content.Intent
+    import android.graphics.pdf.PdfDocument
     import android.icu.text.SimpleDateFormat
     import android.icu.util.Calendar
+    import android.os.Environment
     import android.util.Log
     import android.widget.Toast
+    import androidx.activity.compose.rememberLauncherForActivityResult
+    import androidx.activity.result.contract.ActivityResultContracts
     import androidx.compose.foundation.*
     import androidx.compose.foundation.layout.*
     import androidx.compose.foundation.lazy.LazyColumn
@@ -25,9 +31,14 @@
     import com.example.nani.R
     import com.example.nani.data.UserLogs
     import com.example.nani.screens.login.LoginViewModel
+    import com.example.nani.ui.theme.components.createPdfDocument
     import com.example.nani.ui.theme.components.formatDate
     import com.example.nani.ui.theme.components.formatTime
+
     import com.example.nani.ui.theme.components.tablePadding
+    import java.io.File
+    import java.io.FileOutputStream
+    import java.io.IOException
     import java.util.Date
     import java.util.Locale
 
@@ -63,7 +74,16 @@
                 viewModel.fetchLogs(token)
             }
         }
+        val filteredLogs = logs.filter { log ->
+            try {
+                val millis = if (log.date!! < 1000000000000L) log.date * 1000 else log.date
+                val logDate = Date(millis)
 
+                logDate >= selectedStartDate && logDate <= selectedEndDate
+            } catch (e: Exception) {
+                false
+            }
+        }
         val scrollState = rememberScrollState()
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -96,201 +116,13 @@
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                DownloadReportButton()
-            }
-        }
-    }
-    @Composable
-    fun DateRangeSelection(
-        selectedStartDate: Date,
-        selectedEndDate: Date,
-        onStartDateSelected: (Date) -> Unit,
-        onEndDateSelected: (Date) -> Unit
-    ) {
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    MaterialTheme.colorScheme.onSecondaryContainer,
-                    shape = RoundedCornerShape(12.dp)
-                )
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically){
-                    Image(
-                        painter = painterResource(id = R.drawable.start),
-                        contentDescription = "Start Icon",
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    DatePickerButton("Start", selectedStartDate, onStartDateSelected)
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Image(
-                        painter = painterResource(id = R.drawable.calendar),
-                        contentDescription = "Calendar Icon",
-                        modifier = Modifier.size(50.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-                    )
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.end),
-                        contentDescription = "End Icon",
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    DatePickerButton("End", selectedEndDate, onEndDateSelected)
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun DatePickerButton(label: String, date: Date, onDateSelected: (Date) -> Unit) {
-        var showDatePicker by remember { mutableStateOf(false) }
-        val dateFormat = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
-
-        Box {
-            TextButton(onClick = { showDatePicker = true }) {
-                Text("${label}: ${dateFormat.format(date)}")
-                Icon(
-                    painter = painterResource(id = R.drawable.dropdown),
-                    contentDescription = "Dropdown",
-                    modifier = Modifier.size(15.dp).padding(start = 5.dp)
-                )
-            }
-        }
-
-        if (showDatePicker) {
-            val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = date.time
-            )
-
-            DatePickerDialog(
-                onDismissRequest = { showDatePicker = false },
-                colors = DatePickerDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    headlineContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-                confirmButton = {
-                    TextButton(onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            onDateSelected(Date(millis))
-                        }
-                        showDatePicker = false
-                    },  colors = ButtonDefaults.textButtonColors(
-                        contentColor = Color.Cyan
-                    )
-                    ) {
-                        Text("OK", color = MaterialTheme.colorScheme.secondary)
-                    }
-                }
-            ) {
-                DatePicker( state = datePickerState,
-                    colors = DatePickerDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surface ,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        headlineContentColor = MaterialTheme.colorScheme.onSurface,
-                        navigationContentColor = MaterialTheme.colorScheme.secondary,
-                        weekdayContentColor = MaterialTheme.colorScheme.onSurface,
-                        dayContentColor = MaterialTheme.colorScheme.onSurface,
-                        selectedDayContentColor = MaterialTheme.colorScheme.primary,
-                        selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        todayContentColor = MaterialTheme.colorScheme.secondary,
-                        disabledDayContentColor = MaterialTheme.colorScheme.background,
-                        yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        selectedYearContentColor = MaterialTheme.colorScheme.primary,
-                        selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    ))
-            }
-        }
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun DatePickerDemo(selectedMonth: String, onMonthSelected: (String) -> Unit) {
-        val context = LocalContext.current
-        var showDatePicker by remember { mutableStateOf(false) }
-        val datePickerState = rememberDatePickerState()
-
-        Box {
-            TextButton(onClick = { showDatePicker = true }) {
-                Text(text = selectedMonth)
-                Icon(
-                    painter = painterResource(id = R.drawable.dropdown),
-                    contentDescription = "Dropdown",
-                    modifier = Modifier.size(15.dp).padding(start = 5.dp)
-                )
-            }
-        }
-
-        if (showDatePicker) {
-            DatePickerDialog(
-                onDismissRequest = { showDatePicker = false },
-                colors = DatePickerDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    headlineContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            datePickerState.selectedDateMillis?.let { millis ->
-                                val calendar = Calendar.getInstance().apply { timeInMillis = millis }
-                                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                                val month = SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar.time)
-                                val year = calendar.get(Calendar.YEAR)
-
-                                //mao ni ang stored data sample paras api later
-                                val fullDate = "$day $month, $year"
-
-
-                                onMonthSelected(month)
-                            }
-                            showDatePicker = false
-                        },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color.Cyan
-                        )
-                    ) {
-                        Text("OK", color = MaterialTheme.colorScheme.secondary)
-                    }
-                }
-            ) {
-                DatePicker(
-                    state = datePickerState,
-                    colors = DatePickerDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surface ,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        headlineContentColor = MaterialTheme.colorScheme.onSurface,
-                        navigationContentColor = MaterialTheme.colorScheme.secondary,
-                        weekdayContentColor = MaterialTheme.colorScheme.onSurface,
-                        dayContentColor = MaterialTheme.colorScheme.onSurface,
-                        selectedDayContentColor = MaterialTheme.colorScheme.primary,
-                        selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        todayContentColor = MaterialTheme.colorScheme.secondary,
-                        disabledDayContentColor = MaterialTheme.colorScheme.background,
-                        yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        selectedYearContentColor = MaterialTheme.colorScheme.primary,
-                        selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-
-                    ),
-
+                DownloadReportButton(
+                    logs = filteredLogs
                 )
             }
         }
     }
+
     @Composable
     fun AnalyticsTableSection(logs: List<UserLogs>, startDate: Date, endDate: Date) {
         val filteredLogs = logs.filter { log ->
@@ -420,22 +252,49 @@
 
     }
 
-
-
-
     @Composable
-    fun DownloadReportButton() {
+    fun DownloadReportButton(logs: List<UserLogs>) {
         val context = LocalContext.current
+        val activity = context as Activity
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument(),
+            onResult = { uri ->
+                uri?.let {
+                    try {
+
+                        val outputStream = context.contentResolver.openOutputStream(it)
+
+                        // Create PDF document
+                        val pdfDocument = createPdfDocument(logs)
+                        pdfDocument.writeTo(outputStream)
+                        pdfDocument.close()
+
+                        Toast.makeText(context, "PDF saved successfully", Toast.LENGTH_LONG).show()
+                    } catch (e: IOException) {
+                        Toast.makeText(context, "Error saving PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        )
+
         Button(
-            onClick = { Toast.makeText(context, "Still working on this feature", Toast.LENGTH_SHORT).show()},
+            onClick = {
+                val fileName = "AnalyticsReport.pdf"
+                launcher.launch(fileName)
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
-            Text(text = "Download Report", color = Color.White )
+            Text(text = "Download Report", color = Color.White)
         }
         Spacer(modifier = Modifier.height(50.dp))
     }
+
+
+
+
+
 
 
 
@@ -494,3 +353,121 @@
             style = MaterialTheme.typography.titleLarge
         )
     }
+
+    @Composable
+    fun DateRangeSelection(
+        selectedStartDate: Date,
+        selectedEndDate: Date,
+        onStartDateSelected: (Date) -> Unit,
+        onEndDateSelected: (Date) -> Unit
+    ) {
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.onSecondaryContainer,
+                    shape = RoundedCornerShape(12.dp)
+                )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically){
+                    Image(
+                        painter = painterResource(id = R.drawable.start),
+                        contentDescription = "Start Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    DatePickerButton("Start", selectedStartDate, onStartDateSelected)
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Image(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = "Calendar Icon",
+                        modifier = Modifier.size(50.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.end),
+                        contentDescription = "End Icon",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    DatePickerButton("End", selectedEndDate, onEndDateSelected)
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun DatePickerButton(label: String, date: Date, onDateSelected: (Date) -> Unit) {
+        var showDatePicker by remember { mutableStateOf(false) }
+        val dateFormat = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+
+        Box {
+            TextButton(onClick = { showDatePicker = true }) {
+                Text("${label}: ${dateFormat.format(date)}")
+                Icon(
+                    painter = painterResource(id = R.drawable.dropdown),
+                    contentDescription = "Dropdown",
+                    modifier = Modifier.size(15.dp).padding(start = 5.dp)
+                )
+            }
+        }
+
+        if (showDatePicker) {
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = date.time
+            )
+
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                colors = DatePickerDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                ),
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            onDateSelected(Date(millis))
+                        }
+                        showDatePicker = false
+                    },  colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color.Cyan
+                    )
+                    ) {
+                        Text("OK", color = MaterialTheme.colorScheme.secondary)
+                    }
+                }
+            ) {
+                DatePicker( state = datePickerState,
+                    colors = DatePickerDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surface ,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        headlineContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationContentColor = MaterialTheme.colorScheme.secondary,
+                        weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+                        dayContentColor = MaterialTheme.colorScheme.onSurface,
+                        selectedDayContentColor = MaterialTheme.colorScheme.primary,
+                        selectedDayContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        todayContentColor = MaterialTheme.colorScheme.secondary,
+                        disabledDayContentColor = MaterialTheme.colorScheme.background,
+                        yearContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedYearContentColor = MaterialTheme.colorScheme.primary,
+                        selectedYearContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    ))
+            }
+        }
+    }
+

@@ -15,6 +15,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
@@ -22,7 +24,9 @@ import com.google.android.gms.location.Priority
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -69,6 +73,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.data.User
+import com.example.nani.data.UserLogs
 import com.example.nani.data.UserResponse
 import com.example.nani.ui.theme.NaNiTheme
 import com.google.android.gms.location.LocationCallback
@@ -76,6 +81,9 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -199,6 +207,78 @@ suspend fun requestUpdatedLocation(context: Context): String {
     }
 }
 
+fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
+    val pdfDocument = PdfDocument()
+
+    // Page size (width and height)
+    val pageInfo = PdfDocument.PageInfo.Builder(600, 800, 1).create()  // Increased width for table content
+    var page = pdfDocument.startPage(pageInfo)
+
+    var canvas = page.canvas
+    val paint = android.graphics.Paint().apply {
+        color = android.graphics.Color.BLACK
+        textSize = 12f
+    }
+
+    val columnWidths = listOf(100f, 100f, 100f, 80f)
+    var yPos = 50f
+
+    // Header row
+    val headerTexts = listOf(
+        "Date", "Time In", "Time Out", "Total Hours"
+    )
+
+    var xPos = 10f
+    headerTexts.forEachIndexed { index, text ->
+        canvas.drawText(text, xPos, yPos, paint)
+        xPos += columnWidths[index]
+    }
+
+    yPos += 30
+
+    // Draw data rows
+    val addNewPageIfNeeded = {
+        if (yPos > pageInfo.pageHeight - 50) {
+            pdfDocument.finishPage(page)
+            page = pdfDocument.startPage(pageInfo)  // Start a new page
+            canvas = page.canvas
+            yPos = 50f
+        }
+    }
+
+    if (logs.isEmpty()) {
+
+        xPos = 10f
+        listOf("   -", "     -", "      -", "          -").forEachIndexed { index, text ->
+            canvas.drawText(text, xPos, yPos, paint)
+            xPos += columnWidths[index]
+        }
+        yPos += 30
+    } else {
+        logs.forEach { log ->
+            val formattedDate = formatDate(log.date)
+            val formattedTimeIn = formatTime(log.timeIn)
+            val formattedTimeOut = formatTime(log.timeOut)
+            val totalHours = "${log.totalHours ?: 0} hrs"
+
+            xPos = 10f
+            val rowData = listOf(
+                formattedDate, formattedTimeIn, formattedTimeOut, totalHours
+            )
+
+            rowData.forEachIndexed { index, text ->
+                canvas.drawText(text, xPos, yPos, paint)
+                xPos += columnWidths[index]
+            }
+
+            yPos += 30
+            addNewPageIfNeeded()
+        }
+    }
+
+    pdfDocument.finishPage(page)
+    return pdfDocument
+}
 
 
 
