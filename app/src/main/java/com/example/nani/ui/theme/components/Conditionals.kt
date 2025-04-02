@@ -92,78 +92,9 @@ import com.example.nani.R
 
     }
 
-    @Composable
-    fun betweenSpace (): Dp{
-        val screenWidth = LocalConfiguration.current.screenWidthDp
 
-        val landscape =  screenWidth in 801..900
-        val isLargeScreen =  screenWidth in 601..800
-        val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
-        return when {
-            tablet -> 170.dp
-            landscape -> 170.dp
-            desktop ->250.dp
-            isLargeScreen -> 30.dp
-            else -> 30.dp
-        }
-    }
 
-    @Composable
-    fun sizeCircular (): Dp{
-        val screenWidth = LocalConfiguration.current.screenWidthDp
 
-        val landscape =  screenWidth in 801..900
-        val isLargeScreen =  screenWidth in 601..800
-        val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
-        return when {
-            tablet-> 250.dp
-            landscape -> 150.dp
-            desktop ->250.dp
-            isLargeScreen -> 150.dp
-            else -> 150.dp
-        }
-    }
-    @Composable
-    fun cardPadding(): Dp{
-        val screenWidth = LocalConfiguration.current.screenWidthDp
-
-        val landscape =  screenWidth in 801..900
-        val isLargeScreen =  screenWidth in 601..800
-        val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
-        return when {
-            tablet -> 100.dp
-            landscape -> 50.dp
-            desktop ->100.dp
-            isLargeScreen -> 20.dp
-            else -> 1.dp
-        }
-    }
-    @Composable
-    fun textSize (): TextStyle {
-        val screenWidth = LocalConfiguration.current.screenWidthDp
-
-        val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
-        return when {
-            tablet-> MaterialTheme.typography.titleLarge
-            desktop -> MaterialTheme.typography.displayLarge
-            else -> MaterialTheme.typography.titleMedium
-        }
-    }
-    @Composable
-    fun offset (): Dp {
-        val screenWidth = LocalConfiguration.current.screenWidthDp
-        val tablet=  screenWidth in 901..1400
-        val desktop = screenWidth >= 1401
-        return when {
-            tablet ->  -(140.dp)
-            desktop ->  -(150.dp)
-            else -> -(83.dp)
-        }
-    }
 
 @Composable
 fun tablePadding(): Dp {
@@ -174,25 +105,6 @@ fun tablePadding(): Dp {
         tablet -> 80.dp
         desktop -> 150.dp
         else -> 8.dp
-    }
-}
-
-
-//Analytics screen
-@Composable
-fun aTable (): Dp{
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-
-    val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
-    val tablet=  screenWidth in 901..1400
-    val desktop = screenWidth >= 1401
-    return when {
-        tablet -> 170.dp
-        landscape -> 170.dp
-        desktop ->250.dp
-        isLargeScreen -> 30.dp
-        else -> 30.dp
     }
 }
 

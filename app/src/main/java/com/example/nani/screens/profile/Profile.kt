@@ -27,7 +27,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -39,12 +38,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.data.Project
@@ -52,16 +49,11 @@ import com.example.nani.data.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.projects.ProjectViewModel
-import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.SessionManager
 import com.example.nani.ui.theme.components.arcOffset
-import com.example.nani.ui.theme.components.betweenSpace
-import com.example.nani.ui.theme.components.cardPadding
 import com.example.nani.ui.theme.components.imageOffset
 import com.example.nani.ui.theme.components.imageSize
-import com.example.nani.ui.theme.components.offset
-import com.example.nani.ui.theme.components.sizeCircular
-import com.example.nani.ui.theme.components.textSize
+
 
 @Composable
 fun ProfileScreen(
@@ -125,9 +117,13 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
     val inProgressCount = projects.count { it.status == "In Progress" }
     val toDoCount = projects.count { it.status == "To Do" }
     val completedCount = projects.count{it.status == "Completed"}
-    val total =inProgressCount + toDoCount
-    val completed = if (total > 0) (completedCount.toFloat() / total) * 100 else 0f
-    val toDoPercent = if (total > 0) (toDoCount.toFloat() / total) * 100 else 0f
+    val total =inProgressCount + toDoCount+completedCount
+    val pending = inProgressCount + toDoCount
+    val completed = when  {
+        total > 0-> (completedCount.toFloat() / total) * 100
+        else -> 0f
+    }
+    val toDoPercent = if (inProgressCount > 0) (toDoCount.toFloat() / pending) * 100 else 0f
     Column {
         Box(
             modifier = Modifier
@@ -236,7 +232,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text = "In Progress",
+                    text = "Pending",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -258,7 +254,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text = "To Do Lists",
+                    text = "  To Do  ",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -322,7 +318,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
         Column(modifier = Modifier.fillMaxWidth()) {
             Row (modifier = Modifier.fillMaxWidth()){
                 Text(
-                    text = "To Do",
+                    text = "In Progress",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier
