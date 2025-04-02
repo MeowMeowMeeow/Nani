@@ -65,9 +65,6 @@ fun ProfileScreen(
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
 
-    val isLoading by viewModel.isLoading
-    val errorMessage by viewModel.errorMessage
-
     val logs by viewModel.logs
     val user = loginViewModel.details.collectAsState().value
     val token = user?.token ?: ""

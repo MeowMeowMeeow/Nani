@@ -304,7 +304,8 @@ fun ProjectsGroup(
                             unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
                             unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -322,7 +323,8 @@ fun ProjectsGroup(
                             unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
                             unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -336,7 +338,7 @@ fun ProjectsGroup(
                             )
                         },
                         modifier = Modifier
-
+                            .fillMaxWidth()
                             .height(150.dp),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -557,7 +559,9 @@ fun ListProjects(
                                     unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                                     focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
                                     unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
-                                )
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -571,7 +575,9 @@ fun ListProjects(
                                     unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                                     focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
                                     unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
-                                )
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -580,7 +586,8 @@ fun ListProjects(
                                 label = {
                                     Text("More Description", style = MaterialTheme.typography.labelSmall,color = MaterialTheme.colorScheme.onSurface)
                                 },  modifier = Modifier
-                                    .height(150.dp),
+                                    .height(150.dp)
+                                    .fillMaxWidth(),
                                 colors = TextFieldDefaults.colors(
                                     focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                                     unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,

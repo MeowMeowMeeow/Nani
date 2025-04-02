@@ -63,8 +63,10 @@
     import com.example.nani.data.UserLogs
     import com.example.nani.screens.login.LoginViewModel
     import com.example.nani.ui.theme.components.createPdfDocument
+
     import com.example.nani.ui.theme.components.formatDate
     import com.example.nani.ui.theme.components.formatTime
+
     import com.example.nani.ui.theme.components.tablePadding
     import java.io.IOException
     import java.util.Date

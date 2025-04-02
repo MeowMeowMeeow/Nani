@@ -293,7 +293,7 @@ fun JairosoftAppBar(navController: NavController) {
                         navController,
                         JairosoftAppScreen.Projects,
                         R.drawable.projects,
-                        "Projects"
+                        "Projects",
                     )
                     Spacer(modifier = Modifier.padding(5.dp))
                     BottomNavItem(

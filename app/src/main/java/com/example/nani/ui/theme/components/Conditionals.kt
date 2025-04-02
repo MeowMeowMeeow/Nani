@@ -16,8 +16,10 @@ import androidx.compose.ui.unit.dp
         val landscape =  screenWidth in 801..900
         val isLargeScreen =  screenWidth in 601..800
         val tablet=  screenWidth in 901..1400
+        val bigPhone = screenWidth in 400..500
         return when
         {
+            bigPhone->30.dp
             tabletP -> 10.dp
             landscape -> 80.dp
             tablet ->250.dp
@@ -41,6 +43,24 @@ import androidx.compose.ui.unit.dp
             else -> 1.dp
         }
     }
+
+@Composable
+fun profilepadding (): Dp {
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+
+    val tabletP = screenWidth in 501..600
+    val landscape =  screenWidth in 801..900
+    val isLargeScreen =  screenWidth in 601..800
+    val tablet=  screenWidth in 901..1400
+    return when {
+
+        tabletP -> 20.dp
+        landscape -> 50.dp
+        tablet -> 80.dp
+        isLargeScreen -> 50.dp
+        else -> 1.dp
+    }
+}
 
     @Composable
     fun arcOffset (): Dp{
@@ -98,8 +118,8 @@ fun tablePadding(): Dp {
     val tablet=  screenWidth in 901..1400
     val desktop = screenWidth >= 1401
     return when {
-        tablet -> 80.dp
-        desktop -> 150.dp
+        tablet -> 10.dp
+        desktop -> 10.dp
         else -> 8.dp
     }
 }
