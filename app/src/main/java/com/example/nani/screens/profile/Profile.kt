@@ -120,7 +120,13 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
         total > 0-> (completedCount.toFloat() / total) * 100
         else -> 0f
     }
-    val toDoPercent = if (inProgressCount > 0) (toDoCount.toFloat() / pending) * 100 else 0f
+    //val toDoPercent = if (inProgressCount > 0) (toDoCount.toFloat() / pending) * 100 else 0f
+    val toDoPercent = when  {
+        inProgressCount > 0-> (toDoCount.toFloat() / pending) * 100
+        inProgressCount ==0 && toDoCount >0 -> 100f
+        else -> 0f
+    }
+
     Column {
         Box(
             modifier = Modifier
