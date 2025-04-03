@@ -345,8 +345,7 @@
             text = text,
             fontSize = 12.sp,
             modifier = Modifier
-                .width(width)
-                .padding(start = 8.dp,bottom = 8.dp, end = tablePadding()),
+                .width(width),
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )

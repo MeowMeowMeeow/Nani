@@ -69,6 +69,7 @@ import androidx.navigation.NavHostController
 import com.example.nani.R
 import com.example.nani.data.Project
 import com.example.nani.ui.theme.components.colorPicked
+import com.example.nani.ui.theme.components.editHeight
 
 
 //segmented button, Snack bar pang clock in, Alert Dialog
@@ -235,7 +236,7 @@ fun ProjectsGroup(
 
         Box(
             //change in conditionals
-            modifier = Modifier.height(550.dp)
+            modifier = Modifier.height(editHeight())
                 .fillMaxWidth()
         ) {
             ListProjects(

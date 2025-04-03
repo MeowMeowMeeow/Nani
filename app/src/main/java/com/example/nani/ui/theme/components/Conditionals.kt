@@ -45,22 +45,21 @@ import androidx.compose.ui.unit.dp
     }
 
 @Composable
-fun profilepadding (): Dp {
+fun editHeight (): Dp {
     val screenWidth = LocalConfiguration.current.screenWidthDp
 
     val tabletP = screenWidth in 501..600
     val landscape =  screenWidth in 801..900
-    val isLargeScreen =  screenWidth in 601..800
+    val tabletPortrait=  screenWidth in 601..800
     val tablet=  screenWidth in 901..1400
     return when {
-
-        tabletP -> 20.dp
-        landscape -> 50.dp
-        tablet -> 80.dp
-        isLargeScreen -> 50.dp
-        else -> 1.dp
+        tabletPortrait ->900.dp
+        landscape -> 200.dp
+        tablet -> 500.dp
+        else -> 550.dp
     }
 }
+
 
     @Composable
     fun arcOffset (): Dp{
