@@ -188,8 +188,7 @@
             }
         }
     }
-
-
+    
     @Composable
     fun AnalyticsTable(logs: List<UserLogs>) {
 
@@ -319,13 +318,6 @@
         Spacer(modifier = Modifier.height(50.dp))
     }
 
-
-
-
-
-
-
-
     @Composable
     fun TableHeaderCell(text: String, width: Dp) {
         Text(
@@ -350,7 +342,6 @@
             textAlign = TextAlign.Center
         )
     }
-
 
     @Composable
     fun HeaderSection() {

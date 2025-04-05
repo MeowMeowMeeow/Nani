@@ -5,6 +5,7 @@ import com.example.nani.network.data.ProjectDao
 import com.example.nani.network.data.RetrofitInstance
 import com.example.nani.network.data.RetrofitInstance.api
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 class UserRepository {
 
@@ -38,6 +39,31 @@ class AnalyticsRepository {
         return response.response.logs
     }
 }
+
+class TimeTrackingRepository {
+
+    private val api = RetrofitInstance.api
+
+    suspend fun postTimeOut(
+        token: String,
+        timeOutRequest: TimeOutRequest
+    ): Response<Unit> {
+        return api.postTimeOut("Bearer $token", timeOutRequest)
+    }
+}
+
+class TimeInRepository {
+
+    private val api = RetrofitInstance.api
+
+    suspend fun postTimeIn(
+        token: String,
+        timeInRequest: TimeInRequest
+    ): Response<Unit> {
+        return api.postTimeIn("Bearer $token", timeInRequest)
+    }
+}
+
 
 
 

@@ -61,6 +61,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 fun hasLocationPermission(context: Context): Boolean {
@@ -103,11 +104,6 @@ suspend fun getUserCity(context: Context): String {
         "Error getting city"
     }
 }
-
-
-
-
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SuppressLint("MissingPermission")
@@ -389,6 +385,8 @@ object SessionManager {
     private const val PREF_NAME = "nani_app_prefs"
     private const val KEY_USER_ID = "user_id"
     private const val KEY_TOKEN = "token"
+    private const val KEY_CLOCK_IN_TIME = "clock_in_time"
+    private const val KEY_TIME_TRACKING_STATE = "time_tracking_state"
 
     private var currentUser: UserResponse? = null
     private var token: String? = null
@@ -431,7 +429,33 @@ object SessionManager {
         return token
     }
 
+    // Save clock-in time
+    fun saveClockInTime(context: Context, clockInTime: Long) {
+        getPrefs(context).edit().apply {
+            putLong(KEY_CLOCK_IN_TIME, clockInTime)
+            apply()
+        }
+    }
 
+    // Retrieve clock-in time
+    fun getClockInTime(context: Context): Long {
+        return getPrefs(context).getLong(KEY_CLOCK_IN_TIME, 0L)
+    }
+
+    // Save time tracking state (clocked in or clocked out)
+    fun saveTimeTrackingState(context: Context, isClockedIn: Boolean) {
+        getPrefs(context).edit().apply {
+            putBoolean(KEY_TIME_TRACKING_STATE, isClockedIn)
+            apply()
+        }
+    }
+
+    // Retrieve time tracking state
+    fun getTimeTrackingState(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_TIME_TRACKING_STATE, false)
+    }
+
+    // Clear user info and clock-in time
     fun clearUser(context: Context) {
         currentUser = null
         token = null
@@ -439,6 +463,7 @@ object SessionManager {
         getPrefs(context).edit().clear().apply()
     }
 }
+
 class TokenStorage(context: Context) {
 
     private val prefs: SharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -456,6 +481,18 @@ class TokenStorage(context: Context) {
     }
 }
 
+// Function to format date as MM/dd/yyyy hh:mm a
+fun timeDate(date: Date): String {
+    val format = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
+    return format.format(date)
+}
+
+// Function to format time as hh:mm a
+fun timeTime(date: Date): String {
+    val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    return format.format(date)
+}
+
 
 fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -464,6 +501,8 @@ fun isNetworkAvailable(context: Context): Boolean {
     val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
     return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
+
+
 @Composable
 @Preview(name = "Light Theme", showBackground = true)
 @Preview(name = "Dark Theme", uiMode = Configuration.UI_MODE_NIGHT_YES,showBackground = true)

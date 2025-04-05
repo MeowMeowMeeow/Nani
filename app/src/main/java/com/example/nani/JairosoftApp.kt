@@ -1,6 +1,7 @@
 package com.example.nani
 
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -21,8 +22,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,12 +35,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.example.nani.data.TimeInRequest
+import com.example.nani.data.TimeOutRequest
 import com.example.nani.data.UserResponse
 
 import com.example.nani.screens.analytics.AnalyticsScreen
@@ -55,6 +56,9 @@ import com.example.nani.screens.projects.ProjectViewModel
 import com.example.nani.screens.projects.ProjectsScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.SessionManager
+import com.example.nani.ui.theme.components.TimeTrackingViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -73,6 +77,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 
 @Composable
 fun JairosoftApp() {
+    val timeTrackingViewModel: TimeTrackingViewModel = viewModel()
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf<UserResponse?>(null) }
     var token by remember { mutableStateOf<String?>(null) }
@@ -84,6 +89,9 @@ fun JairosoftApp() {
     val currentScreen = JairosoftAppScreen.valueOf(
         backStackEntry?.destination?.route ?: JairosoftAppScreen.Login.name
     )
+
+    var clockInUnixTime by remember { mutableStateOf<Long?>(null) }
+
     var isGreen by remember { mutableStateOf(true) }
     val fabColor by animateColorAsState(
         targetValue = if (isGreen) MaterialTheme.colorScheme.tertiaryContainer else Color.Red,
@@ -95,7 +103,7 @@ fun JairosoftApp() {
         animationSpec = tween(durationMillis = 300),
         label = "FAB Rotation Animation"
     )
-
+    val snackbarMessage by timeTrackingViewModel.snackbarMessage.observeAsState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
@@ -131,6 +139,7 @@ fun JairosoftApp() {
 
 //edit na max width;
     Scaffold(
+
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -149,14 +158,16 @@ fun JairosoftApp() {
             if (shouldShowBottomBar) {
                 FloatingActionButton(
                     onClick = {
-                        isGreen = !isGreen
+                        // Get context and call the viewmodel function to toggle time tracking
+                        timeTrackingViewModel.toggleTimeTracking(context)
 
+                        // Toggle button color and state logic for snackbar message
+                        isGreen = !isGreen // Toggle button color
                         snackbarJob?.cancel()
-                        snackbarJob = scope.launch {
-                            snackbarHostState.currentSnackbarData?.dismiss()
-
+                        snackbarJob = CoroutineScope(Dispatchers.Main).launch {
+                            snackbarHostState.currentSnackbarData?.dismiss() // Dismiss previous snackbar
                             snackbarHostState.showSnackbar(
-                                message = if (isGreen) "Clocked Out" else "Clocked In",
+                                message = if (isGreen) "Clocked Out" else "Clocked In", // Show reversed message
                                 duration = SnackbarDuration.Short
                             )
                         }
@@ -176,7 +187,10 @@ fun JairosoftApp() {
                     )
                 }
             }
-        }, floatingActionButtonPosition = FabPosition.Center
+        }
+
+
+        , floatingActionButtonPosition = FabPosition.Center
     ) { innerPadding ->
         NavHost(
             navController = navController,
