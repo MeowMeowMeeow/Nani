@@ -69,9 +69,11 @@ class TimeTrackingViewModel(
                 SessionManager.saveTimeTrackingState(context, true)
 
             } else {
+
                 // Clock Out logic
                 val clockOutUnix = System.currentTimeMillis() / 1000L
-                val durationSeconds = clockOutUnix - (clockInTime ?: 0L)
+                val savedClockInTime = SessionManager.getClockInTime(context)
+                val durationSeconds = clockOutUnix - savedClockInTime
                 val timeOutMinutes = durationSeconds / 60
 
                 val attendanceStatus = if (timeOutMinutes >= 240) "Whole-Day" else "Half-Day"
@@ -83,6 +85,7 @@ class TimeTrackingViewModel(
                     totalHoursWorked = timeOutMinutes / 60,
                     totalUndertime = if (timeOutMinutes < 480) (480 - timeOutMinutes) else 0
                 )
+
 
                 // Post Time-Out
                 try {
