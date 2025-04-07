@@ -502,6 +502,11 @@ fun isNetworkAvailable(context: Context): Boolean {
     return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
 
+fun formatDateClock(unixTime: Long): String {
+    val sdf = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
+    val formattedDate = sdf.format(Date(unixTime * 1000))
+    return formattedDate.lowercase(Locale.getDefault())
+}
 
 @Composable
 @Preview(name = "Light Theme", showBackground = true)

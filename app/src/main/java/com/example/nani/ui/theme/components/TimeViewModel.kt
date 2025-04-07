@@ -37,10 +37,10 @@ class TimeTrackingViewModel(
             if (_timeTrackingState.value == false) {
                 // Clock In logic
                 clockInTime = System.currentTimeMillis() / 1000L
-                val date = clockInTime?.let { formatDate(it) }
+                val date = clockInTime?.let { formatDateClock(it) }
 
                 val timeInRequest = TimeInRequest(
-                    timeIn = formatDate(clockInTime ?: 0),
+                    timeIn = formatDateClock(clockInTime ?: 0),
                     date = date ?: "",
                     attendanceStatus = "Whole-Day",
                     timeInMins = 0,  // Time-in minutes remains 0 initially
@@ -80,7 +80,7 @@ class TimeTrackingViewModel(
 
                 val timeOutRequest = TimeOutRequest(
                     userId = userId,
-                    timeOut = formatDate(clockOutUnix),
+                    timeOut = formatDateClock(clockOutUnix),
                     timeOutMinutes = timeOutMinutes.toLong(),
                     totalHoursWorked = timeOutMinutes / 60,
                     totalUndertime = if (timeOutMinutes < 480) (480 - timeOutMinutes) else 0
@@ -117,9 +117,5 @@ class TimeTrackingViewModel(
 
 
 
-    private fun formatDate(unixTime: Long): String {
-        val sdf = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault())
-        val formattedDate = sdf.format(Date(unixTime * 1000))
-        return formattedDate.lowercase(Locale.getDefault())
-    }
+
 }
