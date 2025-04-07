@@ -1,7 +1,5 @@
 package com.example.nani.screens.profile
 
-import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,8 +22,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,8 +40,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
-import com.example.nani.data.Project
-import com.example.nani.data.UserLogs
+import com.example.nani.data.model.Project
+import com.example.nani.data.model.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.projects.ProjectViewModel

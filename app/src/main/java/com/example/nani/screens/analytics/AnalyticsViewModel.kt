@@ -5,8 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nani.data.AnalyticsRepository
-import com.example.nani.data.UserLogs
+import com.example.nani.data.repository.AnalyticsRepository
+import com.example.nani.data.model.UserLogs
 import kotlinx.coroutines.launch
 
 

@@ -1,4 +1,4 @@
-package com.example.nani.data
+package com.example.nani.data.model
 
 
 import com.google.gson.annotations.SerializedName

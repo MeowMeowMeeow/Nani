@@ -1,7 +1,6 @@
 package com.example.nani
 
 
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -39,9 +38,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.nani.data.TimeInRequest
-import com.example.nani.data.TimeOutRequest
-import com.example.nani.data.UserResponse
+import com.example.nani.data.model.UserResponse
 
 import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
@@ -158,16 +155,15 @@ fun JairosoftApp() {
             if (shouldShowBottomBar) {
                 FloatingActionButton(
                     onClick = {
-                        // Get context and call the viewmodel function to toggle time tracking
+
                         timeTrackingViewModel.toggleTimeTracking(context)
 
-                        // Toggle button color and state logic for snackbar message
-                        isGreen = !isGreen // Toggle button color
+                        isGreen = !isGreen
                         snackbarJob?.cancel()
                         snackbarJob = CoroutineScope(Dispatchers.Main).launch {
-                            snackbarHostState.currentSnackbarData?.dismiss() // Dismiss previous snackbar
+                            snackbarHostState.currentSnackbarData?.dismiss()
                             snackbarHostState.showSnackbar(
-                                message = if (isGreen) "Clocked Out" else "Clocked In", // Show reversed message
+                                message = if (isGreen) "Clocked Out" else "Clocked In",
                                 duration = SnackbarDuration.Short
                             )
                         }

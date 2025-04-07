@@ -1,6 +1,4 @@
-package com.example.nani.network.data
-
-import com.example.nani.network.ApiService
+package com.example.nani.data.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

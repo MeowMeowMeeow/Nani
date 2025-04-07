@@ -4,11 +4,11 @@ package com.example.nani.screens.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nani.data.AnalyticsRepository
-import com.example.nani.data.ErrorResponse
-import com.example.nani.data.User
-import com.example.nani.data.UserLogs
-import com.example.nani.data.UserRepository
+import com.example.nani.data.repository.AnalyticsRepository
+import com.example.nani.data.model.ErrorResponse
+import com.example.nani.data.model.User
+import com.example.nani.data.model.UserLogs
+import com.example.nani.data.repository.UserRepository
 import com.example.nani.ui.theme.components.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

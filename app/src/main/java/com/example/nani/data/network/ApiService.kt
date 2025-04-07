@@ -1,10 +1,9 @@
-package com.example.nani.network
+package com.example.nani.data.network
 
-import com.example.nani.data.LogsResponse
-import com.example.nani.data.TimeInRequest
-import com.example.nani.data.TimeInResponse
-import com.example.nani.data.TimeOutRequest
-import com.example.nani.data.User
+import com.example.nani.data.model.LogsResponse
+import com.example.nani.data.model.TimeInRequest
+import com.example.nani.data.model.TimeOutRequest
+import com.example.nani.data.model.User
 import retrofit2.Response
 
 import retrofit2.http.Body

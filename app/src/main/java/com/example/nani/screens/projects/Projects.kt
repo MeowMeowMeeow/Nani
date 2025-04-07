@@ -67,7 +67,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.nani.R
-import com.example.nani.data.Project
+import com.example.nani.data.model.Project
 import com.example.nani.ui.theme.components.colorPicked
 import com.example.nani.ui.theme.components.editHeight
 

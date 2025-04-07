@@ -49,9 +49,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.R
-import com.example.nani.data.User
-import com.example.nani.data.UserLogs
-import com.example.nani.data.UserResponse
+import com.example.nani.data.model.User
+import com.example.nani.data.model.UserLogs
+import com.example.nani.data.model.UserResponse
 import com.example.nani.ui.theme.NaNiTheme
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

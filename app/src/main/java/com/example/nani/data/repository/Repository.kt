@@ -1,10 +1,12 @@
-package com.example.nani.data
+package com.example.nani.data.repository
 
 import android.util.Log
-import com.example.nani.network.data.ProjectDao
-import com.example.nani.network.data.RetrofitInstance
-import com.example.nani.network.data.RetrofitInstance.api
-import kotlinx.coroutines.flow.Flow
+import com.example.nani.data.model.TimeInRequest
+import com.example.nani.data.model.TimeOutRequest
+import com.example.nani.data.model.User
+import com.example.nani.data.model.UserLogs
+import com.example.nani.data.network.RetrofitInstance
+import com.example.nani.data.network.RetrofitInstance.api
 import retrofit2.Response
 
 class UserRepository {

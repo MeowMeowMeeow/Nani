@@ -55,7 +55,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.R
-import com.example.nani.data.UserLogs
+import com.example.nani.data.model.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel

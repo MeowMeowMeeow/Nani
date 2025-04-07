@@ -1,6 +1,5 @@
     package com.example.nani.screens.analytics
 
-    import android.app.Activity
     import android.icu.text.SimpleDateFormat
     import android.icu.util.Calendar
     import android.util.Log
@@ -60,7 +59,7 @@
     import androidx.compose.ui.unit.sp
     import androidx.navigation.NavHostController
     import com.example.nani.R
-    import com.example.nani.data.UserLogs
+    import com.example.nani.data.model.UserLogs
     import com.example.nani.screens.login.LoginViewModel
     import com.example.nani.ui.theme.components.createPdfDocument
 
