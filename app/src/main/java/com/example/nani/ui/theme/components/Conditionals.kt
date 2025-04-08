@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
         val landscape =  screenWidth in 801..900
         val isLargeScreen =  screenWidth in 601..800
         val tablet=  screenWidth in 901..1400
-        val bigPhone = screenWidth in 400..500
+        val bigphone = screenWidth in 400 .. 450
         return when
         {
-            bigPhone->30.dp
+            bigphone -> 1.dp
             tabletP -> 10.dp
             landscape -> 80.dp
             tablet ->250.dp
