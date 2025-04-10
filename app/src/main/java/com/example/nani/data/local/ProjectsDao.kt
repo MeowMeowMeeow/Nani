@@ -1,15 +1,13 @@
-package com.example.nani.network.data
+package com.example.nani.data.local
 
-import androidx.room.ColumnInfo
+
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
-import com.example.nani.data.Project
+import com.example.nani.data.model.Project
 import kotlinx.coroutines.flow.Flow
 
 @Dao

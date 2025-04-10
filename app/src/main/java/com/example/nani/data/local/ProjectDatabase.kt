@@ -1,10 +1,10 @@
-package com.example.nani.network.data
+package com.example.nani.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.nani.data.Project
+import com.example.nani.data.model.Project
 
 @Database(entities = [Project::class], version = 1)
 abstract class ProjectDatabase : RoomDatabase() {

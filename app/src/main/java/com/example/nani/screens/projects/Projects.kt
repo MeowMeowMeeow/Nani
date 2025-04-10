@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,9 +33,9 @@ import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -62,16 +61,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.nani.R
-import com.example.nani.data.Project
+import com.example.nani.data.model.Project
 import com.example.nani.ui.theme.components.colorPicked
-
+import com.example.nani.ui.theme.components.editHeight
 
 
 //segmented button, Snack bar pang clock in, Alert Dialog
@@ -80,7 +78,7 @@ fun ProjectsScreen(navController: NavHostController, viewModel: ProjectViewModel
     val projectList by viewModel.projects.collectAsState(initial = emptyList()) // Avoid displaying old data
     var selectedStatus by remember { mutableStateOf("In Progress") }
     var isInitialized by remember { mutableStateOf(false) } // Track initialization
-    val currentStatus by remember { mutableStateOf(viewModel.currentStatus) }
+
 
     LaunchedEffect(selectedStatus) {
         if (!isInitialized) {
@@ -195,9 +193,9 @@ fun ProjectsGroup(
                     selectedTabIndex = state,
                     indicator = {},
                     divider = {
-                        Divider(
-                            color = Color.Transparent,
-                            thickness = 0.dp
+                        HorizontalDivider(
+                            thickness = 0.dp,
+                            color = Color.Transparent
                         )
                     },
                     containerColor = Color.Transparent,
@@ -238,7 +236,7 @@ fun ProjectsGroup(
 
         Box(
             //change in conditionals
-            modifier = Modifier.height(550.dp)
+            modifier = Modifier.height(editHeight())
                 .fillMaxWidth()
         ) {
             ListProjects(
@@ -260,7 +258,7 @@ fun ProjectsGroup(
                     .align(Alignment.BottomEnd)
                     .padding(20.dp)
                     .zIndex(1f),
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                containerColor = MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.6f),
                 elevation = FloatingActionButtonDefaults.elevation(0.dp)
             ) {
                 Image(
@@ -277,6 +275,7 @@ fun ProjectsGroup(
     // AlertDialog for Adding Project
     if (showDialog) {
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
             onDismissRequest = { showDialog = false },
             title = {
                 Text(
@@ -288,8 +287,8 @@ fun ProjectsGroup(
             text = {
                 Column (
                     modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(8.dp)
+                        .verticalScroll(rememberScrollState())
+                        .padding(8.dp)
                 ) {
                     OutlinedTextField(
                         value = projectName,
@@ -300,7 +299,14 @@ fun ProjectsGroup(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                        }
+                        },
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                            unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -312,7 +318,14 @@ fun ProjectsGroup(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                        }
+                        },
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                            unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -324,14 +337,24 @@ fun ProjectsGroup(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
-                        }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                            unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                        )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         "Status:",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 20.sp
                     )
                     titles.forEach { status ->
                         Row(
@@ -339,6 +362,7 @@ fun ProjectsGroup(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { projectStatus = status }
+                                .fillMaxWidth()
                         ) {
                             RadioButton(
                                 selected = projectStatus == status,
@@ -510,6 +534,7 @@ fun ListProjects(
                 var editedStatus by remember { mutableStateOf(editableProject!!.status) }
 
                 AlertDialog(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     onDismissRequest = { showEditDialog = false },
                     title = {
                         Text(
@@ -529,7 +554,15 @@ fun ListProjects(
                                 onValueChange = { editedName = it },
                                 label = {
                                     Text("Project Name", style = MaterialTheme.typography.labelSmall,color = MaterialTheme.colorScheme.onSurface)
-                                }
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                    unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -537,7 +570,15 @@ fun ListProjects(
                                 onValueChange = { editedDescription = it },
                                 label = {
                                     Text("Project Description", style = MaterialTheme.typography.labelSmall,color = MaterialTheme.colorScheme.onSurface)
-                                }
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                    unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -545,20 +586,40 @@ fun ListProjects(
                                 onValueChange = { editedMoreDescription = it },
                                 label = {
                                     Text("More Description", style = MaterialTheme.typography.labelSmall,color = MaterialTheme.colorScheme.onSurface)
-                                }
+                                },  modifier = Modifier
+                                    .height(150.dp)
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    focusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                    unfocusedIndicatorColor =  MaterialTheme.colorScheme.secondary,
+                                )
                             )
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            Text("Status:", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface)
+                            Text("Status:",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 20.sp
+                            )
                             val statuses = listOf("In Progress", "To Do", "Completed")
                             statuses.forEach { status ->
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier.clickable { editedStatus = status }
+                                        .fillMaxWidth()
                                 ) {
                                     RadioButton(
                                         selected = (editedStatus == status),
-                                        onClick = { editedStatus = status }
+                                        onClick = { editedStatus = status },
+                                        colors = RadioButtonDefaults.colors(
+                                            unselectedColor = MaterialTheme.colorScheme.secondary,
+                                            selectedColor = MaterialTheme.colorScheme.secondary,
+                                            disabledUnselectedColor = MaterialTheme.colorScheme.secondary,
+                                            disabledSelectedColor = MaterialTheme.colorScheme.secondary,
+
+                                            )
                                     )
                                     Text(text = status, style = MaterialTheme.typography.labelSmall,color = MaterialTheme.colorScheme.onSurface)
                                 }

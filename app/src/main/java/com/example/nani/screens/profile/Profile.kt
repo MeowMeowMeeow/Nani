@@ -1,7 +1,5 @@
 package com.example.nani.screens.profile
 
-import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,11 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -38,29 +34,22 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nani.R
 import com.example.nani.JairosoftAppScreen
-import com.example.nani.data.Project
-import com.example.nani.data.UserLogs
+import com.example.nani.data.model.Project
+import com.example.nani.data.model.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.login.LoginViewModel
 import com.example.nani.screens.projects.ProjectViewModel
-import com.example.nani.ui.theme.NaNiTheme
 import com.example.nani.ui.theme.components.SessionManager
 import com.example.nani.ui.theme.components.arcOffset
-import com.example.nani.ui.theme.components.betweenSpace
-import com.example.nani.ui.theme.components.cardPadding
 import com.example.nani.ui.theme.components.imageOffset
 import com.example.nani.ui.theme.components.imageSize
-import com.example.nani.ui.theme.components.offset
-import com.example.nani.ui.theme.components.sizeCircular
-import com.example.nani.ui.theme.components.textSize
+
 
 @Composable
 fun ProfileScreen(
@@ -71,9 +60,6 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
-
-    val isLoading by viewModel.isLoading
-    val errorMessage by viewModel.errorMessage
 
     val logs by viewModel.logs
     val user = loginViewModel.details.collectAsState().value
@@ -120,10 +106,23 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
-                 projects: List<Project>) {
+                 projects: List<Project>, ) {
     val inProgressCount = projects.count { it.status == "In Progress" }
     val toDoCount = projects.count { it.status == "To Do" }
     val completedCount = projects.count{it.status == "Completed"}
+    val total =inProgressCount + toDoCount+completedCount
+    val pending = inProgressCount + toDoCount
+    val completed = when  {
+        total > 0-> (completedCount.toFloat() / total) * 100
+        else -> 0f
+    }
+    //val toDoPercent = if (inProgressCount > 0) (toDoCount.toFloat() / pending) * 100 else 0f
+    val toDoPercent = when  {
+        inProgressCount > 0-> (toDoCount.toFloat() / pending) * 100
+        inProgressCount ==0 && toDoCount >0 -> 100f
+        else -> 0f
+    }
+
     Column {
         Box(
             modifier = Modifier
@@ -222,7 +221,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
         }
         Spacer(modifier = Modifier.height(60.dp))
         Row(  modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center) {
+            horizontalArrangement = Arrangement.SpaceEvenly) {
             Column(horizontalAlignment = Alignment.CenterHorizontally,  modifier = Modifier.padding(15.dp)) {
                 Text(
                     text = "$inProgressCount",
@@ -232,7 +231,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text = "In Progress",
+                    text = "Pending",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -254,7 +253,7 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 Text(
-                    text = "To Do Lists",
+                    text = "  To Do  ",
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleSmall
                 )
@@ -283,6 +282,66 @@ fun ProfileGroup(onLogoutClick: () -> Unit, logs: List<UserLogs>,
                 )
 
             }
+
+        }
+        Spacer(modifier = Modifier.height(50.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row (modifier = Modifier.fillMaxWidth()){
+                Text(
+                    text = "Completed",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${completed.toInt()}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+
+                )
+            }
+            LinearProgressIndicator(
+                progress = completed / 100f,
+                modifier = Modifier
+                    .padding( start=30.dp, end = 30.dp)
+                    .fillMaxWidth(),
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer //progress color
+            )
+        }
+        Spacer(modifier = Modifier.height(50.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row (modifier = Modifier.fillMaxWidth()){
+                Text(
+                    text = "In Progress",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "${toDoPercent.toInt()}%",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier
+                        .padding(start = 30.dp, end = 30.dp, bottom = 10.dp)
+
+                )
+            }
+            LinearProgressIndicator(
+                progress = toDoPercent / 100f,
+                modifier = Modifier
+                    .padding( start=30.dp, end = 30.dp)
+                    .fillMaxWidth(),
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.onPrimaryContainer )
+            Spacer(modifier = Modifier.height(100.dp))
+
         }
     }
 }

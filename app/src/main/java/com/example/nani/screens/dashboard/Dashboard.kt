@@ -4,25 +4,38 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -36,41 +49,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nani.JairosoftAppScreen
 import com.example.nani.R
-import com.example.nani.data.UserLogs
+import com.example.nani.data.model.UserLogs
 import com.example.nani.screens.analytics.AnalyticsViewModel
 import com.example.nani.screens.analytics.TableCell
 import com.example.nani.screens.login.LoginViewModel
-import com.example.nani.ui.theme.NaNiTheme
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.nani.ui.theme.components.ProgressBar
 import com.example.nani.ui.theme.components.TokenStorage
 import com.example.nani.ui.theme.components.formatDate
 import com.example.nani.ui.theme.components.formatTime
 import com.example.nani.ui.theme.components.getUserCity
-import com.example.nani.ui.theme.components.hasLocationPermission
-import com.example.nani.ui.theme.components.isLocationEnabled
 import com.example.nani.ui.theme.components.requestUpdatedLocation
+import com.example.nani.ui.theme.components.tablePadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 //update sa viewmodel only after nag login once ra siya mu animate
 @Composable
@@ -83,13 +85,11 @@ fun DashboardScreen(
     val tokenStorage = remember { TokenStorage(context) }
 
     val logs by viewModel.logs
-    val isLoading by viewModel.isLoading
-    val errorMessage by viewModel.errorMessage
     val user = loginViewModel.details.collectAsState().value
     val loginToken = user?.token.orEmpty()
 
     val currentDate = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
-    var cityName by remember { mutableStateOf("Unknown") }
+    var cityName by remember { mutableStateOf("Undisclosed Location") }
 
     val visibleDateCard = remember { mutableStateOf(false) }
     val visibleProjectsCard = remember { mutableStateOf(false) }
@@ -122,11 +122,11 @@ fun DashboardScreen(
                     if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                         CoroutineScope(Dispatchers.Main).launch {
                             val updatedCityName = requestUpdatedLocation(context)
-                            cityName = if (updatedCityName.isNotEmpty()) updatedCityName else "Unknown"
+                            cityName = updatedCityName.ifEmpty { "Unknown" }
                             Log.d("Dashboard", "Location re-enabled: $cityName")
                         }
                     } else {
-                        cityName = "Unknown"
+                        cityName = "Discreet location"
                         Log.d("Dashboard", "Location services disabled")
                     }
                 }
@@ -224,17 +224,17 @@ fun DashboardScreen(
                     DateDashboardCard(
                         icon = R.drawable.calendar,
                         title = "Today is $currentDate",
-                        subtitle = "Have a productive day at $cityName!"
+                        subtitle = "Have a productive day!"
                     )
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
 
                 AnimatedVisibility(visible = visibleProjectsCard.value) {
-                    ProjectsCard(
-                        icon = R.drawable.folder,
-                        title = "On-Going Projects",
-                        subtitle = "--               --                --"
+                    LocationsCard(
+                        icon = R.drawable.map,
+                        title = "$cityName Vibes!",
+                        subtitle = "How's the weather at $cityName?"
                     )
                 }
 
@@ -256,9 +256,6 @@ fun DashboardScreen(
         }
     }
 }
-
-
-
 
 
 @Composable
@@ -292,7 +289,7 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
 }
 
 @Composable
-fun ProjectsCard(icon: Int, title: String, subtitle: String) {
+fun LocationsCard(icon: Int, title: String, subtitle: String) {
     ElevatedCard(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
@@ -341,7 +338,7 @@ fun AttendanceCard(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Image(
-                    painter = painterResource(id = R.drawable.calendar),
+                    painter = painterResource(id = R.drawable.logs),
                     contentDescription = "Calendar Icon",
                     modifier = Modifier.size(24.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
@@ -364,29 +361,56 @@ fun AttendanceCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(start= 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                horizontalArrangement = Arrangement.SpaceEvenly,
+
+                ) {
                 Text(
+
                     text = "Date",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .width( 80.dp)
                 )
+
+
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time In",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .width( 80.dp)
                 )
-
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
+                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time Out",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier .width( 80.dp)
                 )
+
             }
 
-            val sortedLogs = logs.sortedByDescending { it.date }.take(3)
-            LazyColumn (  modifier = Modifier.heightIn(max = 200.dp)){
+            val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+            val sortedLogs = logs
+                .filter { it.date != null } // Ensure no null dates are passed
+                .sortedByDescending { log ->
+                    try {
+                        log.date?.let { parser.parse(it) } // Parse date string into Date object
+                    } catch (e: Exception) {
+                        null // Return null if parsing fails
+                    }
+                }
+                .take(3)
+
+            LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
                 items(sortedLogs) { userLogs ->
 
                     val formattedDate = formatDate(userLogs.date)
@@ -398,22 +422,28 @@ fun AttendanceCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .horizontalScroll(horizontalScrollState)
-
+                            .horizontalScroll(horizontalScrollState),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        TableCell(formattedDate)
-                        Spacer(modifier = Modifier.width(25.dp))
-
-                        TableCell(formattedTimeIn)
-                        Spacer(modifier = Modifier.width(75.dp))
-
-                        TableCell(formattedTimeOut)
+                        TableCell(formattedDate, width = 60.dp)
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        TableCell(formattedTimeIn, width = 80.dp)
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        Spacer(modifier = Modifier.width(tablePadding()))
+                        TableCell(formattedTimeOut, width = 80.dp)
                     }
-                    Spacer(modifier = Modifier.height(5.dp))
+                    Spacer(modifier = Modifier.height(1.dp))
 
                     Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
             }
+
             Button(
                 onClick = { navController.navigate(JairosoftAppScreen.Analytics.name) },
                 modifier = Modifier.fillMaxWidth(),
@@ -463,16 +493,38 @@ fun TrackedCard() {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Column {
+                Row(horizontalArrangement = Arrangement.SpaceEvenly,modifier = Modifier
+                    .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3f))
+                    .fillMaxWidth()){
 
-                Text(
-                    text = "0            2            4            6            8            10",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3f))
-                        .fillMaxWidth()
-                        .padding(start = 30.dp)
-                )
+                    Text(
+                        text = "2",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "4",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+
+                        )
+                    Text(
+                        text = "6",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = "8",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+
+                        )
+                    Text(
+                        text = "10",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
                 Spacer(modifier = Modifier.height(15.dp))
                 Row {
                     Column {

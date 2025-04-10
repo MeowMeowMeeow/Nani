@@ -2,24 +2,13 @@ package com.example.nani.screens.analytics
 
 import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.nani.data.AnalyticsRepository
-
-import com.example.nani.data.UserLogs
-import com.example.nani.network.data.RetrofitInstance
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-
+import com.example.nani.data.repository.AnalyticsRepository
+import com.example.nani.data.model.UserLogs
 import kotlinx.coroutines.launch
-
+import java.net.SocketTimeoutException
 
 
 class AnalyticsViewModel(
@@ -40,7 +29,6 @@ class AnalyticsViewModel(
     fun setToken(token: String) {
         Log.d("AnalyticsViewModel", "Token set: $token")
         this.token = token
-
     }
 
     fun fetchLogs(token: String? = this.token) {
@@ -66,8 +54,8 @@ class AnalyticsViewModel(
                     _errorMessage.value = "No logs found."
                     Log.w("AnalyticsViewModel", "No logs returned from repository")
                 }
-            } catch (e: Exception) {
-                _errorMessage.value = "Failed to fetch logs: ${e.localizedMessage}"
+            } catch (e: SocketTimeoutException) {
+                _errorMessage.value = "Failed to fetch logs"
                 Log.e("AnalyticsViewModel", "Error fetching logs", e)
             } finally {
                 _isLoading.value = false
@@ -76,4 +64,3 @@ class AnalyticsViewModel(
         }
     }
 }
-

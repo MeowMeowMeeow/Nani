@@ -1,11 +1,10 @@
-package com.example.nani.network.data
-
-import com.example.nani.network.ApiService
+package com.example.nani.data.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitInstance {
     val api: ApiService by lazy {
@@ -23,6 +22,9 @@ object RetrofitInstance {
         }
 
         return OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(logging)
             .build()
     }
