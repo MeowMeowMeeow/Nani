@@ -408,7 +408,7 @@ fun AttendanceCard(
                         null // Return null if parsing fails
                     }
                 }
-                .take(3)
+                .take(5)
 
             LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
                 items(sortedLogs) { userLogs ->

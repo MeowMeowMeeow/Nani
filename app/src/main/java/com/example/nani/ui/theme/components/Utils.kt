@@ -12,8 +12,10 @@ import android.location.Geocoder
 import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Environment
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -60,6 +62,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -152,7 +157,7 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
     val pdfDocument = PdfDocument()
 
     // Page size (width and height)
-    val pageInfo = PdfDocument.PageInfo.Builder(600, 800, 1).create()  // Increased width for table content
+    val pageInfo = PdfDocument.PageInfo.Builder(600, 800, 1).create()
     var page = pdfDocument.startPage(pageInfo)
 
     var canvas = page.canvas
@@ -165,9 +170,7 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
     var yPos = 50f
 
     // Header row
-    val headerTexts = listOf(
-        "Date", "Time In", "Time Out", "Total Hours"
-    )
+    val headerTexts = listOf("Date", "Time In", "Time Out", "Total Hours")
 
     var xPos = 10f
     headerTexts.forEachIndexed { index, text ->
@@ -177,18 +180,16 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
 
     yPos += 30
 
-    // Draw data rows
     val addNewPageIfNeeded = {
         if (yPos > pageInfo.pageHeight - 50) {
             pdfDocument.finishPage(page)
-            page = pdfDocument.startPage(pageInfo)  // Start a new page
+            page = pdfDocument.startPage(pageInfo)
             canvas = page.canvas
             yPos = 50f
         }
     }
 
     if (logs.isEmpty()) {
-
         xPos = 10f
         listOf("   -", "     -", "      -", "          -").forEachIndexed { index, text ->
             canvas.drawText(text, xPos, yPos, paint)
@@ -201,11 +202,8 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
             val formattedTimeIn = formatTime(log.timeIn)
             val formattedTimeOut = formatTime(log.timeOut)
 
-
             xPos = 10f
-            val rowData = listOf(
-                formattedDate, formattedTimeIn, formattedTimeOut
-            )
+            val rowData = listOf(formattedDate, formattedTimeIn, formattedTimeOut)
 
             rowData.forEachIndexed { index, text ->
                 canvas.drawText(text, xPos, yPos, paint)
@@ -219,6 +217,32 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
 
     pdfDocument.finishPage(page)
     return pdfDocument
+}
+
+fun saveUserLogsAsPdf(context: Context, logs: List<UserLogs>) {
+    val pdfDocument = createPdfDocument(logs)
+    val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!
+    val baseName = "AnalyticsReport"
+    val extension = ".pdf"
+
+    // Make sure filename increments properly
+    var file = File(baseDir, "$baseName$extension")
+    var index = 1
+    while (file.exists()) {
+        file = File(baseDir, "$baseName ($index)$extension")
+        index++
+    }
+
+    try {
+        val outputStream = FileOutputStream(file)
+        pdfDocument.writeTo(outputStream)
+        outputStream.close()
+        pdfDocument.close()
+        Log.d("PDF_SAVE", "PDF successfully saved: ${file.absolutePath}")
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Log.e("PDF_SAVE", "Error saving PDF", e)
+    }
 }
 
 

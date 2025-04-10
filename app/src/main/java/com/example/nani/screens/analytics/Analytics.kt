@@ -2,6 +2,7 @@ package com.example.nani.screens.analytics
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -67,6 +68,7 @@ import com.example.nani.ui.theme.components.formatDate
 import com.example.nani.ui.theme.components.formatTime
 
 import com.example.nani.ui.theme.components.tablePadding
+import java.io.File
 import java.io.IOException
 import java.util.Date
 import java.util.Locale
@@ -305,8 +307,20 @@ fun DownloadReportButton(logs: List<UserLogs>) {
 
     Button(
         onClick = {
-            val fileName = "AnalyticsReport.pdf"
-            launcher.launch(fileName)
+            val baseName = "AnalyticsReport"
+            val extension = ".pdf"
+            val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)!!
+            var file = File(baseDir, "$baseName$extension")
+            var index = 1
+
+            while (file.exists()) {
+                file = File(baseDir, "$baseName ($index) $extension")
+                index++
+            }
+
+
+            launcher.launch(file.name)
+
         },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
