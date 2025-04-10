@@ -398,8 +398,19 @@ fun AttendanceCard(
 
             }
 
-            val sortedLogs = logs.sortedByDescending { it.date }.take(3)
-            LazyColumn (  modifier = Modifier.heightIn(max = 200.dp)){
+            val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+            val sortedLogs = logs
+                .filter { it.date != null } // Ensure no null dates are passed
+                .sortedByDescending { log ->
+                    try {
+                        log.date?.let { parser.parse(it) } // Parse date string into Date object
+                    } catch (e: Exception) {
+                        null // Return null if parsing fails
+                    }
+                }
+                .take(3)
+
+            LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
                 items(sortedLogs) { userLogs ->
 
                     val formattedDate = formatDate(userLogs.date)
@@ -412,7 +423,7 @@ fun AttendanceCard(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .horizontalScroll(horizontalScrollState),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
+                        horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TableCell(formattedDate, width = 60.dp)
@@ -432,6 +443,7 @@ fun AttendanceCard(
                     Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
             }
+
             Button(
                 onClick = { navController.navigate(JairosoftAppScreen.Analytics.name) },
                 modifier = Modifier.fillMaxWidth(),

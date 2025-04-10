@@ -23,24 +23,23 @@ class UserRepository {
 
 
 
-
 class AnalyticsRepository {
 
     suspend fun getLogs(token: String): List<UserLogs> {
         Log.d("AnalyticsRepository", "Fetching logs with token: $token")
 
-        val response = api.getLogs("Bearer $token")
+        val response = RetrofitInstance.api.getLogs("Bearer $token")
 
-        Log.d("AnalyticsRepository", "Raw response status: ${response.status}")
-        Log.d("AnalyticsRepository", "Logs count: ${response.response.logs.size}")
+        Log.d("AnalyticsRepository", "Logs count: ${response.size}")
 
-        response.response.logs.forEachIndexed { index, log ->
-            Log.d("AnalyticsRepository", "Log #$index: $log")
+        response.forEachIndexed { index, wrapper ->
+            Log.d("AnalyticsRepository", "Log #$index: ${wrapper.data}")
         }
 
-        return response.response.logs
+        return response.map { it.data }
     }
 }
+
 
 class TimeTrackingRepository {
 

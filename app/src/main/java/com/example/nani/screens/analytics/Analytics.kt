@@ -89,6 +89,7 @@
 
         val logs by viewModel.logs
         Log.d("AnalyticsScreen", "Logs size: ${logs.size}")
+        val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
 
         val isLoading by viewModel.isLoading
         val errorMessage by viewModel.errorMessage
@@ -103,16 +104,16 @@
                 viewModel.fetchLogs(token)
             }
         }
+
         val filteredLogs = logs.filter { log ->
             try {
-                val millis = if (log.date!! < 1000000000000L) log.date * 1000 else log.date
-                val logDate = Date(millis)
-
+                val logDate = parser.parse(log.date ?: "") ?: return@filter false
                 logDate >= selectedStartDate && logDate <= selectedEndDate
             } catch (e: Exception) {
                 false
             }
         }
+
         Surface(
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxSize()
@@ -153,17 +154,17 @@
 
     @Composable
     fun AnalyticsTableSection(logs: List<UserLogs>, startDate: Date, endDate: Date) {
+        val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+
         val filteredLogs = logs.filter { log ->
             try {
-                val millis = if (log.date!! < 1000000000000L) log.date * 1000 else log.date
-                val logDate = Date(millis)
-
+                val logDate = parser.parse(log.date ?: "") ?: return@filter false
                 logDate >= startDate && logDate <= endDate
             } catch (e: Exception) {
-                Log.e("AnalyticsScreen", "Date parsing error: ${e.localizedMessage}")
                 false
             }
         }
+
 
         val horizontalScrollState = rememberScrollState()
 
@@ -241,7 +242,6 @@
                         val formattedDate = formatDate(userLogs.date)
                         val formattedTimeIn = formatTime(userLogs.timeIn)
                         val formattedTimeOut = formatTime(userLogs.timeOut)
-                        val totalHours = "${userLogs.totalHours ?: 0} hrs"
                         val location = "N/A"
                         val lateMinutes = 0
                         val undertimeMinutes = 0
@@ -262,7 +262,7 @@
                                 lateMinutes.toString() to 80.dp,
                                 undertimeMinutes.toString() to 100.dp,
                                 totalLateUndertime.toString() to 140.dp,
-                                totalHours to 80.dp
+
                             ).forEach { (text, width) ->
                                 TableCell(text, width)
                             }
@@ -315,60 +315,6 @@
             Text(text = "Download Report", color = Color.White)
         }
         Spacer(modifier = Modifier.height(50.dp))
-    }
-
-    @Composable
-    fun TableHeaderCell(text: String, width: Dp) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier
-                .width(width)
-                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp, end = tablePadding()),
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center
-        )
-    }
-
-    @Composable
-    fun TableCell(text: String, width: Dp) {
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            modifier = Modifier
-                .width(width),
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center
-        )
-    }
-
-    @Composable
-    fun HeaderSection() {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.jairosoft),
-                contentDescription = "Logo",
-                modifier = Modifier.size(40.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Jairosoft",
-                fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.titleLarge,
-            )
-        }
-        Spacer(modifier = Modifier.height(14.dp))
-        Text(
-            text = "Analytics",
-            fontSize = 30.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleLarge
-        )
     }
 
     @Composable
@@ -488,3 +434,57 @@
         }
     }
 
+
+    @Composable
+    fun TableHeaderCell(text: String, width: Dp) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier
+                .width(width)
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp, end = tablePadding()),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
+    }
+
+    @Composable
+    fun TableCell(text: String, width: Dp) {
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .width(width),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
+    }
+
+    @Composable
+    fun HeaderSection() {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.jairosoft),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Jairosoft",
+                fontSize = 24.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge,
+            )
+        }
+        Spacer(modifier = Modifier.height(14.dp))
+        Text(
+            text = "Analytics",
+            fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge
+        )
+    }

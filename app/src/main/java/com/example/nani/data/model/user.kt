@@ -15,18 +15,19 @@ import com.google.gson.annotations.SerializedName
 
 
 
+data class LogsWrapper(
+    @SerializedName("data")
+    val data: UserLogs
+)
+
 data class UserLogs(
-    @SerializedName("_id") val id: String?,
-    @SerializedName("User_id") val userId: String?,
-    @SerializedName("Attendance Status") val attendanceStatus: String?,
-    @SerializedName("Total Hours 100%") val totalHours: Int?,
-    @SerializedName("Created By") val createdBy: String?,
-    @SerializedName("time-in") val timeIn: Long?,
-    @SerializedName("time-out") val timeOut: Long?,
-    @SerializedName("Date") val date: Long?,
-    @SerializedName("Modified Date") val modifiedDate: Long?,
-    @SerializedName("Created Date") val createdDate: Long?,
-    @SerializedName("toggle") val toggle: String?
+    @SerializedName("user_id") val userId: String?,
+    @SerializedName("date") val date: String?,
+    @SerializedName("time-in") val timeIn: String?,
+    @SerializedName("time-out") val timeOut: String?,
+    @SerializedName("total-late") val totalLate: String?,
+    @SerializedName("total-undertime") val totalUndertime: String?,
+    @SerializedName("status") val status: String?
 )
 
 

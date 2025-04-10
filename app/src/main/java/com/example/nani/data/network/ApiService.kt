@@ -1,6 +1,7 @@
 package com.example.nani.data.network
 
 import com.example.nani.data.model.LogsResponse
+import com.example.nani.data.model.LogsWrapper
 import com.example.nani.data.model.TimeInRequest
 import com.example.nani.data.model.TimeOutRequest
 import com.example.nani.data.model.User
@@ -25,7 +26,7 @@ interface ApiService {
     @GET("logs")
     suspend fun getLogs(
         @Header("Authorization") token: String
-    ): LogsResponse
+    ): List<LogsWrapper>
 
     @POST("time-in")
     suspend fun postTimeIn(

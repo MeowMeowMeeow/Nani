@@ -200,11 +200,11 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
             val formattedDate = formatDate(log.date)
             val formattedTimeIn = formatTime(log.timeIn)
             val formattedTimeOut = formatTime(log.timeOut)
-            val totalHours = "${log.totalHours ?: 0} hrs"
+
 
             xPos = 10f
             val rowData = listOf(
-                formattedDate, formattedTimeIn, formattedTimeOut, totalHours
+                formattedDate, formattedTimeIn, formattedTimeOut
             )
 
             rowData.forEachIndexed { index, text ->
@@ -349,35 +349,28 @@ fun bottomIconImageColor(navController: NavController, label: JairosoftAppScreen
 
 }
 
-fun formatDate(unixTime: Long?): String {
-    return if (unixTime != null && unixTime != 0L) {
-        try {
-            val millis = if (unixTime < 1000000000000L) unixTime * 1000 else unixTime
-            val date = java.util.Date(millis)
-            val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-            outputFormat.format(date)
-        } catch (e: Exception) {
-            "-"
-        }
-    } else {
+fun formatDate(dateString: String?): String {
+    return try {
+        val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = parser.parse(dateString ?: "") ?: return "-"
+        formatter.format(date)
+    } catch (e: Exception) {
         "-"
     }
 }
 
-fun formatTime(unixTime: Long?): String {
-    return if (unixTime != null && unixTime != 0L) {
-        try {
-            val millis = if (unixTime < 1000000000000L) unixTime * 1000 else unixTime
-            val date = java.util.Date(millis)
-            val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-            outputFormat.format(date)
-        } catch (e: Exception) {
-            "-"
-        }
-    } else {
+fun formatTime(dateString: String?): String {
+    return try {
+        val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+        val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = parser.parse(dateString ?: "") ?: return "-"
+        formatter.format(date)
+    } catch (e: Exception) {
         "-"
     }
 }
+
 
 
 object SessionManager {
