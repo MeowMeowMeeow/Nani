@@ -217,8 +217,7 @@ fun JairosoftApp() {
 
                 AnalyticsScreen(
                     navController = navController,
-                    viewModel = analyticsViewModel,
-                    loginViewModel = loginViewModel
+
                 )
             }
 

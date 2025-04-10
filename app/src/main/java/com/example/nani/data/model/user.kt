@@ -21,13 +21,13 @@ data class LogsWrapper(
 )
 
 data class UserLogs(
-    @SerializedName("user_id") val userId: String?,
-    @SerializedName("date") val date: String?,
-    @SerializedName("time-in") val timeIn: String?,
-    @SerializedName("time-out") val timeOut: String?,
-    @SerializedName("total-late") val totalLate: String?,
-    @SerializedName("total-undertime") val totalUndertime: String?,
-    @SerializedName("status") val status: String?
+    val date: String,
+    val timeIn: String,
+    val timeOut: String,
+    val userId: String,
+    val totalLate: String,
+    val totalUndertime: String,
+    val status: String
 )
 
 

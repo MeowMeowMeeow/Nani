@@ -4,6 +4,7 @@
     import android.icu.util.Calendar
     import android.util.Log
     import android.widget.Toast
+    import android.widget.Toast.LENGTH_LONG
     import androidx.activity.compose.rememberLauncherForActivityResult
     import androidx.activity.result.contract.ActivityResultContracts
     import androidx.compose.foundation.Image
@@ -74,9 +75,130 @@
     @Composable
     fun AnalyticsScreen(
         navController: NavHostController,
-        viewModel: AnalyticsViewModel,
-        loginViewModel: LoginViewModel,
     ) {
+        // Hardcoded logs data
+        val logs = listOf(
+            UserLogs(
+                userId = "user123",
+                date = "Apr 10, 2025 08:30 AM",
+                timeIn = "Apr 10, 2025 08:30 AM",
+                timeOut = "Apr 10, 2025 05:30 PM",
+                totalLate = "15",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user456",
+                date = "Apr 10, 2025 09:00 AM",
+                timeIn = "Apr 10, 2025 09:00 AM",
+                timeOut = "Apr 10, 2025 06:00 PM",
+                totalLate = "30",
+                totalUndertime = "0",
+                status = "Whole-day"
+            ),
+            UserLogs(
+                userId = "user789",
+                date = "Apr 10, 2025 08:15 AM",
+                timeIn = "Apr 10, 2025 08:15 AM",
+                timeOut = "Apr 10, 2025 05:30 PM",
+                totalLate = "10",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user101",
+                date = "Apr 9, 2025 08:45 AM",
+                timeIn = "Apr 9, 2025 08:45 AM",
+                timeOut = "Apr 9, 2025 05:45 PM",
+                totalLate = "5",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user102",
+                date = "Apr 9, 2025 09:30 AM",
+                timeIn = "Apr 9, 2025 09:30 AM",
+                timeOut = "Apr 9, 2025 06:30 PM",
+                totalLate = "10",
+                totalUndertime = "0",
+                status = "Whole-day"
+            ),
+            UserLogs(
+                userId = "user103",
+                date = "Apr 9, 2025 07:30 AM",
+                timeIn = "Apr 9, 2025 07:30 AM",
+                timeOut = "Apr 9, 2025 04:30 PM",
+                totalLate = "0",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user104",
+                date = "Apr 8, 2025 10:00 AM",
+                timeIn = "Apr 8, 2025 10:00 AM",
+                timeOut = "Apr 8, 2025 07:00 PM",
+                totalLate = "0",
+                totalUndertime = "0",
+                status = "Whole-day"
+            ),
+            UserLogs(
+                userId = "user105",
+                date = "Apr 8, 2025 09:30 AM",
+                timeIn = "Apr 8, 2025 09:30 AM",
+                timeOut = "Apr 8, 2025 06:30 PM",
+                totalLate = "15",
+                totalUndertime = "0",
+                status = "Whole-day"
+            ),
+            UserLogs(
+                userId = "user106",
+                date = "Apr 8, 2025 08:00 AM",
+                timeIn = "Apr 8, 2025 08:00 AM",
+                timeOut = "Apr 8, 2025 05:00 PM",
+                totalLate = "10",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user107",
+                date = "Apr 7, 2025 08:30 AM",
+                timeIn = "Apr 7, 2025 08:30 AM",
+                timeOut = "Apr 7, 2025 05:30 PM",
+                totalLate = "5",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user108",
+                date = "Apr 7, 2025 09:00 AM",
+                timeIn = "Apr 7, 2025 09:00 AM",
+                timeOut = "Apr 7, 2025 06:00 PM",
+                totalLate = "0",
+                totalUndertime = "0",
+                status = "Whole-day"
+            ),
+            UserLogs(
+                userId = "user109",
+                date = "Apr 7, 2025 08:15 AM",
+                timeIn = "Apr 7, 2025 08:15 AM",
+                timeOut = "Apr 7, 2025 05:30 PM",
+                totalLate = "10",
+                totalUndertime = "0",
+                status = "Half-Day"
+            ),
+            UserLogs(
+                userId = "user110",
+                date = "Apr 6, 2025 08:30 AM",
+                timeIn = "Apr 6, 2025 08:30 AM",
+                timeOut = "Apr 6, 2025 05:30 PM",
+                totalLate = "20",
+                totalUndertime = "0",
+                status = "Half-Day"
+            )
+        )
+
+
+
         var selectedStartDate by remember {
             mutableStateOf(Calendar.getInstance().apply {
                 set(Calendar.DAY_OF_MONTH, 1)
@@ -87,24 +209,9 @@
             mutableStateOf(Calendar.getInstance().time)
         }
 
-        val logs by viewModel.logs
-        Log.d("AnalyticsScreen", "Logs size: ${logs.size}")
         val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
 
-        val isLoading by viewModel.isLoading
-        val errorMessage by viewModel.errorMessage
-        Log.d("AnalyticsScreen", "Error: $errorMessage")
-
-        val user = loginViewModel.details.collectAsState().value
-        val token = user?.token ?: ""
-
-        LaunchedEffect(token) {
-            if (token.isNotEmpty()) {
-                viewModel.setToken(token)
-                viewModel.fetchLogs(token)
-            }
-        }
-
+        // Filter logs based on selected date range
         val filteredLogs = logs.filter { log ->
             try {
                 val logDate = parser.parse(log.date ?: "") ?: return@filter false
@@ -132,17 +239,7 @@
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                } else if (!errorMessage.isNullOrEmpty()) {
-                    Text(
-                        text = errorMessage ?: "An error occurred",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                } else {
-                    AnalyticsTableSection(logs, selectedStartDate, selectedEndDate)
-                }
+                AnalyticsTableSection(filteredLogs, selectedStartDate, selectedEndDate)
 
                 Spacer(modifier = Modifier.height(20.dp))
                 DownloadReportButton(
@@ -164,7 +261,6 @@
                 false
             }
         }
-
 
         val horizontalScrollState = rememberScrollState()
 
@@ -188,7 +284,7 @@
             }
         }
     }
-    
+
     @Composable
     fun AnalyticsTable(logs: List<UserLogs>) {
 
@@ -206,12 +302,11 @@
                     "Late\nMinutes" to 80.dp,
                     "Undertime\nMinutes" to 100.dp,
                     "Total Late &\nUndertime Minutes" to 140.dp,
-                    "Total\nHours" to 80.dp
+                    "Status" to 80.dp
                 ).forEach { (title, width) ->
                     TableHeaderCell(title, width)
                 }
             }
-
 
             LazyColumn {
                 if (logs.isEmpty()) {
@@ -225,15 +320,18 @@
                         ) {
                             Spacer(modifier = Modifier.width(10.dp))
 
-                                TableCell("-", 80.dp)
-                                TableCell("-", 80.dp)
-                                TableCell("-", 100.dp)
-                                TableCell("-", 80.dp)
-                                 TableCell("-", 80.dp)
-                                TableCell("-", 100.dp)
-                                TableCell("-", 140.dp)
-                                TableCell("-", 80.dp)
-
+                            listOf(
+                                "-" to 80.dp,
+                                "-" to 80.dp,
+                                "-" to 100.dp,
+                                "-" to 80.dp,
+                                "-" to 80.dp,
+                                "-" to 100.dp,
+                                "-" to 140.dp,
+                                "-" to 80.dp
+                            ).forEach { (text, width) ->
+                                TableCell(text, width)
+                            }
                         }
                     }
                 } else {
@@ -242,10 +340,11 @@
                         val formattedDate = formatDate(userLogs.date)
                         val formattedTimeIn = formatTime(userLogs.timeIn)
                         val formattedTimeOut = formatTime(userLogs.timeOut)
-                        val location = "N/A"
-                        val lateMinutes = 0
-                        val undertimeMinutes = 0
-                        val totalLateUndertime = lateMinutes + undertimeMinutes
+                        val location = "Davao City"
+                        val lateMinutes = userLogs.totalLate
+                        val undertimeMinutes = userLogs.totalUndertime
+                        val totalLateUndertime = lateMinutes ?: undertimeMinutes
+                        val status = userLogs.status
 
                         Row(
                             modifier = Modifier
@@ -262,21 +361,15 @@
                                 lateMinutes.toString() to 80.dp,
                                 undertimeMinutes.toString() to 100.dp,
                                 totalLateUndertime.toString() to 140.dp,
-
+                                 status to 80.dp
                             ).forEach { (text, width) ->
                                 TableCell(text, width)
                             }
-
-                            Log.d(
-                                "AnalyticsTable",
-                                "Date: $formattedDate, Time In: $formattedTimeIn, Time Out: $formattedTimeOut, Location: $location"
-                            )
                         }
                     }
                 }
             }
         }
-
     }
 
     @Composable
@@ -295,9 +388,9 @@
                         pdfDocument.writeTo(outputStream)
                         pdfDocument.close()
 
-                        Toast.makeText(context, "PDF saved successfully", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "PDF saved successfully", LENGTH_LONG).show()
                     } catch (e: IOException) {
-                        Toast.makeText(context, "Error saving PDF: ${e.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Error saving PDF: ${e.message}", LENGTH_LONG).show()
                     }
                 }
             }
@@ -433,7 +526,6 @@
             }
         }
     }
-
 
     @Composable
     fun TableHeaderCell(text: String, width: Dp) {

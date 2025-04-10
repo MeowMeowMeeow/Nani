@@ -161,12 +161,12 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
         textSize = 12f
     }
 
-    val columnWidths = listOf(100f, 100f, 100f, 80f)
+    val columnWidths = listOf(80f, 80f, 100f, 80f, 80f, 100f, 140f, 80f)
     var yPos = 50f
 
     // Header row
     val headerTexts = listOf(
-        "Date", "Time In", "Time Out", "Total Hours"
+        "Date", "Time In", "Location", "Time Out", "Status"
     )
 
     var xPos = 10f
@@ -188,9 +188,8 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
     }
 
     if (logs.isEmpty()) {
-
         xPos = 10f
-        listOf("   -", "     -", "      -", "          -").forEachIndexed { index, text ->
+        listOf("   -", "   -", "    -", "   -", "   -", "    -", "     -", "   -").forEachIndexed { index, text ->
             canvas.drawText(text, xPos, yPos, paint)
             xPos += columnWidths[index]
         }
@@ -200,11 +199,12 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
             val formattedDate = formatDate(log.date)
             val formattedTimeIn = formatTime(log.timeIn)
             val formattedTimeOut = formatTime(log.timeOut)
-
+            val location = "Davao City"  // Assuming the location is fixed for now
+            val status = log.status
 
             xPos = 10f
             val rowData = listOf(
-                formattedDate, formattedTimeIn, formattedTimeOut
+                formattedDate, formattedTimeIn, location, formattedTimeOut, status
             )
 
             rowData.forEachIndexed { index, text ->
@@ -220,6 +220,7 @@ fun createPdfDocument(logs: List<UserLogs>): PdfDocument {
     pdfDocument.finishPage(page)
     return pdfDocument
 }
+
 
 
 

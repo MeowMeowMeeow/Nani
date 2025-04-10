@@ -83,8 +83,38 @@ fun DashboardScreen(
 ) {
     val context = LocalContext.current
     val tokenStorage = remember { TokenStorage(context) }
+    val logs = listOf(
+        UserLogs(
+            userId = "user123",
+            date = "Apr 10, 2025 08:30 AM",
+            timeIn = "Apr 10, 2025 08:30 AM",
+            timeOut = "Apr 10, 2025 05:30 PM",
+            totalLate = "15",
+            totalUndertime = "0",
+            status = "Half-Day"
+        ),
+        UserLogs(
+            userId = "user456",
+            date = "Apr 10, 2025 09:00 AM",
+            timeIn = "Apr 10, 2025 09:00 AM",
+            timeOut = "Apr 10, 2025 06:00 PM",
+            totalLate = "30",
+            totalUndertime = "0",
+            status = "Whole-day"
+        ),
+        UserLogs(
+            userId = "user789",
+            date = "Apr 10, 2025 08:15 AM",
+            timeIn = "Apr 10, 2025 08:15 AM",
+            timeOut = "Apr 10, 2025 05:30 PM",
+            totalLate = "10",
+            totalUndertime = "0",
+            status = "Half-Day"
+        ),
+    )
 
-    val logs by viewModel.logs
+    // Hardcoded logs (no API calls)
+
     val user = loginViewModel.details.collectAsState().value
     val loginToken = user?.token.orEmpty()
 
@@ -113,6 +143,7 @@ fun DashboardScreen(
             }
         }
     }
+
     DisposableEffect(Unit) {
         // Create the BroadcastReceiver
         val locationReceiver = object : BroadcastReceiver() {
@@ -257,7 +288,6 @@ fun DashboardScreen(
     }
 }
 
-
 @Composable
 fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
     ElevatedCard(
@@ -280,9 +310,9 @@ fun DateDashboardCard(icon: Int, title: String, subtitle: String) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column {
-                Text(text = title,  style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = subtitle,style = MaterialTheme.typography.bodyMedium, color =  MaterialTheme.colorScheme.onSurface)
+                Text(text = subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
@@ -312,12 +342,11 @@ fun LocationsCard(icon: Int, title: String, subtitle: String) {
             Column {
                 Text(text = title, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = subtitle, fontSize = 12.sp, color =  MaterialTheme.colorScheme.onSurface)
+                Text(text = subtitle, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }
 }
-
 
 @Composable
 fun AttendanceCard(
@@ -364,83 +393,46 @@ fun AttendanceCard(
                     .padding(start= 8.dp)
                     .background(MaterialTheme.colorScheme.surfaceDim.copy(alpha = 0.3F)),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-
             ) {
                 Text(
-
                     text = "Date",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier .width( 80.dp)
                 )
-
-
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time In",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier .width( 80.dp)
                 )
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
-                Spacer(modifier = Modifier.width(tablePadding()))
                 Text(
                     text = "Time Out",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier .width( 80.dp)
                 )
-
             }
 
-            val parser = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
-            val sortedLogs = logs
-                .filter { it.date != null } // Ensure no null dates are passed
-                .sortedByDescending { log ->
-                    try {
-                        log.date?.let { parser.parse(it) } // Parse date string into Date object
-                    } catch (e: Exception) {
-                        null // Return null if parsing fails
-                    }
-                }
-                .take(3)
-
             LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
-                items(sortedLogs) { userLogs ->
-
+                items(logs) { userLogs ->
                     val formattedDate = formatDate(userLogs.date)
                     val formattedTimeIn = formatTime(userLogs.timeIn)
                     val formattedTimeOut = formatTime(userLogs.timeOut)
-                    val horizontalScrollState = rememberScrollState()
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
-                            .horizontalScroll(horizontalScrollState),
+                            .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        TableCell(formattedDate, width = 60.dp)
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
+                        TableCell(formattedDate, width = 65.dp)
                         TableCell(formattedTimeIn, width = 80.dp)
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
-                        Spacer(modifier = Modifier.width(tablePadding()))
                         TableCell(formattedTimeOut, width = 80.dp)
                     }
                     Spacer(modifier = Modifier.height(1.dp))
-
-                    Log.d("AnalyticsTable", "Date raw: ${userLogs.date}, TimeIn raw: ${userLogs.timeIn}, TimeOut raw: ${userLogs.timeOut}")
                 }
             }
 
@@ -452,7 +444,7 @@ fun AttendanceCard(
                 )
             ) {
                 Text(
-                    text = ("Show attendance"),
+                    text = "Show attendance",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.tertiary
                 )
