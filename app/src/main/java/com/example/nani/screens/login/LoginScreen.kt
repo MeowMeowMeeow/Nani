@@ -84,20 +84,13 @@
                     return@LoginGroup
                 }
 
-                viewModel.login(
-                    email,
-                    password,
-                    onSuccess = {
-                        navController.navigate(JairosoftAppScreen.Dashboard.name) {
-                            popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    },
-                    onFailure = { error ->
-                        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                    },
-                    context = context
-                )
+                // Bypass authentication here since api is down
+                navController.navigate(JairosoftAppScreen.Dashboard.name) {
+                    popUpTo(JairosoftAppScreen.Login.name) { inclusive = true }
+                    launchSingleTop = true
+                }
+
+
             },
             onForgotPassword = {
                 navController.navigate(JairosoftAppScreen.Forgot.name)

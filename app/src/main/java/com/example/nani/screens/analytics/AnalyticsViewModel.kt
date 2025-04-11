@@ -5,14 +5,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nani.data.AnalyticsRepository
-import com.example.nani.data.UserLogs
+import com.example.nani.data.repository.AnalyticsRepository
+import com.example.nani.data.model.UserLogs
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 
-class AnalyticsViewModel(
-    private val repository: AnalyticsRepository = AnalyticsRepository()
-) : ViewModel() {
+class AnalyticsViewModel : ViewModel() {
 
     private val _logs = mutableStateOf<List<UserLogs>>(emptyList())
     val logs: State<List<UserLogs>> = _logs
@@ -28,7 +28,6 @@ class AnalyticsViewModel(
     fun setToken(token: String) {
         Log.d("AnalyticsViewModel", "Token set: $token")
         this.token = token
-
     }
 
     fun fetchLogs(token: String? = this.token) {
@@ -40,22 +39,56 @@ class AnalyticsViewModel(
 
         Log.d("AnalyticsViewModel", "Fetching logs with token: $authToken")
 
+
         _isLoading.value = true
         _errorMessage.value = null
 
+        // Hardcoded logs
+        val logsList = listOf(
+            UserLogs(
+                date = "Apr 10, 2025 09:00 AM",
+                timeIn = "09:00 AM",
+                timeOut = "06:00 PM",
+                userId = "user_001",
+                totalLate = "0 minutes",
+                totalUndertime = "0 minutes",
+                status = "Present"
+            ),
+            UserLogs(
+                date = "Apr 9, 2025 09:00 AM",
+                timeIn = "09:00 AM",
+                timeOut = "06:00 PM",
+                userId = "user_002",
+                totalLate = "15 minutes",
+                totalUndertime = "0 minutes",
+                status = "Present"
+            ),
+            UserLogs(
+                date = "Apr 8, 2025 09:00 AM",
+                timeIn = "09:00 AM",
+                timeOut = "06:00 PM",
+                userId = "user_003",
+                totalLate = "30 minutes",
+                totalUndertime = "0 minutes",
+                status = "Present"
+            )
+        )
+
+
         viewModelScope.launch {
             try {
-                val result = repository.getLogs(authToken)
-                Log.d("AnalyticsViewModel", "Logs fetched successfully: ${result.size} entries")
 
-                _logs.value = result
+                delay(2000)
+                Log.d("AnalyticsViewModel", "Logs fetched successfully: ${logsList.size} entries")
 
-                if (result.isEmpty()) {
+                _logs.value = logsList
+
+                if (logsList.isEmpty()) {
                     _errorMessage.value = "No logs found."
-                    Log.w("AnalyticsViewModel", "No logs returned from repository")
+                    Log.w("AnalyticsViewModel", "No logs returned")
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "No Internet Connection"
+                _errorMessage.value = "Failed to fetch logs"
                 Log.e("AnalyticsViewModel", "Error fetching logs", e)
             } finally {
                 _isLoading.value = false

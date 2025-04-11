@@ -21,8 +21,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,13 +34,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.example.nani.data.UserResponse
+import com.example.nani.data.model.UserResponse
 
 import com.example.nani.screens.analytics.AnalyticsScreen
 import com.example.nani.screens.analytics.AnalyticsViewModel
@@ -55,6 +53,9 @@ import com.example.nani.screens.projects.ProjectViewModel
 import com.example.nani.screens.projects.ProjectsScreen
 import com.example.nani.ui.theme.components.JairosoftAppBar
 import com.example.nani.ui.theme.components.SessionManager
+import com.example.nani.ui.theme.components.TimeTrackingViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -73,6 +74,7 @@ enum class JairosoftAppScreen(@StringRes val title: Int) {
 
 @Composable
 fun JairosoftApp() {
+    val timeTrackingViewModel: TimeTrackingViewModel = viewModel()
     val context = LocalContext.current
     var currentUser by remember { mutableStateOf<UserResponse?>(null) }
     var token by remember { mutableStateOf<String?>(null) }
@@ -84,6 +86,9 @@ fun JairosoftApp() {
     val currentScreen = JairosoftAppScreen.valueOf(
         backStackEntry?.destination?.route ?: JairosoftAppScreen.Login.name
     )
+
+    var clockInUnixTime by remember { mutableStateOf<Long?>(null) }
+
     var isGreen by remember { mutableStateOf(true) }
     val fabColor by animateColorAsState(
         targetValue = if (isGreen) MaterialTheme.colorScheme.tertiaryContainer else Color.Red,
@@ -95,7 +100,7 @@ fun JairosoftApp() {
         animationSpec = tween(durationMillis = 300),
         label = "FAB Rotation Animation"
     )
-
+    val snackbarMessage by timeTrackingViewModel.snackbarMessage.observeAsState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var snackbarJob by remember { mutableStateOf<Job?>(null) }
@@ -131,6 +136,7 @@ fun JairosoftApp() {
 
 //edit na max width;
     Scaffold(
+
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -149,12 +155,13 @@ fun JairosoftApp() {
             if (shouldShowBottomBar) {
                 FloatingActionButton(
                     onClick = {
+
+                        timeTrackingViewModel.toggleTimeTracking(context)
+
                         isGreen = !isGreen
-
                         snackbarJob?.cancel()
-                        snackbarJob = scope.launch {
+                        snackbarJob = CoroutineScope(Dispatchers.Main).launch {
                             snackbarHostState.currentSnackbarData?.dismiss()
-
                             snackbarHostState.showSnackbar(
                                 message = if (isGreen) "Clocked Out" else "Clocked In",
                                 duration = SnackbarDuration.Short
@@ -176,7 +183,10 @@ fun JairosoftApp() {
                     )
                 }
             }
-        }, floatingActionButtonPosition = FabPosition.Center
+        }
+
+
+        , floatingActionButtonPosition = FabPosition.Center
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -207,8 +217,7 @@ fun JairosoftApp() {
 
                 AnalyticsScreen(
                     navController = navController,
-                    viewModel = analyticsViewModel,
-                    loginViewModel = loginViewModel
+
                 )
             }
 
