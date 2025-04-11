@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+//not working since api is down
 class TimeTrackingViewModel(
     private val timeInRepository: TimeInRepository = TimeInRepository(),
     private val timeTrackingRepository: TimeTrackingRepository = TimeTrackingRepository()
@@ -43,8 +45,8 @@ class TimeTrackingViewModel(
                     timeIn = formatDateClock(clockInTime ?: 0),
                     date = date ?: "",
                     attendanceStatus = "Whole-Day",
-                    timeInMins = 0,  // Time-in minutes remains 0 initially
-                    totalLateMins = 0,  // You can calculate late minutes here if needed
+                    timeInMins = 0,
+                    totalLateMins = 0,
                     userId = userId
                 )
 

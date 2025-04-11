@@ -15,6 +15,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
+//not working since api is down
 interface ApiService {
 
     @FormUrlEncoded
@@ -32,7 +33,7 @@ interface ApiService {
     suspend fun postTimeIn(
         @Header("Authorization") token: String,
         @Body timeInRequest: TimeInRequest
-    ): Response<Unit> // Time-in API (no specific response)
+    ): Response<Unit>
 
     @POST("time-out")
     suspend fun postTimeOut(

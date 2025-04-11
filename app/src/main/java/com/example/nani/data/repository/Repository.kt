@@ -8,7 +8,7 @@ import com.example.nani.data.model.UserLogs
 import com.example.nani.data.network.RetrofitInstance
 import com.example.nani.data.network.RetrofitInstance.api
 import retrofit2.Response
-
+//not working since api is down
 class UserRepository {
 
     private val api = RetrofitInstance.api
@@ -22,7 +22,7 @@ class UserRepository {
 }
 
 
-
+//not working since api is down
 class AnalyticsRepository {
 
     suspend fun getLogs(token: String): List<UserLogs> {
@@ -39,7 +39,7 @@ class AnalyticsRepository {
         return response.map { it.data }
     }
 }
-
+//not working since api is down
 
 class TimeTrackingRepository {
 

@@ -128,7 +128,7 @@ fun DashboardScreen(
 
     var hasInitialized by remember { mutableStateOf(false) }
 
-    // Get the initial location when the screen is loaded
+    //Live location ni
     LaunchedEffect(Unit) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -164,11 +164,10 @@ fun DashboardScreen(
             }
         }
 
-        // Register the receiver
+
         val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
         context.registerReceiver(locationReceiver, filter)
 
-        // Unregister the receiver on dispose
         onDispose {
             context.unregisterReceiver(locationReceiver)
         }

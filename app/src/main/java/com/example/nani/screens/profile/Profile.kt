@@ -56,7 +56,7 @@ fun ProfileScreen(
     navController: NavHostController,
     viewModel: AnalyticsViewModel,
     loginViewModel: LoginViewModel,
-    projectsViewModel: ProjectViewModel // Add ProjectViewModel as a parameter
+    projectsViewModel: ProjectViewModel
 ) {
     val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -86,7 +86,7 @@ fun ProfileScreen(
         ProfileGroup(
             onLogoutClick = { showLogoutDialog = true },
             logs = logs,
-            projects = projects // Pass the list of projects to the ProfileGroup
+            projects = projects
         )
     }
 

@@ -19,7 +19,7 @@ data class LogsWrapper(
     @SerializedName("data")
     val data: UserLogs
 )
-
+//adjusted to be hardcoded data
 data class UserLogs(
     val date: String,
     val timeIn: String,
@@ -61,28 +61,28 @@ data class ErrorResponse(
 )
 
 
-// TimeInRequest for sending time-in data to the backend
+//Not working for now since the API is down
 data class TimeInRequest(
-    @SerializedName("time-in") val timeIn: String, // Time-In in String format
-    @SerializedName("date") val date: String, // Date for clocking in in String format
-    @SerializedName("attendance_status") val attendanceStatus: String, // "Whole-Day" or "Half-Day"
-    @SerializedName("time-in_mins") val timeInMins: Int, // Time-In duration in minutes
-    @SerializedName("total_late_mins") val totalLateMins: Int, // Total late minutes
-    @SerializedName("user_id") val userId: String // User ID
+    @SerializedName("time-in") val timeIn: String,
+    @SerializedName("date") val date: String,
+    @SerializedName("attendance_status") val attendanceStatus: String,
+    @SerializedName("time-in_mins") val timeInMins: Int,
+    @SerializedName("total_late_mins") val totalLateMins: Int,
+    @SerializedName("user_id") val userId: String
 )
 
 
-// TimeInResponse for handling the response after posting time-in
+
 data class TimeInResponse(
     val status: String,
     val message: String
 )
 
-// TimeOutRequest for sending time-out data to the backend
+// Not working due to API
 data class TimeOutRequest(
-    @SerializedName("user_id") val userId: String, // User ID for time-out
-    @SerializedName("timeout") val timeOut: String, // Time-out in String format
-    @SerializedName("time-out_mins") val timeOutMinutes: Long, // Time-out duration in minutes
-    @SerializedName("total_hrs_work") val totalHoursWorked: Long, // Total hours worked
-    @SerializedName("total_undertime") val totalUndertime: Long // Total undertime in minutes
+    @SerializedName("user_id") val userId: String,
+    @SerializedName("timeout") val timeOut: String,
+    @SerializedName("time-out_mins") val timeOutMinutes: Long,
+    @SerializedName("total_hrs_work") val totalHoursWorked: Long,
+    @SerializedName("total_undertime") val totalUndertime: Long
 )

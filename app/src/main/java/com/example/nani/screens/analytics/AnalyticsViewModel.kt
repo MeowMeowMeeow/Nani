@@ -39,7 +39,7 @@ class AnalyticsViewModel : ViewModel() {
 
         Log.d("AnalyticsViewModel", "Fetching logs with token: $authToken")
 
-        // Simulating loading state
+
         _isLoading.value = true
         _errorMessage.value = null
 
@@ -74,10 +74,10 @@ class AnalyticsViewModel : ViewModel() {
             )
         )
 
-        // Simulating a delay like a network request
+
         viewModelScope.launch {
             try {
-                // Simulating delay
+
                 delay(2000)
                 Log.d("AnalyticsViewModel", "Logs fetched successfully: ${logsList.size} entries")
 
